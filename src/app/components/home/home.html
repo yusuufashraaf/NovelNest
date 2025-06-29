@@ -1,0 +1,43 @@
+<div class="container py-4">
+    <!-- Top Picks -->
+    <h4 class="mb-3 fw-semibold">Top Picks</h4>
+    <div class="row g-4">
+        @for (book of topPicks; track $index) {
+        <div class="col-12 col-sm-6 col-md-4">
+            <a class="text-decoration-none text-dark">
+                <div class="book-card">
+                    <img [src]="book.image" [alt]="book.title" class="img-fluid rounded" />
+                    <div class="fw-semibold mt-2 text-center">{{ book.title }}</div>
+                    <div class="text-muted small text-center">{{ book.subtitle }}</div>
+                </div>
+            </a>
+        </div>
+        }
+    </div>
+
+    <!-- New Arrivals -->
+    <h4 class="mt-5 mb-3 fw-semibold">New Arrivals</h4>
+    <div class="row g-4">
+        @for (book of newArrivals; track $index) {
+        <div class="col-12 col-sm-6 col-md-4">
+            <a class="text-decoration-none text-dark">
+                <div class="book-card">
+                    <img [src]="book.image" [alt]="book.title" class="img-fluid rounded" />
+                    <div class="fw-semibold mt-2 text-center">{{ book.title }}</div>
+                    <div class="text-muted small text-center">{{ book.subtitle }}</div>
+                </div>
+            </a>
+        </div>
+        }
+    </div>
+
+    <!-- Popular Genres -->
+    <h4 class="mt-5 mb-3">Popular Genres</h4>
+    <div class="d-flex flex-wrap">
+        @for (genre of genres; track $index) {
+        <span class="badge bg-light text-dark border me-2 mb-4 px-3 py-2 fs-5 rounded-pill">
+            {{ genre }}
+        </span>
+        }
+    </div>
+</div>
