@@ -1,0 +1,110 @@
+<!-- Centered Filter Dropdowns -->
+<div class="d-flex flex-wrap justify-content-center gap-3 mb-4 mt-4">
+    <!-- Genre -->
+    <div class="dropdown">
+        <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+            Genre
+        </button>
+        <ul class="dropdown-menu">
+            @for (genre of genres; track $index) {
+            <li>
+                <a class="dropdown-item" (click)="filterByGenre(genre)">{{ genre }}</a>
+            </li>
+            }
+        </ul>
+    </div>
+
+    <!-- Author -->
+    <div class="dropdown">
+        <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+            Author
+        </button>
+        <ul class="dropdown-menu">
+            @for (author of authors; track $index) {
+            <li>
+                <a class="dropdown-item" (click)="filterByAuthor(author)">{{ author }}</a>
+            </li>
+            }
+        </ul>
+    </div>
+
+    <!-- Price Range -->
+    <div class="dropdown">
+        <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+            Price Range
+        </button>
+        <ul class="dropdown-menu">
+            @for (range of priceRanges; track $index) {
+            <li>
+                <a class="dropdown-item" (click)="filterByPrice(range)">{{ range }}</a>
+            </li>
+            }
+        </ul>
+    </div>
+
+    <!-- Publication Date -->
+    <div class="dropdown">
+        <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+            Publication Date
+        </button>
+        <ul class="dropdown-menu">
+            @for (date of publicationDates; track $index) {
+            <li>
+                <a class="dropdown-item" (click)="filterByDate(date)">{{ date }}</a>
+            </li>
+            }
+        </ul>
+    </div>
+
+    <!-- Rating (also centered here) -->
+    <div class="dropdown">
+        <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+            Rating
+        </button>
+        <ul class="dropdown-menu">
+            @for (rating of ratings; track $index) {
+            <li>
+                <a class="dropdown-item" (click)="filterByRating(rating)">{{ rating }} Stars & Up</a>
+            </li>
+            }
+        </ul>
+    </div>
+</div>
+
+<!-- Book Grid (4 per row, with margins & no horizontal scroll) -->
+<div class="container ">
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+        @for (book of visibleBooks; track $index) {
+        <div class="col">
+            <div class="card h-100 border-0 shadow-sm">
+                <img [src]="book.image" [alt]="book.title" class="card-img-top"
+                    style="height: 320px; object-fit: cover;" />
+                <div class="card-body px-2 py-3">
+                    <h6 class="card-title mb-1 fw-semibold">{{ book.title }}</h6>
+                    <p class="card-text text-muted small">{{ book.author }}</p>
+                </div>
+            </div>
+        </div>
+        }
+    </div>
+</div>
+
+<!-- Pagination -->
+@if (totalPages > 1) {
+<nav class="mt-4 d-flex justify-content-center">
+    <ul class="pagination  pagination-rounded">
+        <li class="page-item" [class.disabled]="currentPage === 1">
+            <a class="page-link" (click)="changePage(currentPage - 1)">&laquo;</a>
+        </li>
+        @for (page of [].constructor(totalPages); track $index) {
+        <li class="page-item" [class.active]="currentPage === $index + 1">
+            <a class="page-link" (click)="changePage($index + 1)">{{ $index + 1 }}</a>
+        </li>
+    }
+        <li class="page-item" [class.disabled]="currentPage === totalPages">
+            <a class="page-link" (click)="changePage(currentPage + 1)">&raquo;</a>
+        </li>
+        
+    </ul>
+</nav>
+}
