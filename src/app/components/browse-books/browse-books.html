@@ -42,19 +42,6 @@
         </ul>
     </div>
 
-    <!-- Publication Date -->
-    <div class="dropdown">
-        <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
-            Publication Date
-        </button>
-        <ul class="dropdown-menu">
-            @for (date of publicationDates; track $index) {
-            <li>
-                <a class="dropdown-item" (click)="filterByDate(date)">{{ date }}</a>
-            </li>
-            }
-        </ul>
-    </div>
 
     <!-- Rating (also centered here) -->
     <div class="dropdown">
@@ -70,6 +57,9 @@
         </ul>
     </div>
 </div>
+
+<!-- Sort DropDown list-->
+
 
 <!-- Book Grid (4 per row, with margins & no horizontal scroll) -->
 <div class="container ">
@@ -99,12 +89,11 @@
         @for (page of [].constructor(totalPages); track $index) {
         <li class="page-item" [class.active]="currentPage === $index + 1">
             <a class="page-link" (click)="changePage($index + 1)">{{ $index + 1 }}</a>
-        </li>
-    }
+        </li>}
         <li class="page-item" [class.disabled]="currentPage === totalPages">
             <a class="page-link" (click)="changePage(currentPage + 1)">&raquo;</a>
         </li>
-        
+
     </ul>
 </nav>
 }
