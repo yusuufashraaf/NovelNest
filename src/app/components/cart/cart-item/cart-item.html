@@ -1,0 +1,21 @@
+<!-- Cart Item 1 -->
+<div class="row align-items-center border-bottom py-3 mx-0 my-2">
+  <div class="col-6 d-flex align-items-center">
+    <img [src]="item().img" alt="The Midnight Garden" class="rounded shadow-sm me-3 cart-img" width="70" height="95">
+    <div>
+      <div class="fw-semibold fs-5">{{ item().title }}</div>
+      <div class="author" style="font-size: 1rem;">Author: <span>{{ item().author }}</span></div>
+      <div class="text-muted small">Price: ${{ item().price }}</div>
+    </div>
+  </div>
+  <div class="col-3 text-center">
+    <div class="d-flex justify-content-center align-items-center gap-2">
+      <button class="btn btn-light rounded-circle px-2 py-0 cart-qty-btn">-</button>
+      <span class="mx-2 fs-5">1</span>
+      <button class="btn btn-light rounded-circle px-2 py-0 cart-qty-btn">+</button>
+    </div>
+  </div>
+  <div class="col-3 text-center pe-4 fw-bold">
+    ${{ item().price }}
+  </div>
+</div>
