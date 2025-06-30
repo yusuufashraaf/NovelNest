@@ -23,7 +23,7 @@ export class BrowseBooks implements OnInit {
   ];
   ratings = [5, 4, 3, 2, 1];
   priceRanges = ['Under $10', '$10 - $20', '$20 - $30', 'Over $30'];
-  publicationDates = ['2020s', '2010s', '2000s', '1990s', 'Classic'];
+
 
   filterByGenre(genre: string) {
     console.log('Filtering by genre:', genre);
