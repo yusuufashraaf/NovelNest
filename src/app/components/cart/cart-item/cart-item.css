@@ -1,0 +1,12 @@
+.cart-img {
+  object-fit: cover;
+}
+
+.author {
+  color: #4f7096;
+}
+
+.cart-qty-btn {
+  width: 32px;
+  height: 32px;
+}

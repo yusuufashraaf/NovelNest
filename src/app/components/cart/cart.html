@@ -1,1 +1,34 @@
-<p>cart works!</p>
+<!-- Shopping Cart Page - Combined Design -->
+<div class="container py-5">
+  <h1 class="fw-bold mb-5 cart-title">Shopping Cart</h1>
+  <div class="card">
+    <div class="card-body p-0">
+      <!-- Header Row -->
+      <div class="row g-0 text-center align-items-center cart-header-row rounded-1">
+        <div class="col-6 text-start ps-4 py-3 fs-5">Book</div>
+        <div class="col-3 py-3 fs-5">Quantity</div>
+        <div class="col-3 py-3 fs-5">Subtotal</div>
+      </div>
+
+      <!-- Cart Items -->
+      @for(item of cartService.cart(); track item.id) {
+      <app-cart-item [item]="item" />
+      }
+
+      <!-- Summary -->
+      <div class="row justify-content-end px-4 cart-summary-row">
+        <div class="col-md-6 col-lg-4 total-row">
+          <ul class="list-unstyled mb-5">
+            <li class="d-flex justify-content-between fw-bold py-1 fs-4">
+              <span>Total</span>
+              <span>${{ totalPrice }}</span>
+            </li>
+          </ul>
+          <button class="btn w-100 cart-checkout-btn">
+            Proceed to Checkout &rarr;
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
