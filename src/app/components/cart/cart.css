@@ -1,0 +1,37 @@
+.cart-title {
+  color: #1a78e5;
+}
+
+.cart-header-row {
+  background-color: #1a78e5;
+  color: #fff;
+  font-weight: 600;
+}
+
+.cart-summary-row {
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+}
+
+.total-row {
+  border-top: 2px solid #1a78e5;
+}
+
+.cart-checkout-btn {
+  background-color: #1a78e5;
+  color: #fff;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 1.4rem;
+  padding-left: 2rem;
+  padding-right: 2rem;
+  transition: 0.2s;
+}
+
+.cart-checkout-btn:hover {
+  background-color: #155abf;
+}
+
+.card {
+  border: none;
+}
