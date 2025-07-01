@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
-
+import { RouterModule } from '@angular/router';
 @Component({
   selector: 'app-profile-tabs',
-  imports: [],
+  imports: [RouterModule],
   templateUrl: './profile-tabs.html',
   styleUrl: './profile-tabs.css'
 })
