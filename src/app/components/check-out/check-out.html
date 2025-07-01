@@ -1,2 +1,195 @@
-<p>check-out works!</p>
-  <button (click)="createProduct()">create Product</button>
+<div class="container">
+<div class="header">
+    <div class="breadcrumb">
+        <a href="#" onclick="return false;">Cart</a> / Checkout
+    </div>
+    <h1>Checkout</h1>
+</div>
+<form [formGroup]="checkoutForm">
+  <div class="checkout-content">
+      <div class="form-section">
+          <h2 class="section-title">Shipping Address</h2>
+
+          <div class="form-group">
+              <label for="firstName">First Name</label>
+              <input type="text" id="firstName" name="firstName" formControlName="firstName">
+              <div class="validators">
+                @if(firstName.touched && firstName.errors?.['required']){
+                  <p class="error-inp">Required field</p>
+                }@if(firstName.errors?.['minlength']){
+                  <p class="error-inp">Provide a valid name (min-length:2)</p>
+                }@if(firstName.errors?.['maxlength']){
+                  <p class="error-inp">Provide a valid name </p>
+                }
+            </div>
+          </div>
+
+          <div class="form-group">
+              <label for="lastName">Last Name</label>
+              <input type="text" id="lastName" name="lastName" formControlName="lastName">
+              <div class="validators">
+                @if(lastName.touched && lastName.errors?.['required']){
+                  <p class="error-inp">Required field</p>
+                }@if(lastName.errors?.['minlength']){
+                  <p class="error-inp">Provide a valid name (min-length:2)</p>
+                }@if(lastName.errors?.['maxlength']){
+                  <p class="error-inp">Provide a valid name </p>
+                }
+                </div>
+          </div>
+
+          <div class="form-group">
+              <label for="address">Address</label>
+              <input type="text" id="address" name="address" formControlName="address">
+              <div class="validators">
+                @if(address.touched && address.errors?.['required']){
+                  <p class="error-inp">Required field</p>
+                }@if(address.errors?.['minlength']){
+                  <p class="error-inp">Provide a valid address (min-length:2)</p>
+                }@if(address.errors?.['maxlength']){
+                  <p class="error-inp">Provide a valid address </p>
+                }
+                </div>
+          </div>
+
+          <div class="form-group">
+              <label for="city">City</label>
+              <input type="text" id="city" name="city" formControlName="city">
+              <div class="validators">
+                @if(city.touched && city.errors?.['required']){
+                  <p class="error-inp">Required field</p>
+                }@if(city.errors?.['minlength']){
+                  <p class="error-inp">Provide a valid city (min-length:2)</p>
+                }@if(city.errors?.['maxlength']){
+                  <p class="error-inp">Provide a valid city</p>
+                }
+              </div>
+          </div>
+
+          <div class="form-row">
+              <div class="form-group">
+                  <label for="state">State</label>
+                  <input type="text" id="state" name="state" formControlName="state">
+                  <div class="validators">
+                    @if(state.touched && state.errors?.['required']){
+                      <p class="error-inp">Required field</p>
+                    }@if(state.errors?.['minlength']){
+                      <p class="error-inp">Provide a valid state (min-length:2)</p>
+                    }@if(state.errors?.['maxlength']){
+                      <p class="error-inp">Provide a valid state</p>
+                    }
+                  </div>
+              </div>
+              <div class="form-group">
+                  <label for="zipCode">Zip Code</label>
+                  <input type="text" id="zipCode" name="zipCode" formControlName="zipCode">
+                  <div class="validators">
+                    @if(zipCode.touched && zipCode.errors?.['required']){
+                      <p class="error-inp">Required field</p>
+                    }@if(zipCode.errors?.['pattern']){
+                      <p class="error-inp">Provide a valid zip code</p>
+                    }@if(zipCode.errors?.['minlength'] || zipCode.errors?.['maxlength']){
+                      <p class="error-inp">Zip code must be 5 digits</p>
+                    }
+                  </div>
+              </div>
+          </div>
+
+          <h2 class="section-title">Payment Method</h2>
+
+          <div class="payment-methods">
+              <div class="payment-option" onclick="selectPayment('paypal')">
+                  <input type="radio" id="paypal" name="payment" value="paypal" checked>
+                  <label for="paypal">PayPal</label>
+                  <div class="payment-logo paypal-logo"></div>
+              </div>
+          </div>
+
+          <div class="card-details show" id="cardDetails">
+              <div class="form-group card-number-group">
+                  <label for="cardNumber">Card Number</label>
+                  <input type="text" id="cardNumber" name="cardNumber" placeholder="Enter card number" maxlength="19" formControlName="cardNumber">
+                  <div class="card-helper">Enter your 16-digit card number</div>
+                  <div class="validators">
+                    @if(cardNumber.touched && cardNumber.errors?.['required']){
+                      <p class="error-inp">Required field</p>
+                    }@if(cardNumber.errors?.['pattern']){
+                      <p class="error-inp">Provide a valid card number</p>
+                    }@if(cardNumber.errors?.['minlength'] || cardNumber.errors?.['maxlength']){
+                      <p class="error-inp">Card number must be 16 digits</p>
+                    }
+                  </div>
+              </div>
+
+              <div class="form-row">
+                  <div class="form-group">
+                      <label for="expiry">Expiration Date</label>
+                      <input type="text" id="expiry" name="expiry" placeholder="MM/YY" maxlength="5" formControlName="expiry">
+                      <div class="validators">
+                        @if(expiry.touched && expiry.errors?.['required']){
+                          <p class="error-inp">Required field</p>
+                        }@if(expiry.errors?.['pattern']){
+                          <p class="error-inp">Provide a valid date (MM/YY)</p>
+                        }
+                      </div>
+                  </div>
+                  <div class="form-group">
+                      <label for="cvv">CVV</label>
+                      <input type="text" id="cvv" name="cvv" placeholder="123" maxlength="4" formControlName="cvv">
+                      <div class="validators">
+                        @if(cvv.touched && cvv.errors?.['required']){
+                          <p class="error-inp">Required field</p>
+                        }@if(cvv.errors?.['pattern']){
+                          <p class="error-inp">Provide a valid CVV</p>
+                        }@if(cvv.errors?.['minlength'] || cvv.errors?.['maxlength']){
+                          <p class="error-inp">CVV must be 3-4 digits</p>
+                        }
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+
+      <div class="order-summary">
+          <h2 class="section-title">Order Summary</h2>
+
+          <div class="order-item">
+              <div class="item-image">📚</div>
+              <div class="item-details">
+                  <div class="item-title">The Secret Garden</div>
+                  <div class="item-quantity">Quantity: 1</div>
+              </div>
+          </div>
+
+          <div class="order-item">
+              <div class="item-image">📖</div>
+              <div class="item-details">
+                  <div class="item-title">The Great Gatsby</div>
+                  <div class="item-quantity">Quantity: 1</div>
+              </div>
+          </div>
+
+          <div class="summary-row">
+              <span>Subtotal</span>
+              <span>$32.98</span>
+          </div>
+
+          <div class="summary-row">
+              <span>Shipping</span>
+              <span>$5.00</span>
+          </div>
+
+          <div class="summary-row">
+              <span>Tax</span>
+              <span>$2.50</span>
+          </div>
+
+          <div class="summary-row total">
+              <span>Total</span>
+              <span>$53.48</span>
+          </div>
+
+          <button class="confirm-btn" (click)="createOrder()">Confirm Purchase</button>
+      </div>
+  </div>
+</form>
