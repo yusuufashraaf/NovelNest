@@ -9,6 +9,7 @@ import { PaymentError } from './components/payment-error/payment-error';
 import { ThankYou } from './components/thank-you/thank-you';
 import { UserProfile } from './components/user-profile/user-profile';
 import { PurchasedBooks } from './components/purchased-books/purchased-books';
+import { PersonalInfo } from './components/personal-info/personal-info';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'Home', pathMatch: 'full' },
@@ -25,6 +26,7 @@ export const routes: Routes = [
     component: UserProfile,
     children: [
       { path: 'purchased', component: PurchasedBooks },
+      {path:'info',component:PersonalInfo},
       { path: '', redirectTo: 'purchased', pathMatch: 'full' }, 
     ],
   },
