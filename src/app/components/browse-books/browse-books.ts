@@ -6,7 +6,8 @@ import {
   PLATFORM_ID,
 } from '@angular/core';
 import { isPlatformBrowser, NgClass } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { ActivatedRoute, RouterModule } from '@angular/router';
+import { AddToCart } from '../add-to-cart/add-to-cart';
 
 import { Product } from '../../services/product.service';
 import { Products } from '../models/product.model';
