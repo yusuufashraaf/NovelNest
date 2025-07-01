@@ -51,12 +51,7 @@
         </ul>
     </div>
 
-<<<<<<< Updated upstream
-
-    <!-- Rating (also centered here) -->
-=======
     <!-- Rating -->
->>>>>>> Stashed changes
     <div class="dropdown">
         <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown"
             aria-expanded="false">
@@ -126,7 +121,8 @@
         @for (page of [].constructor(totalPages); track $index) {
         <li class="page-item" [class.active]="currentPage === $index + 1">
             <a class="page-link" (click)="changePage($index + 1)">{{ $index + 1 }}</a>
-        </li>}
+        </li>
+        }
         <li class="page-item" [class.disabled]="currentPage === totalPages">
             <a class="page-link" (click)="changePage(currentPage + 1)">&raquo;</a>
         </li>
