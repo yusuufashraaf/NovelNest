@@ -6,6 +6,7 @@ import { ContactUs } from './components/contact-us/contact-us';
 import { CheckOut } from './components/check-out/check-out';
 import { PaymentSuccess } from './components/payment-success/payment-success';
 import { PaymentError } from './components/payment-error/payment-error';
+import { Dashboard } from './components/dashboard/dashboard';
 
 export const routes: Routes = [
   {path:'checkout',component:CheckOut},
@@ -15,5 +16,6 @@ export const routes: Routes = [
   { path: 'Cart', component: Cart },
   { path: 'ContactUs', component: ContactUs },
   { path: 'success', component: PaymentSuccess },
-  { path: 'err', component: PaymentError }
+  { path: 'err', component: PaymentError },
+  {path:'dashboard',component:Dashboard}
 ];
