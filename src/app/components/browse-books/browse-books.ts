@@ -5,8 +5,9 @@ import {
   OnInit,
   PLATFORM_ID,
 } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
+import { isPlatformBrowser, NgClass } from '@angular/common';
 import { ActivatedRoute, RouterModule } from '@angular/router';
+import { AddToCart } from '../add-to-cart/add-to-cart';
 
 import { Product } from '../../services/product.service';
 import { Products } from '../models/product.model';
@@ -14,7 +15,7 @@ import { Products } from '../models/product.model';
 @Component({
   selector: 'app-browse-books',
   standalone: true,
-  imports: [RouterModule],
+  imports: [RouterModule, AddToCart],
   templateUrl: './browse-books.html',
   styleUrl: './browse-books.css',
 })
