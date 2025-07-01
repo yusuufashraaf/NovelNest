@@ -11,7 +11,7 @@
 
     <!-- Profile avatar only visible on mobile (inside the collapse) -->
     <div class="d-lg-none mb-2">
-      <a href="#" class="d-flex align-items-center">
+      <a href="#" class="d-flex align-items-center"  routerLink="/profile">
         <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Avatar" class="rounded-circle" width="32"
           height="32" />
       </a>
@@ -36,7 +36,7 @@
         {{ cartService.cart().totalQuantity }}
       </span>
     </a>
-    <a href="#" class="">
+    <a href="#" class="" routerLink="/profile">
       <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Avatar" class="rounded-circle" width="32"
         height="32" />
     </a>
