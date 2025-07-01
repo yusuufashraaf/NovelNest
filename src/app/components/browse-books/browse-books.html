@@ -1,14 +1,17 @@
-<!-- Centered Filter Dropdowns -->
+<!-- Filter Dropdowns -->
 <div class="d-flex flex-wrap justify-content-center gap-3 mb-4 mt-4">
     <!-- Genre -->
     <div class="dropdown">
-        <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
-            Genre
+        <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown"
+            aria-expanded="false">
+            {{ filters.genre ? filters.genre : 'Genre' }}
         </button>
         <ul class="dropdown-menu">
             @for (genre of genres; track $index) {
             <li>
-                <a class="dropdown-item" (click)="filterByGenre(genre)">{{ genre }}</a>
+                <a class="dropdown-item" (click)="filterByGenre(genre)" [class.active]="filters.genre === genre">
+                    {{ genre }}
+                </a>
             </li>
             }
         </ul>
@@ -16,13 +19,16 @@
 
     <!-- Author -->
     <div class="dropdown">
-        <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
-            Author
+        <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown"
+            aria-expanded="false">
+            {{ filters.author?filters.author: 'Author' }}
         </button>
         <ul class="dropdown-menu">
             @for (author of authors; track $index) {
             <li>
-                <a class="dropdown-item" (click)="filterByAuthor(author)">{{ author }}</a>
+                <a class="dropdown-item" (click)="filterByAuthor(author)" [class.active]="filters.author === author">
+                    {{ author }}
+                </a>
             </li>
             }
         </ul>
@@ -30,52 +36,77 @@
 
     <!-- Price Range -->
     <div class="dropdown">
-        <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
-            Price Range
+        <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown"
+            aria-expanded="false">
+            {{ filters.priceRange?filters.priceRange: 'Price Range' }}
         </button>
         <ul class="dropdown-menu">
             @for (range of priceRanges; track $index) {
             <li>
-                <a class="dropdown-item" (click)="filterByPrice(range)">{{ range }}</a>
+                <a class="dropdown-item" (click)="filterByPrice(range)" [class.active]="filters.priceRange === range">
+                    {{ range }}
+                </a>
             </li>
             }
         </ul>
     </div>
 
-
-
-    <!-- Rating (also centered here) -->
+    <!-- Rating -->
     <div class="dropdown">
-        <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
-            Rating
+        <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown"
+            aria-expanded="false">
+            {{ filters.rating ? filters.rating + ' Stars & Up' : 'Rating' }}
         </button>
         <ul class="dropdown-menu">
             @for (rating of ratings; track $index) {
             <li>
-                <a class="dropdown-item" (click)="filterByRating(rating)">{{ rating }} Stars & Up</a>
+                <a class="dropdown-item" (click)="filterByRating(rating)" [class.active]="filters.rating === rating">
+                    {{ rating }} Stars & Up
+                </a>
             </li>
             }
         </ul>
     </div>
+
+    <!-- Reset Filters Button -->
+    <div class="w-100 d-flex justify-content-center mt-3">
+        <button (click)="resetFilters()" class="btn btn-reset-custom">
+            <i class="bi bi-x-circle me-2"></i>Reset Filters
+        </button>
+    </div>
 </div>
 
-<!-- Sort DropDown list-->
+<!-- Loading Spinner -->
+@if (isLoading) {
+<div class="text-center my-3">
+    <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
+    </div>
+</div>
+}
+<!-- Book Grid -->
+<div class="container">
+    @if (books.length === 0 && !isLoading) {
+    <div class="text-center text-gray-500 py-5">
+        <p>No products found for the selected filters.</p>
+    </div>
+    }
 
-
-<!-- Book Grid (4 per row, with margins & no horizontal scroll) -->
-<div class="container ">
     <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
-        @for (book of visibleBooks; track $index) {
-        <div class="col">
-            <div class="card h-100 border-0 shadow-sm">
-                <img [src]="book.image" [alt]="book.title" class="card-img-top"
-                    style="height: 320px; object-fit: cover;" />
-                <div class="card-body px-2 py-3">
-                    <h6 class="card-title mb-1 fw-semibold">{{ book.title }}</h6>
-                    <p class="card-text text-muted small">{{ book.author }}</p>
+        @for (book of books; track $index) {
+        <a href="">
+            <div class="col">
+                <div class="card h-100 border-0 shadow-sm fade-in-card">
+                    <img [src]="book.imageCover" [alt]="book.title" class="card-img-top"
+                        style="height: 320px; object-fit: contain;" />
+                    <div class="card-body px-2 py-3">
+                        <h6 class="card-title mb-1 fw-semibold">{{ book.title }}</h6>
+                        <p class="card-text text-muted small">{{ book.author }}</p>
+                        <h6 class="card-title mb-1 fw-semibold">{{ book.price }} L.E</h6>
+                    </div>
                 </div>
             </div>
-        </div>
+        </a>
         }
     </div>
 </div>
@@ -83,7 +114,7 @@
 <!-- Pagination -->
 @if (totalPages > 1) {
 <nav class="mt-4 d-flex justify-content-center">
-    <ul class="pagination  pagination-rounded">
+    <ul class="pagination pagination-rounded">
         <li class="page-item" [class.disabled]="currentPage === 1">
             <a class="page-link" (click)="changePage(currentPage - 1)">&laquo;</a>
         </li>
@@ -95,7 +126,6 @@
         <li class="page-item" [class.disabled]="currentPage === totalPages">
             <a class="page-link" (click)="changePage(currentPage + 1)">&raquo;</a>
         </li>
-
     </ul>
 </nav>
 }
