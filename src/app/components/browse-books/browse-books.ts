@@ -7,7 +7,6 @@ import {
 } from '@angular/core';
 import { isPlatformBrowser, NgClass } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { AddToCart } from '../add-to-cart/add-to-cart';
 
 import { Product } from '../../services/product.service';
 import { Products } from '../models/product.model';
@@ -22,6 +21,7 @@ import { Products } from '../models/product.model';
 export class BrowseBooks implements OnInit {
   constructor(
     private productService: Product,
+    private route: ActivatedRoute,
     @Inject(PLATFORM_ID) private platformId: Object
   ) {}
 
@@ -54,6 +54,11 @@ export class BrowseBooks implements OnInit {
       window.addEventListener('resize', this.checkScreenSize.bind(this));
     }
 
+    this.route.queryParams.subscribe((params) => {
+      const keyword = params['keyword'] || null;
+      this.loadBooks(this.currentPage, keyword);
+    });
+
     this.productService.getGenres().subscribe({
       next: (res) => {
         this.genres = ['All', ...res.genres];
@@ -67,8 +72,6 @@ export class BrowseBooks implements OnInit {
       },
       error: (err) => console.error('Failed to load authors:', err),
     });
-
-    this.loadBooks(this.currentPage);
   }
 
   checkScreenSize() {
@@ -88,7 +91,7 @@ export class BrowseBooks implements OnInit {
     }
   }
 
-  loadBooks(page: number) {
+  loadBooks(page: number, keyword?: string) {
     this.isLoading = true;
     const { genre, author, rating, priceRange, sort } = this.filters;
 
@@ -100,6 +103,7 @@ export class BrowseBooks implements OnInit {
     if (genre) params.genre = genre;
     if (author) params.author = author;
     if (rating) params.rating = rating;
+    if (keyword) params.keyword = keyword;
 
     if (priceRange && priceRange !== 'All') {
       const priceMap: Record<string, () => void> = {
