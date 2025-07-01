@@ -1,5 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import {
+  Component,
+  HostListener,
+  Inject,
+  OnInit,
+  PLATFORM_ID,
+} from '@angular/core';
+import { isPlatformBrowser, NgClass } from '@angular/common';
 import { RouterModule } from '@angular/router';
+
 import { Product } from '../../services/product.service';
 import { Products } from '../models/product.model';
 
@@ -11,7 +19,10 @@ import { Products } from '../models/product.model';
   styleUrl: './browse-books.css',
 })
 export class BrowseBooks implements OnInit {
-  constructor(private productService: Product) {}
+  constructor(
+    private productService: Product,
+    @Inject(PLATFORM_ID) private platformId: Object
+  ) {}
 
   books: Products[] = [];
   booksPerPage = 8;
@@ -29,9 +40,19 @@ export class BrowseBooks implements OnInit {
     author: null as string | null,
     rating: null as number | null,
     priceRange: null as string | null,
+    sort: null as string | null,
   };
 
+  showScrollTop = false;
+  sidebarVisible = true;
+  isSmallScreen = false;
+
   ngOnInit() {
+    if (isPlatformBrowser(this.platformId)) {
+      this.checkScreenSize();
+      window.addEventListener('resize', this.checkScreenSize.bind(this));
+    }
+
     this.productService.getGenres().subscribe({
       next: (res) => {
         this.genres = ['All', ...res.genres];
@@ -49,9 +70,26 @@ export class BrowseBooks implements OnInit {
     this.loadBooks(this.currentPage);
   }
 
+  checkScreenSize() {
+    if (isPlatformBrowser(this.platformId)) {
+      this.isSmallScreen = window.innerWidth < 768;
+      this.sidebarVisible = !this.isSmallScreen;
+    }
+  }
+
+  toggleFilters() {
+    this.sidebarVisible = !this.sidebarVisible;
+  }
+
+  private closeSidebarOnMobile() {
+    if (this.isSmallScreen) {
+      this.sidebarVisible = false;
+    }
+  }
+
   loadBooks(page: number) {
     this.isLoading = true;
-    const { genre, author, rating, priceRange } = this.filters;
+    const { genre, author, rating, priceRange, sort } = this.filters;
 
     const params: any = {
       page,
@@ -78,6 +116,10 @@ export class BrowseBooks implements OnInit {
       priceMap[priceRange]?.();
     }
 
+    if (sort) {
+      params.sort = sort;
+    }
+
     this.productService.getAllProducts(params).subscribe({
       next: (res) => {
         this.books = res.data || [];
@@ -98,29 +140,42 @@ export class BrowseBooks implements OnInit {
     if (page < 1 || page > this.totalPages) return;
     this.currentPage = page;
     this.loadBooks(page);
-    setTimeout(() => {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }, 100);
+
+    if (isPlatformBrowser(this.platformId)) {
+      setTimeout(() => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }, 100);
+    }
   }
 
   filterByGenre(genre: string) {
     this.filters.genre = genre === 'All' ? null : genre;
     this.resetPageAndLoad();
+    this.closeSidebarOnMobile();
   }
 
   filterByAuthor(author: string) {
     this.filters.author = author === 'All' ? null : author;
     this.resetPageAndLoad();
+    this.closeSidebarOnMobile();
   }
 
   filterByRating(rating: number) {
     this.filters.rating = rating;
     this.resetPageAndLoad();
+    this.closeSidebarOnMobile();
   }
 
   filterByPrice(range: string) {
     this.filters.priceRange = range;
     this.resetPageAndLoad();
+    this.closeSidebarOnMobile();
+  }
+
+  setSort(sortValue: string) {
+    this.filters.sort = sortValue;
+    this.resetPageAndLoad();
+    this.closeSidebarOnMobile();
   }
 
   resetFilters() {
@@ -129,12 +184,27 @@ export class BrowseBooks implements OnInit {
       author: null,
       rating: null,
       priceRange: null,
+      sort: null,
     };
     this.resetPageAndLoad();
   }
 
   private resetPageAndLoad() {
     this.currentPage = 1;
+    this.closeSidebarOnMobile();
     this.loadBooks(this.currentPage);
+  }
+
+  @HostListener('window:scroll', [])
+  onWindowScroll() {
+    if (isPlatformBrowser(this.platformId)) {
+      this.showScrollTop = window.scrollY > 300;
+    }
+  }
+
+  scrollToTop() {
+    if (isPlatformBrowser(this.platformId)) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
   }
 }
