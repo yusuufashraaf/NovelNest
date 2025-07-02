@@ -199,7 +199,7 @@ input[type="email"]:focus {
     padding-bottom: 0;
 }
 
-.item-image {
+.item-image img{
     width: 40px;
     height: 48px;
     background-color: #ddd;
