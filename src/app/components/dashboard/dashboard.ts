@@ -1,6 +1,7 @@
 import { Component, OnInit, AfterViewInit, ViewChild, ElementRef, OnDestroy, Inject, PLATFORM_ID } from '@angular/core';
 import { Chart } from 'chart.js/auto';
 import { isPlatformBrowser } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
 
 interface StoreMetric {
   title: string;
@@ -35,7 +36,6 @@ interface Book {
   URL: string;
 }
 
-
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.html',
@@ -44,56 +44,56 @@ interface Book {
 export class Dashboard implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('salesTrendChart') salesTrendChartRef!: ElementRef;
   @ViewChild('categorySalesChart') categorySalesChartRef!: ElementRef;
-  
-booksInventory: Book[] = [
-  {
-    id: 1,
-    title: 'The Midnight Library',
-    author: 'Matt Haig',
-    category: 'Fiction',
-    price: 12.99,
-    publishedDate: '2020-08-13',
-    URL: '978-1786892706'
-  },
-  {
-    id: 2,
-    title: 'Atomic Habits',
-    author: 'James Clear',
-    category: 'Self-Help',
-    price: 14.99,
-    publishedDate: '2018-10-16',
-    URL: '978-0735211292'
-  },
-  {
-    id: 3,
-    title: 'Where the Crawdads Sing',
-    author: 'Delia Owens',
-    category: 'Fiction',
-    price: 10.99,
-    publishedDate: '2018-08-14',
-    URL: '978-0735219090'
-  },
-  {
-    id: 4,
-    title: 'The Silent Patient',
-    author: 'Alex Michaelides',
-    category: 'Thriller',
-    price: 9.99,
-    publishedDate: '2019-02-05',
-    URL: '978-1250301697'
-  },
-  {
-    id: 5,
-    title: 'Fairy Tale',
-    author: 'Stephen King',
-    category: 'Fantasy',
-    price: 16.99,
-    publishedDate: '2022-09-06',
-    URL: '978-1668002179'
-  }
-];
 
-  storeMetrics: StoreMetric[] = [
+  booksInventory: Book[] = [//list of all books in the store
+    {
+      id: 1,
+      title: 'The Midnight Library',
+      author: 'Matt Haig',
+      category: 'Fiction',
+      price: 12.99,
+      publishedDate: '2020-08-13',
+      URL: 'https://www.google.com'
+    },
+    {
+      id: 2,
+      title: 'Atomic Habits',
+      author: 'James Clear',
+      category: 'Self-Help',
+      price: 14.99,
+      publishedDate: '2018-10-16',
+      URL: 'https://www.google.com'
+    },
+    {
+      id: 3,
+      title: 'Where the Crawdads Sing',
+      author: 'Delia Owens',
+      category: 'Fiction',
+      price: 10.99,
+      publishedDate: '2018-08-14',
+      URL: 'https://www.google.com'
+    },
+    {
+      id: 4,
+      title: 'The Silent Patient',
+      author: 'Alex Michaelides',
+      category: 'Thriller',
+      price: 9.99,
+      publishedDate: '2019-02-05',
+      URL: 'https://www.google.com'
+    },
+    {
+      id: 5,
+      title: 'Fairy Tale',
+      author: 'Stephen King',
+      category: 'Fantasy',
+      price: 16.99,
+      publishedDate: '2022-09-06',
+      URL: 'https://www.google.com'
+    }
+  ];
+
+  storeMetrics: StoreMetric[] = [//Generic Data
     {
       title: 'Monthly Revenue',
       value: '$28,450',
@@ -124,45 +124,45 @@ booksInventory: Book[] = [
     }
   ];
 
-  recentCustomerActivities: CustomerActivity[] = [
-  {
-    id: 1,
-    customerName: 'Sarah Johnson',
-    booksPurchased: ['The Midnight Library', 'Where the Crawdads Sing', 'The Silent Patient'],
-    date: '15 mins ago',
-    avatar: 'https://randomuser.me/api/portraits/men/43.jpg',
-  },
-  {
-    id: 2,
-    customerName: 'Michael Chen',
-    booksPurchased: ['Atomic Habits', 'Deep Work'],
-    date: '32 mins ago',
-    avatar: 'https://randomuser.me/api/portraits/men/32.jpg',
-  },
-  {
-    id: 3,
-    customerName: 'Emma Wilson',
-    booksPurchased: ['Monthly Book Club Subscription'],
-    date: '1 hour ago',
-    avatar: 'https://randomuser.me/api/portraits/men/65.jpg'
-  },
-  {
-    id: 4,
-    customerName: 'David Rodriguez',
-    booksPurchased: ['The Silent Patient'],
-    date: '2 hours ago',
-    avatar: 'https://randomuser.me/api/portraits/men/22.jpg',
-  },
-  {
-    id: 5,
-    customerName: 'Lisa Thompson',
-    booksPurchased: ['Fairy Tale', 'The Institute'],
-    date: '3 hours ago',
-    avatar: 'https://randomuser.me/api/portraits/men/71.jpg',
-  }
-];
+  recentCustomerActivities: CustomerActivity[] = [//Last Customer Purchases
+    {
+      id: 1,
+      customerName: 'Sarah Johnson',
+      booksPurchased: ['The Midnight Library', 'Where the Crawdads Sing', 'The Silent Patient'],
+      date: '15 mins ago',
+      avatar: 'https://randomuser.me/api/portraits/men/43.jpg',
+    },
+    {
+      id: 2,
+      customerName: 'Michael Chen',
+      booksPurchased: ['Atomic Habits', 'Deep Work'],
+      date: '32 mins ago',
+      avatar: 'https://randomuser.me/api/portraits/men/32.jpg',
+    },
+    {
+      id: 3,
+      customerName: 'Emma Wilson',
+      booksPurchased: ['Monthly Book Club Subscription'],
+      date: '1 hour ago',
+      avatar: 'https://randomuser.me/api/portraits/men/65.jpg'
+    },
+    {
+      id: 4,
+      customerName: 'David Rodriguez',
+      booksPurchased: ['The Silent Patient'],
+      date: '2 hours ago',
+      avatar: 'https://randomuser.me/api/portraits/men/22.jpg',
+    },
+    {
+      id: 5,
+      customerName: 'Lisa Thompson',
+      booksPurchased: ['Fairy Tale', 'The Institute'],
+      date: '3 hours ago',
+      avatar: 'https://randomuser.me/api/portraits/men/71.jpg',
+    }
+  ];
 
-  storeInitiatives: StoreInitiative[] = [
+  storeInitiatives: StoreInitiative[] = [//Store Upgrades (Optional)
     {
       name: 'Website Redesign',
       completion: 85,
@@ -193,11 +193,20 @@ booksInventory: Book[] = [
   categorySalesChart: any;
   isBrowser: boolean;
 
-  constructor(@Inject(PLATFORM_ID) private platformId: Object) {
+  constructor(@Inject(PLATFORM_ID) private platformId: Object, private http: HttpClient) {
     this.isBrowser = isPlatformBrowser(platformId);
   }
 
-  ngOnInit(): void { }
+  ngOnInit(): void {
+    this.FetchData();
+  }
+
+
+
+  async FetchData() {
+
+  }
+
 
   ngAfterViewInit(): void {
     if (this.isBrowser) {
@@ -205,25 +214,20 @@ booksInventory: Book[] = [
     }
   }
 
-  // Add these methods to your component class
-viewBook(bookId: number): void {
-  console.log('View book:', bookId);
-  // Implement view logic here
-}
+  viewBook(bookId: number): void {
+    console.log('View book:', bookId);
+  }
 
-editBook(bookId: number): void {
-  console.log('Edit book:', bookId);
-  // Implement edit logic here
-}
+  editBook(bookId: number): void {
+    console.log('Edit book:', bookId);
+  }
 
-deleteBook(bookId: number): void {
-  console.log('Delete book:', bookId);
-  // Implement delete logic here
-  this.booksInventory = this.booksInventory.filter(book => book.id !== bookId);
-}
+  deleteBook(bookId: number): void {
+    console.log('Delete book:', bookId);
+    this.booksInventory = this.booksInventory.filter(book => book.id !== bookId);
+  }
 
   createCharts(): void {
-    // Sales Trend Chart
     if (this.salesTrendChartRef) {
       this.salesTrendChart = new Chart(this.salesTrendChartRef.nativeElement, {
         type: 'line',
@@ -257,8 +261,6 @@ deleteBook(bookId: number): void {
         }
       });
     }
-
-    // Category Sales Chart
     if (this.categorySalesChartRef) {
       this.categorySalesChart = new Chart(this.categorySalesChartRef.nativeElement, {
         type: 'bar',
