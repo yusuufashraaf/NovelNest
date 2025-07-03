@@ -1,0 +1,40 @@
+<div class="row mt-4">
+        <div class="col-12">
+          <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+              <h5 class="mb-0">Users Data</h5>
+            </div>
+            <div class="card-body">
+              <div class="table-responsive">
+                <table class="table table-hover table-striped">
+                  <thead class="table-light">
+                    <tr>
+                      <th>Id</th>
+                      <th>Name</th>
+                      <th>Email</th>
+                      <th>Role</th>
+                      <th>Created At</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    @for (user of UsersData; track user._id) {
+                    <tr>
+                      <td>{{ user._id }}</td>
+                      <td>{{ user.name }}</td>
+                      <td>{{ user.email }}</td>
+                      <td>
+                        <span class="badge bg-secondary">{{user.role}}</span>
+                      </td>
+                      <td>{{ user.createdAt }}</td>
+                    </tr>
+                    }
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div class="card-footer">
+              <small class="text-muted">Showing {{ UsersData.length }} Users Signed Up</small>
+            </div>
+          </div>
+        </div>
+      </div>
