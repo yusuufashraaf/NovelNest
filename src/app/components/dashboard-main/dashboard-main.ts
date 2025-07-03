@@ -17,28 +17,28 @@ export class DashboardMain implements OnInit, AfterViewInit, OnDestroy {
 
   storeMetrics: StoreMetric[] = [//Generic Data
     {
-      title: 'Monthly Revenue',
+      title: 'Monthly Reveniew',
       value: '$28,450',
       icon: 'bi bi-currency-dollar',
       color: 'bg-primary',
       change: 15
     },
     {
-      title: 'New/Total Customers',
+      title: 'New Customers',
       value: '842',
       icon: 'bi bi-people',
       color: 'bg-success',
       change: 22
     },
     {
-      title: 'Number of Books',
+      title: 'New Books',
       value: '3,156',
       icon: 'bi bi-book',
       color: 'bg-info',
       change: 18
     },
     {
-      title: 'Total/New Books Orders(to be determined)',
+      title: 'New Orders',
       value: '89',
       icon: 'bi bi-cart',
       color: 'bg-warning',
