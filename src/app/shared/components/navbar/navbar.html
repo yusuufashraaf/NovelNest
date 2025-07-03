@@ -1,36 +1,44 @@
 <nav class="navbar navbar-expand-lg navbar-light px-3">
-    <a class="navbar-brand d-flex align-items-center me-4" href="#">
-        <img src="assets/Logo/NovelListLogo.png" alt="Logo" width="24" class="me-2" />
+  <a class="navbar-brand d-flex align-items-center me-4" href="#">
+    <img src="assets/Logo/NovelListLogo.png" alt="Logo" width="24" class="me-2" />
+  </a>
+
+  <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarContent">
+
+    <!-- Profile avatar only visible on mobile (inside the collapse) -->
+    <div class="d-lg-none mb-2">
+      <a href="#" class="d-flex align-items-center"  routerLink="/profile">
+        <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Avatar" class="rounded-circle" width="32"
+          height="32" />
+      </a>
+    </div>
+
+    <ul class="navbar-nav me-auto mb-2 mb-lg-0 gap-lg-3">
+      <li class="nav-item"><a class="nav-link" routerLink="/Home" routerLinkActive="active">Home</a></li>
+      <li class="nav-item"><a class="nav-link" routerLink="/Browse">Browse</a></li>
+      <li class="nav-item"><a class="nav-link" routerLink="/ContactUs">Contact Us</a></li>
+    </ul>
+
+  </div>
+
+
+  <!-- Profile avatar only visible on desktop (outside collapse) -->
+  <div class="d-none d-lg-flex align-items-center gap-3">
+    <ng-content></ng-content>
+    <!-- cart icon with quantity -->
+    <a class="position-relative me-3 mt-2 cart-icon" routerLink="/Cart">
+      <i class="bi bi-cart fs-4"></i>
+      <span class="position-absolute top-0 start-100 translate-middle badge rounded-circle bg-danger">
+        {{ cartService.cart().totalQuantity }}
+      </span>
     </a>
-
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-
-    <div class="collapse navbar-collapse" id="navbarContent">
-
-        <!-- Profile avatar only visible on mobile (inside the collapse) -->
-        <div class="d-lg-none mb-2">
-            <a href="#" class="d-flex align-items-center">
-                <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Avatar" class="rounded-circle"
-                    width="32" height="32" />
-            </a>
-        </div>
-
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0 gap-lg-3">
-            <li class="nav-item"><a class="nav-link" routerLink="/Home" routerLinkActive="active">Home</a></li>
-            <li class="nav-item"><a class="nav-link" routerLink="/Browse">Browse</a></li>
-            <li class="nav-item"><a class="nav-link" routerLink="/ContactUs">Contact Us</a></li>
-        </ul>
-
-    </div>
-
-    <!-- Profile avatar only visible on desktop (outside collapse) -->
-    <div class="d-none d-lg-flex align-items-center gap-3">
-        <ng-content></ng-content>
-        <a href="#" class="">
-            <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Avatar" class="rounded-circle" width="32"
-                height="32" />
-        </a>
-    </div>
+    <a href="#" class="" routerLink="/profile">
+      <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Avatar" class="rounded-circle" width="32"
+        height="32" />
+    </a>
+  </div>
 </nav>
