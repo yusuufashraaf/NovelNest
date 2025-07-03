@@ -8,8 +8,8 @@ import { PaymentSuccess } from './components/payment-success/payment-success';
 import { PaymentError } from './components/payment-error/payment-error';
 import { ThankYou } from './components/thank-you/thank-you';
 import { UserProfile } from './components/user-profile/user-profile';
-import { PurchasedBooks } from './components/purchased-books/purchased-books';
-import { PersonalInfo } from './components/personal-info/personal-info';
+import { PurchasedBooks } from './components/user-profile/profile-tabs/purchased-books/purchased-books';
+import { PersonalInfo } from './components/user-profile/profile-tabs/personal-info/personal-info';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'Home', pathMatch: 'full' },
