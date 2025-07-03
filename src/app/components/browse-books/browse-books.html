@@ -120,7 +120,7 @@
   <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
     @for (book of books; track $index) {
     <div>
-      <a href="">
+      <a [routerLink]="['/Browse', book._id]">
         <div class="col">
           <div class="card h-100 border-0 shadow-sm fade-in-card">
             <img [src]="book.imageCover" [alt]="book.title" class="card-img-top"
