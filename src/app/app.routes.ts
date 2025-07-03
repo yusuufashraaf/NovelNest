@@ -9,15 +9,9 @@ import { PaymentError } from './components/payment-error/payment-error';
 import { Dashboard } from './components/dashboard/dashboard';
 import { ThankYou } from './components/thank-you/thank-you';
 import { UserProfile } from './components/user-profile/user-profile';
-import { PurchasedBooks } from './components/purchased-books/purchased-books';
-import { PersonalInfo } from './components/personal-info/personal-info';
-import { Wishlist } from './components/wishlist/wishlist';
 import { PurchasedBooks } from './components/user-profile/profile-tabs/purchased-books/purchased-books';
 import { PersonalInfo } from './components/user-profile/profile-tabs/personal-info/personal-info';
-import { PersonalReviews } from './components/user-profile/profile-tabs/personal-reviews/personal-reviews';
-import { BookDetails } from './components/book-details/book-details';
-
-
+import { Wishlist } from './components/wishlist/wishlist';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'Home', pathMatch: 'full' },
@@ -31,7 +25,6 @@ export const routes: Routes = [
   { path: 'success', component: PaymentSuccess },
   { path: 'err', component: PaymentError },
   { path: 'dashboard', component: Dashboard },
-  {path:'dashboard',component:Dashboard},
   { path: 'thank-you', component: ThankYou },
   {
     path: 'profile',

@@ -2,7 +2,6 @@ import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
 import { AddToCart } from '../../add-to-cart/add-to-cart';
 import { WishlistService } from '../../../services/wishlist.service';
 import Swal from 'sweetalert2';
-
 @Component({
   selector: 'app-wishlist-item',
   standalone: true,
@@ -45,7 +44,9 @@ export class WishlistItem {
   wishlistHandler(productId: string) {
     if (!productId) return;
     this.wishlistService.deleteFromWishlist(productId).subscribe({
-      next: (res) => {},
+      next: (res) => {
+        this.wishlistService.refreshWishlist();
+      },
       error: () => {
         Swal.fire({
           title: 'Failed to remove from wishlist.',
