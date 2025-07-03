@@ -12,6 +12,12 @@ import { UserProfile } from './components/user-profile/user-profile';
 import { PurchasedBooks } from './components/purchased-books/purchased-books';
 import { PersonalInfo } from './components/personal-info/personal-info';
 import { Wishlist } from './components/wishlist/wishlist';
+import { PurchasedBooks } from './components/user-profile/profile-tabs/purchased-books/purchased-books';
+import { PersonalInfo } from './components/user-profile/profile-tabs/personal-info/personal-info';
+import { PersonalReviews } from './components/user-profile/profile-tabs/personal-reviews/personal-reviews';
+import { BookDetails } from './components/book-details/book-details';
+
+
 
 export const routes: Routes = [
   { path: '', redirectTo: 'Home', pathMatch: 'full' },
@@ -24,6 +30,8 @@ export const routes: Routes = [
   { path: 'success', component: PaymentSuccess },
   { path: 'err', component: PaymentError },
   { path: 'dashboard', component: Dashboard },
+  {path:'dashboard',component:Dashboard},
+  {path:'book-details',component:BookDetails},
   { path: 'thank-you', component: ThankYou },
   {
     path: 'profile',
@@ -32,6 +40,9 @@ export const routes: Routes = [
       { path: 'purchased', component: PurchasedBooks },
       { path: 'info', component: PersonalInfo },
       { path: '', redirectTo: 'purchased', pathMatch: 'full' },
+      {path:'info',component:PersonalInfo},
+      {path:'reviews',component:PersonalReviews},
+      { path: '', redirectTo: 'purchased', pathMatch: 'full' }, 
     ],
   },
 ];

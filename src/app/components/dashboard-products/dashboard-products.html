@@ -1,0 +1,69 @@
+<div class="row mt-4">
+        <div class="col-12">
+          <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+              <h5 class="mb-0">Book Inventory</h5>
+              <button class="btn btn-sm btn-primary">
+                <i class="bi bi-plus-circle"></i> Add New Book
+              </button>
+            </div>
+            <div class="card-body">
+              <div class="table-responsive">
+                <table class="table table-hover table-striped">
+                  <thead class="table-light">
+                    <tr>
+                        <th>Image cover</th>
+                      <th>ID</th>
+                      <th>Title</th>
+                      <th>Author</th>
+                      <th>Category</th>
+                      <th>Price</th>
+                      <th>Quantity</th>
+                      <th>Sold</th>
+                      <th>Description</th>
+                      <th>Published</th>
+                      <th>URL</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    @for (book of booksInventory; track book._id) {
+                    <tr>
+                        <td><img class="img-fluid" src="{{ book.imageCover}}"></td>
+                      <td>{{ book._id }}</td>
+                      <td>{{ book.title }}</td>
+                      <td>{{ book.author }}</td>
+                      <td>
+                        <span class="badge bg-secondary">{{book.subcategory}}</span>
+                      </td>
+                      <td>{{ book.price }}LE</td>
+                      <td>{{ book.quantity }}</td>
+                      <td>{{ book.sold }}</td>
+                      <td>{{ book.description }}</td>
+                      <td>{{ book.createdAt }}</td>
+                      <td>PDF URL</td>
+                      <td>
+                        <div class="btn-group btn-group-sm" role="group">
+                          <button class="btn btn-outline-primary" (click)="viewBook(book._id)">
+                            <i class="bi bi-eye"></i>
+                          </button>
+                          <button class="btn btn-outline-success" (click)="editBook(book._id)">
+                            <i class="bi bi-pencil"></i>
+                          </button>
+                          <button class="btn btn-outline-danger" (click)="deleteBook(book._id)">
+                            <i class="bi bi-trash"></i>
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                    }
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div class="card-footer">
+              <small class="text-muted">Showing {{ booksInventory.length }} books in inventory</small>
+            </div>
+          </div>
+        </div>
+      </div>
