@@ -133,7 +133,10 @@
           </div>
         </div>
       </a>
-      <app-add-to-cart [productId]="book._id"></app-add-to-cart>
+      <div class="d-flex justify-content-center gap-5">
+        <app-add-to-cart [productId]="book._id"></app-add-to-cart>
+        <app-add-to-wishlist [productId]="book._id"></app-add-to-wishlist>
+      </div>
     </div>
     }
   </div>
