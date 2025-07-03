@@ -18,10 +18,40 @@ interface wishlistData {
 export class WishlistService {
   private baseUrl = 'http://localhost:5000/api/v1/wishlist';
   private http = inject(HttpClient);
+
+  // wishlist signal
   wishlist = signal<wishlistData>({
     wishlistItems: [],
     totalQuantity: 0,
   });
+
+  // constructor
+  constructor() {
+    this.refreshWishlist();
+  }
+
+  // refresh wishlist
+  refreshWishlist(): void {
+    this.getWishlist().subscribe((res) => {
+      if (res && res.data && res.data.wishlistItems) {
+        const transformedData: wishlistData = {
+          wishlistItems: res.data.wishlistItems.map((item: any) => ({
+            productId: item.productId,
+            title: item.title,
+            author: item.author,
+            img: item.image,
+          })),
+          totalQuantity: res.data.totalQuantity,
+        };
+        this.wishlist.set(transformedData);
+      } else {
+        this.wishlist.set({
+          wishlistItems: [],
+          totalQuantity: 0,
+        });
+      }
+    });
+  }
 
   // get wishlist per user
   getWishlist(): Observable<any> {
