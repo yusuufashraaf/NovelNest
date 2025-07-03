@@ -45,16 +45,7 @@ export class WishlistItem {
   wishlistHandler(productId: string) {
     if (!productId) return;
     this.wishlistService.deleteFromWishlist(productId).subscribe({
-      next: (res) => {
-        const previousWishlist = this.wishlistService.wishlist();
-        this.wishlistService.wishlist.set({
-          ...previousWishlist,
-          wishlistItems: previousWishlist.wishlistItems.filter(
-            (item: any) => item.productId !== productId
-          ),
-          totalQuantity: res.data.totalQuantity,
-        });
-      },
+      next: (res) => {},
       error: () => {
         Swal.fire({
           title: 'Failed to remove from wishlist.',
