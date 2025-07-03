@@ -2,6 +2,8 @@ import { Component } from "@angular/core";
 import { DashboardMain } from "../dashboard-main/dashboard-main";
 import { DashboardProducts } from "../dashboard-products/dashboard-products";
 import { DashboardUsers } from "../dashboard-users/dashboard-users";
+import { DashboardCategories } from "../dashboard-categories/dashboard-categories";
+import { DashboardOrders } from "../dashboard-orders/dashboard-orders";
 
 
 export interface StoreMetric {
@@ -31,8 +33,12 @@ export interface StoreInitiative {
   selector: 'app-dashboard',
   templateUrl: './dashboard.html',
   styleUrls: ['./dashboard.css'],
-  imports: [DashboardMain, DashboardProducts, DashboardUsers]
+  imports: [DashboardMain, DashboardProducts, DashboardUsers, DashboardCategories, DashboardOrders]
 })
 export class Dashboard {
-  
+  state:number = 0;
+
+  changeState(newState:number){
+    this.state = newState;
+  }
 }
