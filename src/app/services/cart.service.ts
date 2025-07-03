@@ -19,7 +19,7 @@ interface cartData {
   providedIn: 'root',
 })
 export class CartService {
-  private baseUrl = 'http://localhost:5000/api/v1/cart';
+  private baseUrl = 'http://localhost:5000/api/v1/Cart';
   private http = inject(HttpClient);
   cart = signal<cartData>({
     cartItems: [],
