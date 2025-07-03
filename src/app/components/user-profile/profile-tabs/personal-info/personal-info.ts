@@ -7,7 +7,7 @@ import {
   ValidationErrors,
   ReactiveFormsModule,
 } from '@angular/forms';
-import { AuthService, User } from '../../services/auth.service';
+import { AuthService,User } from '../../../../services/auth.service';
 import { NgIf } from '@angular/common';
 import { Subject, forkJoin } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
