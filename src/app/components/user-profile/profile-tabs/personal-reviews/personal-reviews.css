@@ -1,0 +1,27 @@
+.card img {
+  border-radius: 0.25rem;
+}
+
+textarea {
+  resize: vertical;
+}
+
+.bi-star,
+.bi-star-fill {
+  color: black;
+  font-size: 1.3rem;
+  transition: color 0.2s;
+  margin-right: 2px;
+}
+
+/* Only show hover effect in edit mode */
+.editable-star:hover {
+  color: orange;
+  cursor: pointer;
+}
+
+@media (max-width: 576px) {
+  .card-body {
+    padding: 0.75rem;
+  }
+}

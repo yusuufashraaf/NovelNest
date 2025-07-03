@@ -1,7 +1,14 @@
 import { PaymentService } from './../../services/payment-service';
 import { HttpClient} from '@angular/common/http';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { CartService } from '../../services/cart.service';
+
+export interface book {
+  book:String,
+  quantity:number,
+  price:number
+}
 
 @Component({
   selector: 'app-check-out',
@@ -10,30 +17,28 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
   templateUrl: './check-out.html',
   styleUrl: './check-out.css'
 })
-export class CheckOut {
+export class CheckOut  implements OnInit {
   router: any;
 
-  constructor(private paymentServ:PaymentService){}
+  constructor(private paymentServ:PaymentService,private cart:CartService){}
 
+  cartItems:any;
+  totalPrice:number=0;
+  books:book[] = [];
+  userId = '664d75f285d1f2b4e7e4567a';
 
-userId = '664d75f285d1f2b4e7e4567a';
+  ngOnInit(): void {
+    this.cartItems= this.cart.cart().cartItems;
+    this.totalPrice =this.cart.cart().totalPrice;
+    this.books = this.cartItems.map((item:any) => ({
+      book: item.productId,
+      quantity: item.quantity,
+      price: item.price
+    }));
 
-books = [
-  {
-    book: '665a1bc67f9911a3bfa1234c',
-    quantity: 2,
-    price: 19.99
-  },
-  {
-    book: '665a1bc67f9911a3bfa1234d',
-    quantity: 1,
-    price: 29.99
   }
-];
 
-get totalPrice() {
-  return this.books.reduce((acc, b) => acc + b.quantity * b.price, 0);
-}
+
 
 generateOrderNumber(): string {
   const now = new Date();
@@ -101,7 +106,7 @@ checkoutForm= new FormGroup({
 
 
 
-  // Getter methods for form controls
+
   get firstName() { return this.checkoutForm.get('firstName')!; }
   get lastName() { return this.checkoutForm.get('lastName')!; }
   get address() { return this.checkoutForm.get('address')!; }
@@ -114,28 +119,28 @@ checkoutForm= new FormGroup({
   get country() { return this.checkoutForm.get('country')!; }
   get payment() { return this.checkoutForm.get('payment')!; }
 
-  // Method to check if form is valid
+
   isFormValid(): boolean {
     return this.checkoutForm.valid;
   }
 
-  // Helper method to mark all fields as touched
+
   private markAllFieldsAsTouched(): void {
     this.checkoutForm.markAllAsTouched();
   }
 
-  // Method to reset form
+
   resetForm(): void {
     this.checkoutForm.reset();
   }
 
-  // Payment method selection
+
   selectPayment(method: string): void {
     this.checkoutForm.patchValue({ payment: method });
     console.log('Payment method selected:', method);
   }
 
-  // Confirm purchase method
+
   confirmPurchase(): void {
     if (this.isFormValid()) {
       this.createOrder();
@@ -145,8 +150,10 @@ checkoutForm= new FormGroup({
     }
   }
 
-  // Fixed createOrder method (renamed from createProduct)
+
   createOrder(): void {
+
+
     if (!this.isFormValid()) {
       this.markAllFieldsAsTouched();
       return;
