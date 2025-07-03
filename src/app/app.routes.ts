@@ -23,6 +23,7 @@ export const routes: Routes = [
   { path: '', redirectTo: 'Home', pathMatch: 'full' },
   { path: 'Home', component: Home },
   { path: 'Browse', component: BrowseBooks },
+  { path: 'Browse/:id', component:BookDetails },
   { path: 'Cart', component: Cart },
   { path: 'Wishlist', component: Wishlist },
   { path: 'ContactUs', component: ContactUs },
@@ -31,7 +32,6 @@ export const routes: Routes = [
   { path: 'err', component: PaymentError },
   { path: 'dashboard', component: Dashboard },
   {path:'dashboard',component:Dashboard},
-  {path:'book-details',component:BookDetails},
   { path: 'thank-you', component: ThankYou },
   {
     path: 'profile',
@@ -42,7 +42,7 @@ export const routes: Routes = [
       { path: '', redirectTo: 'purchased', pathMatch: 'full' },
       {path:'info',component:PersonalInfo},
       {path:'reviews',component:PersonalReviews},
-      { path: '', redirectTo: 'purchased', pathMatch: 'full' }, 
+      { path: '', redirectTo: 'purchased', pathMatch: 'full' },
     ],
   },
 ];

@@ -6,7 +6,7 @@ import {
   PLATFORM_ID,
 } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
-import { ActivatedRoute, RouterModule } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { AddToCart } from '../add-to-cart/add-to-cart';
 import { AddToWishlist } from '../add-to-wishlist/add-to-wishlist';
 import { Product } from '../../services/product.service';
@@ -23,6 +23,7 @@ export class BrowseBooks implements OnInit {
   constructor(
     private productService: Product,
     private route: ActivatedRoute,
+    private router:Router,
     @Inject(PLATFORM_ID) private platformId: Object
   ) {}
 
@@ -215,4 +216,9 @@ export class BrowseBooks implements OnInit {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   }
+
+
+  goToProduct(productId: string) {
+  this.router.navigate(['/Browse', productId]);
+}
 }
