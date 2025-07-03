@@ -1,0 +1,170 @@
+  <h1 class="mb-3 text-center">Main Dashboard</h1>
+
+  <div class=" align-items-center mb-4">
+    <div class="row mb-4">
+      @for (metric of storeMetrics; track metric.title) {
+      <div class="col-md-3 mb-3">
+        <div class="card h-100">
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center">
+              <div>
+                <h6 class="text-muted mb-2">{{ metric.title }}</h6>
+                <h3 class="mb-0">{{ metric.value }}</h3>
+              </div>
+              <div class="icon-shape {{ metric.color }} text-white rounded-3 p-3">
+                <i class="{{ metric.icon }} fs-4"></i>
+              </div>
+            </div>
+            @if (metric.change !== undefined) {
+            <div class="mt-3">
+              <span class="text-{{ metric.change >= 0 ? 'success' : 'danger' }} fw-bold">
+                <i class="bi bi-arrow-{{ metric.change >= 0 ? 'up' : 'down' }}"></i> {{ getAbsoluteValue(metric.change)
+                }}%
+              </span>
+              <span class="text-muted ms-2">vs last month (to be deleted or Not)</span>
+            </div>
+            }
+          </div>
+        </div>
+      </div>
+      }
+    </div>
+
+    <!-- Main Content Row -->
+    <div class="row">
+      <!-- Store Initiatives -->
+      <div class="col-lg-8 mb-4">
+        <div class="card h-100">
+          <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">Store Initiatives</h5>
+            <button class="btn btn-sm btn-outline-primary">View All</button>
+          </div>
+          <div class="card-body">
+            <div class="table-responsive">
+              <table class="table table-hover">
+                <thead>
+                  <tr>
+                    <th>Initiative</th>
+                    <th>Progress</th>
+                    <th>Deadline</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (initiative of storeInitiatives; track initiative.name) {
+                  <tr>
+                    <td>{{ initiative.name }}</td>
+                    <td>
+                      <div class="progress" style="height: 6px;">
+                        <div class="progress-bar" [class]="getProgressBarClass(initiative.status)"
+                          [style.width]="initiative.completion + '%'">
+                        </div>
+                      </div>
+                      <small class="text-muted">{{ initiative.completion }}%</small>
+                    </td>
+                    <td>{{ initiative.deadline }}</td>
+                    <td>
+                      <span class="badge" [class]="getBadgeClass(initiative.status)">
+                        {{ initiative.status }}
+                      </span>
+                    </td>
+                  </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recent Customer Activities Section -->
+      <div class="col-lg-4 mb-4">
+        <div class="card h-100">
+          <div class="card-header">
+            <h5 class="mb-0">Recent Customer Activities</h5>
+          </div>
+          <div class="card-body p-0">
+            <div class="list-group list-group-flush">
+              @for (activity of recentCustomerActivities; track activity.id) {
+              <div class="list-group-item p-3 border-bottom">
+                <div class="d-flex">
+                  <img [src]="activity.avatar" class="rounded-circle me-3" width="48" height="48" alt="Customer">
+                  <div class="flex-grow-1">
+                    <div class="d-flex justify-content-between align-items-start">
+                      <div>
+                        <h6 class="mb-1">{{ activity.customerName }}</h6>
+                      </div>
+                      <small class="text-muted">{{ activity.date }}</small>
+                    </div>
+
+                    <div class="mt-2">
+                      @for (book of activity.booksPurchased; track book) {
+                      <div class="d-flex align-items-center mb-1">
+                        <i class="bi bi-book me-2 text-muted"></i>
+                        <span>{{ book }}</span>
+                      </div>
+                      }
+                    </div>
+                  </div>
+                </div>
+              </div>
+              }
+            </div>
+          </div>
+          <div class="card-footer text-center">
+            <a href="#" class="btn btn-sm btn-link">View All Activities</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Charts Row -->
+      @if (isBrowser) {
+      <div class="row">
+        <div class="col-md-6 mb-4">
+          <div class="card h-100">
+            <div class="card-header">
+              <h5 class="mb-0">Monthly Sales Trend</h5>
+            </div>
+            <div class="card-body">
+              <div class="chart-container">
+                <canvas #salesTrendChart></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 mb-4">
+          <div class="card h-100">
+            <div class="card-header">
+              <h5 class="mb-0">Sales by Category</h5>
+            </div>
+            <div class="card-body">
+              <div class="chart-container">
+                <canvas #categorySalesChart></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      }
+      <!-- Book Inventory Table -->
+      
+      <div class="form-control mt-5 ">
+        <h1 class="text-center">Update Book</h1>
+        <label class="form-control">Book ID #123456789</label>
+        <label class="form-control">Book Name</label>
+        <input class="form-control" type="text" name="Book Name">
+        <label class="form-control">Book Auther</label>
+        <input class="form-control" type="text" name="Book Auther">
+        <label class="form-control">Book Category</label>
+        <input class="form-control" type="text" name="Book Category">
+        <label class="form-control">Price</label>
+        <input class="form-control" type="text" name="Price">
+        <label class="form-control">PDFURL</label>
+        <input class="form-control" type="text" name="PDFURL">
+        <label class="form-control">Book Cover URL</label>
+        <input class="form-control" type="text" name="Book Cover URL">
+        <label class="form-control">Book Description</label>
+        <input class="form-control" type="text" name="Book Description">
+        <button class="btn btn-primary form-control">Update Book Data</button>
+      </div>
+    </div>
