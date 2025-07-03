@@ -1,25 +1,90 @@
-<div class="container my-5 px-3 px-md-5">
-    <div class="bg-light p-4 p-md-5 rounded shadow-sm">
-        <h3 class="fw-bold mb-4">Account Settings</h3>
+<form *ngIf="form" [formGroup]="form" (ngSubmit)="onSubmit()" class="container mt-4">
+    <div class="row justify-content-left">
+        <div class="col-12 col-sm-10 col-md-8 col-lg-6">
 
-        <form>
+            <!-- name -->
             <div class="mb-3">
                 <label for="name" class="form-label">Name</label>
-                <input type="text" class="form-control rounded-pill" id="name" placeholder="Enter your name" />
+                <input id="name" class="form-control rounded-pill" formControlName="name" readonly />
             </div>
 
+            <!-- email -->
             <div class="mb-3">
                 <label for="email" class="form-label">Email</label>
-                <input type="email" class="form-control rounded-pill" id="email" placeholder="Enter your email" />
+                <input id="email" type="email" class="form-control rounded-pill" formControlName="email"
+                    placeholder="Enter your email" />
+                @if (email?.touched && email?.dirty && email?.invalid) {
+                <p class="text-danger ms-2 mt-1">
+                    Please enter a valid email address.
+                </p>
+                }
+                @if (email?.errors?.['serverError']) {
+                <p *ngIf="email?.errors?.['serverError']" class="text-danger ms-2 mt-1">
+                    {{ email?.errors?.['serverError'] }}
+                </p>
+                }
             </div>
 
+            <!-- current password -->
             <div class="mb-3">
-                <label for="pass" class="form-label">New Password</label>
-                <input type="password" class="form-control rounded-pill" id="pass" placeholder="Enter your new password" />
+                <label for="currentPass" class="form-label">Current Password</label>
+                <input type="password" id="currentPass" class="form-control rounded-pill"
+                    formControlName="currentPassword" placeholder="Enter your current password" />
+                @if (currentPassword?.errors?.['required'] && (currentPassword?.dirty || currentPassword?.touched)) {
+                <p class="text-danger ms-2 mt-1">
+                    Current password is required.
+                </p>
+                }
+                @if (currentPassword?.errors?.['serverError']) {
+                <p class="text-danger ms-2 mt-1">
+                    {{ currentPassword?.errors?.['serverError'] }}
+                </p>
+                }
             </div>
 
+            <!-- new password -->
+            <div class="mb-3">
+                <label for="newPass" class="form-label">New Password</label>
+                <input type="password" id="newPass" class="form-control rounded-pill" formControlName="password"
+                    placeholder="Enter new password" />
+                @if (password?.errors?.['pattern'] && (password?.dirty || password?.touched)) {
+                <p class="text-danger ms-2 mt-1">
+                    Password must contain at least one letter and one number.
+                </p>
+                }
+                @if (password?.errors?.['minlength'] && (password?.dirty || password?.touched)) {
+                <p class="text-danger ms-2 mt-1">
+                    Password must be at least 6 characters long.
+                </p>
+                }
+                @if (password?.errors?.['maxlength'] && (password?.dirty || password?.touched)) {
+                <p class="text-danger ms-2 mt-1">
+                    Password must be at most 32 characters long.
+                </p>
+                }
+                @if (password?.errors?.['serverError']) {
+                <p class="text-danger ms-2 mt-1">
+                    {{ password?.errors?.['serverError'] }}
+                </p>
+                }
+            </div>
 
-            <button type="submit" class="btn btn-outline-secondary rounded-pill px-4">Save Changes</button>
-        </form>
+            <!-- confirm password -->
+            <div class="mb-3">
+                <label for="confirmPass" class="form-label">Confirm Password</label>
+                <input type="password" id="confirmPass" class="form-control rounded-pill"
+                    formControlName="confirmPassword" placeholder="Confirm new password" />
+                @if (form!.errors?.['mismatch'] && (confirmPassword?.dirty || confirmPassword?.touched)) {
+                <p class="text-danger ms-2 mt-1">
+                    Passwords do not match.
+                </p>
+                }
+            </div>
+
+            <button type="submit" class="btn btn-outline-secondary rounded-pill w-40 mt-2">
+                Update
+            </button>
+
+        </div>
     </div>
-</div>
+</form>
