@@ -17,12 +17,8 @@ export class AddToWishlist {
     if (!this.productId) return;
     this.wishlistService.addToWishlist(this.productId).subscribe({
       // update wishlist icon simultaneously
-      next: (res) => {
-        const updatedWishlist = this.wishlistService.wishlist();
-        this.wishlistService.wishlist.set({
-          ...updatedWishlist,
-          totalQuantity: res.data.totalQuantity,
-        });
+      next: () => {
+        this.wishlistService.refreshWishlist();
         // show success message with sweetalert2
         Swal.fire({
           title: 'Added to wishlist!',
