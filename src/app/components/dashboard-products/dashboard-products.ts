@@ -36,7 +36,6 @@ export class DashboardProducts {
     this.productService.getAllProducts(params).subscribe({
       next: (res) => {
         this.booksInventory = res.data || [];
-        console.log(this.booksInventory);
         this.isLoading = false;
       },
       error: (err) => {
