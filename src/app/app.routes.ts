@@ -12,6 +12,8 @@ import { UserProfile } from './components/user-profile/user-profile';
 import { PurchasedBooks } from './components/user-profile/profile-tabs/purchased-books/purchased-books';
 import { PersonalInfo } from './components/user-profile/profile-tabs/personal-info/personal-info';
 import { PersonalReviews } from './components/user-profile/profile-tabs/personal-reviews/personal-reviews';
+import { BookDetails } from './components/book-details/book-details';
+
 
 export const routes: Routes = [
   { path: '', redirectTo: 'Home', pathMatch: 'full' },
@@ -23,6 +25,7 @@ export const routes: Routes = [
   { path: 'success', component: PaymentSuccess },
   { path: 'err', component: PaymentError },
   {path:'dashboard',component:Dashboard},
+  {path:'book-details',component:BookDetails},
   { path: 'thank-you', component: ThankYou },
   {
     path: 'profile',
