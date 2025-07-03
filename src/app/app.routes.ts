@@ -11,6 +11,7 @@ import { ThankYou } from './components/thank-you/thank-you';
 import { UserProfile } from './components/user-profile/user-profile';
 import { PurchasedBooks } from './components/user-profile/profile-tabs/purchased-books/purchased-books';
 import { PersonalInfo } from './components/user-profile/profile-tabs/personal-info/personal-info';
+import { PersonalReviews } from './components/user-profile/profile-tabs/personal-reviews/personal-reviews';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'Home', pathMatch: 'full' },
@@ -29,6 +30,7 @@ export const routes: Routes = [
     children: [
       { path: 'purchased', component: PurchasedBooks },
       {path:'info',component:PersonalInfo},
+      {path:'reviews',component:PersonalReviews},
       { path: '', redirectTo: 'purchased', pathMatch: 'full' }, 
     ],
   },
