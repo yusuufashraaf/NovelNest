@@ -8,13 +8,14 @@ import {
 import { isPlatformBrowser } from '@angular/common';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { AddToCart } from '../add-to-cart/add-to-cart';
+import { AddToWishlist } from '../add-to-wishlist/add-to-wishlist';
 import { Product } from '../../services/product.service';
 import { Products } from '../models/product.model';
 
 @Component({
   selector: 'app-browse-books',
   standalone: true,
-  imports: [RouterModule,AddToCart],
+  imports: [RouterModule, AddToCart, AddToWishlist],
   templateUrl: './browse-books.html',
   styleUrl: './browse-books.css',
 })
@@ -155,7 +156,7 @@ export class BrowseBooks implements OnInit {
 
   filterByGenre(genre: string) {
     console.log(genre);
-    
+
     this.filters.genre = genre === 'All' ? null : genre;
     this.resetPageAndLoad();
     this.closeSidebarOnMobile();
