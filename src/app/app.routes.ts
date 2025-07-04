@@ -12,14 +12,9 @@ import { UserProfile } from './components/user-profile/user-profile';
 import { Wishlist } from './components/wishlist/wishlist';
 import { PurchasedBooks } from './components/user-profile/profile-tabs/purchased-books/purchased-books';
 import { PersonalInfo } from './components/user-profile/profile-tabs/personal-info/personal-info';
-<<<<<<< HEAD
-import { Wishlist } from './components/wishlist/wishlist';
 import { BookDetails } from './components/book-details/book-details';
 import { PersonalReviews } from './components/user-profile/profile-tabs/personal-reviews/personal-reviews';
 
-=======
-import { PersonalReviews } from './components/user-profile/profile-tabs/personal-reviews/personal-reviews';
->>>>>>> 7bbadb43deca43ea86135d7f7c298db317551e86
 
 export const routes: Routes = [
   { path: '', redirectTo: 'Home', pathMatch: 'full' },
