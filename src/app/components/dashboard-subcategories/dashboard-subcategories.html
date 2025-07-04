@@ -1,0 +1,80 @@
+<div *ngIf="errorMsg" class="alert alert-danger mt-3">{{ errorMsg }}</div>
+<div *ngIf="successMsg" class="alert alert-success mt-3">{{ successMsg }}</div>
+<div *ngIf="isLoading" class="alert alert-info mt-3">Loading...</div>
+
+<div *ngIf="state == 1" class="form-control mt-5 ">
+  <h1 class="text-center">Add Subcategory</h1>
+  <label class="form-label">Subcategory Name</label>
+  <input class="form-control" type="text" [(ngModel)]="formSubcategoryName" [disabled]="isLoading">
+  <label class="form-label">Subcategory Slug</label>
+  <input class="form-control" type="text" [(ngModel)]="formSubcategorySlug" [disabled]="isLoading">
+  <label class="form-label">Category</label>
+  <select class="form-control" [(ngModel)]="formSubcategoryCategory" [disabled]="isLoading">
+    <option value="" disabled selected>Select a category</option>
+    <option *ngFor="let cat of categories" [value]="cat._id">{{ cat.name }}</option>
+  </select>
+  <button (click)="addSubcategory()" class="btn btn-primary form-control mt-3" [disabled]="isLoading">Add New Subcategory</button>
+</div>
+
+<div *ngIf="state == 2" class="form-control mt-5 ">
+  <h1 class="text-center">Update Subcategory</h1>
+  <h5 class="form-label text-center">Subcategory ID: #{{ formSubcategoryId }}</h5>
+  <label class="form-label">Subcategory Name</label>
+  <input class="form-control" type="text" [(ngModel)]="formSubcategoryName" [disabled]="isLoading">
+
+  <label class="form-label">Category</label>
+  <select class="form-control" [(ngModel)]="formSubcategoryCategory" [disabled]="isLoading">
+    <option value="" disabled selected>Select a category</option>
+    <option *ngFor="let cat of categories" [value]="cat._id">{{ cat.name }}</option>
+  </select>
+  <button (click)="updateSubcategory()" class="btn btn-primary form-control mt-3" [disabled]="isLoading">Update Subcategory</button>
+</div>
+
+<div class="row mt-4">
+  <div class="col-12">
+    <div class="card">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">Subcategories</h5>
+        <button class="btn btn-sm btn-primary" (click)="changeState(1)">
+          <i class="bi bi-plus-circle"></i> Add New Subcategory
+        </button>
+      </div>
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table table-hover table-striped">
+            <thead class="table-light">
+              <tr>
+                <th>Name</th>
+                <th>Category</th>
+                <th>Created At</th>
+                <th>Last Update</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody class="container">
+              <tr *ngFor="let sub of allSubcategories">
+                <td>{{ sub.name }}</td>
+                <td>{{ getCategoryName(sub.category) }}</td>
+                <td>{{ sub.createdAt | date:'dd/MM/yyyy' }}</td>
+                <td>{{ sub.updatedAt | date:'dd/MM/yyyy' }}</td>
+                <td>
+                  <div class="btn-group btn-group-sm" role="group">
+                    <button class="btn btn-outline-success" (click)="editSubcategory(sub._id)" [disabled]="isLoading">
+                      <i class="bi bi-pencil"></i>
+                    </button>
+                    <button class="btn btn-outline-danger" (click)="deleteSubcategory(sub._id)" [disabled]="isLoading">
+                      <i class="bi bi-trash"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="card-footer">
+        <small class="text-muted">Showing {{ allSubcategories.length }} subcategories in inventory</small>
+      </div>
+    </div>
+  </div>
+</div>

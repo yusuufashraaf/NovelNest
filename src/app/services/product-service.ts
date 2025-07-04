@@ -8,6 +8,9 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class ProductService {
+  getAllWithoutPagination() {
+    throw new Error('Method not implemented.');
+  }
 
   constructor(private router:Router,private http:HttpClient){};
 

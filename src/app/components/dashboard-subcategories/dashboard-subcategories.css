@@ -1,0 +1,10 @@
+/* Basic styling for dashboard subcategories */
+.form-control {
+  margin-bottom: 1rem;
+}
+.table {
+  margin-top: 1rem;
+}
+.alert {
+  margin-bottom: 1rem;
+}
