@@ -9,6 +9,10 @@ import { PaymentError } from './components/payment-error/payment-error';
 import { Dashboard } from './components/dashboard/dashboard';
 import { ThankYou } from './components/thank-you/thank-you';
 import { UserProfile } from './components/user-profile/user-profile';
+<<<<<<< Updated upstream
+=======
+import { Wishlist } from './components/wishlist/wishlist';
+>>>>>>> Stashed changes
 import { PurchasedBooks } from './components/user-profile/profile-tabs/purchased-books/purchased-books';
 import { PersonalInfo } from './components/user-profile/profile-tabs/personal-info/personal-info';
 
