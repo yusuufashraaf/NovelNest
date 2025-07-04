@@ -3,7 +3,6 @@ import { Product } from '../../services/product.service';
 import { ActivatedRoute } from '@angular/router';
 import { Products } from '../models/product.model';
 import e from 'express';
-import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-dashboard-products',
@@ -63,20 +62,8 @@ export class DashboardProducts {
   }
 
   deleteBook(bookId: string): void {
-    Swal.fire({
-      title: 'Are you sure?',
-      text: 'You won\'t be able to revert this!',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'Yes, delete it!'
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.isLoading = true;
-        this.booksInventory = this.booksInventory.filter(book => book._id !== bookId);
-        Swal.fire('Deleted!', 'Book deleted successfully!', 'success');
-        this.isLoading = false;
-      }
-    });
+    console.log('Delete book:', bookId);
+    this.booksInventory = this.booksInventory.filter(book => book._id !== bookId);
   }
 
   canAddBook(){
@@ -87,18 +74,10 @@ export class DashboardProducts {
   }
 
   addBook(){
-    // Add your validation and API logic here
-    // On success:
-    Swal.fire('Success', 'Book added successfully!', 'success');
-    // On error:
-    // Swal.fire('Error', 'Error message', 'error');
+    //add book logic
   }
 
   updateBook(){
-    // Add your validation and API logic here
-    // On success:
-    Swal.fire('Success', 'Book updated successfully!', 'success');
-    // On error:
-    // Swal.fire('Error', 'Error message', 'error');
+    //update book logic
   }
 }

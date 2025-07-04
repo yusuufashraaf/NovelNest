@@ -1,4 +1,5 @@
 export interface Products {
+  category: string;
   _id: string;
   title: string;
   slug?: string;
@@ -9,8 +10,9 @@ export interface Products {
   price: number;
   priceAfterDiscount?: number;
   imageCover: string;
-  images?: string[];
-  subcategory?: string[];
+  images: string[];
+  pdfLink: string;
+  subcategory: string[];
   ratingAverage?: number;
   ratingQuantity?: number;
   createdAt?: string;

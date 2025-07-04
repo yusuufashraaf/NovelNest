@@ -1,6 +1,11 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, catchError, tap, of } from 'rxjs';
+
+interface ProductApiResponse {
+  data?: any[];
+  [key: string]: any;
+}
 
 @Injectable({
   providedIn: 'root',
@@ -10,8 +15,16 @@ export class Product {
   constructor(private http: HttpClient) {}
 
   getAllProducts(params: any): Observable<any> {
-    return this.http.get(this.baseUrl, { params });
-  }
+    console.log('🔍 Fetching products from:', this.baseUrl);
+    return this.http.get<ProductApiResponse>(this.baseUrl, { params }).pipe(
+      tap(response => {
+
+      catchError(error => {
+
+        return of({ data: [] });
+      })
+    })
+    )}
 
   getGenres(): Observable<{ genres: string[] }> {
     return this.http.get<{ genres: string[] }>(`${this.baseUrl}/genres`);
@@ -19,5 +32,36 @@ export class Product {
 
   getAuthors(): Observable<{ authors: string[] }> {
     return this.http.get<{ authors: string[] }>(`${this.baseUrl}/authors`);
+  }
+
+  createProduct(productData: any): Observable<any> {
+    console.log('🔍 Creating product:', productData);
+    return this.http.post<any>(this.baseUrl, productData).pipe(
+      tap(response => {
+      }),
+      catchError(error => {
+        throw error;
+      })
+    );
+  }
+
+  updateProduct(productId: string, productData: any): Observable<any> {
+    return this.http.put<any>(`${this.baseUrl}/${productId}`, productData).pipe(
+      tap(response => {
+      }),
+      catchError(error => {
+        throw error;
+      })
+    );
+  }
+
+  deleteProduct(productId: string): Observable<any> {
+    return this.http.delete<any>(`${this.baseUrl}/${productId}`).pipe(
+      tap(response => {
+      }),
+      catchError(error => {
+        throw error;
+      })
+    );
   }
 }
