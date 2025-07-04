@@ -1,0 +1,127 @@
+<div class="container py-4">
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item">Books</li>
+      <li class="breadcrumb-item active">{{book.title}}</li>
+    </ol>
+  </nav>
+
+  <div class="row">
+    <div class="col-md-4 mb-4 mb-md-0">
+      <div class="card h-100 border-0 shadow-sm">
+        <img [src]="book.imageCover || 'https://via.placeholder.com/300x450?text=No+Cover'"
+             class="card-img-top img-fluid"
+             alt="{{book.title}} cover">
+        <div class="card-body text-center">
+          <button class="btn btn-primary w-100 mb-2">
+            <i class="bi bi-cart-plus me-2"></i>Add to Cart
+          </button>
+          <button class="btn btn-outline-secondary w-100">
+            <i class="bi bi-bookmark me-2"></i>Save for Later
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-8">
+      <div class="card h-100 border-0 shadow-sm">
+        <div class="card-body">
+          <span class="badge bg-primary mb-2">{{book.subcategory}}</span>
+          <h1 class="display-5 fw-bold">{{book.title}}</h1>
+          <h3 class="text-muted">By {{book.author}}</h3>
+
+          <div class="d-flex align-items-center my-4">
+            <div class="me-4 text-center">
+              <div class="display-4 fw-bold">{{book.ratingQuantity}}</div>
+              <div class="text-warning fs-3 mb-1">
+                {{getStarRating(book.ratingQuantity || 0)}}
+              </div>
+              <small class="text-muted">{{book.ratingQuantity}} reviews</small>
+            </div>
+          </div>
+
+          <div class="d-flex align-items-center mb-4">
+            <h4 class="text-danger me-3 mb-0">{{book.priceAfterDiscount}}LE</h4>
+            @if(book.priceAfterDiscount != book.price){
+            <span  class="text-muted text-decoration-line-through">
+              {{book.price }}LE
+            </span>
+            }
+
+          </div>
+
+          <div class="mt-4">
+            <h4 class="mb-3">Description</h4>
+            <p class="lead">{{book.description}}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card mt-4 border-0 shadow-sm">
+    <div class="card-header bg-white">
+      <h3 class="mb-0">Reviews</h3>
+    </div>
+    <div class="card-body">
+      @for (review of reviews; track review.userId) {
+      <div class="border-bottom pb-3 mb-3">
+        <div class="d-flex justify-content-between mb-2">
+          <strong class="fs-5">{{review._id}}</strong>
+          <span class="text-muted">{{review.postedAt | date:'medium'}}</span>
+        </div>
+        <div class="text-warning mb-2">
+          {{getStarRating(review.rate)}}
+        </div>
+        <p class="mb-0">{{review.comment}}</p>
+      </div>
+      }
+    </div>
+  </div>
+  <div class="card mt-4 border-0 shadow-sm">
+    <div class="card-header bg-white">
+      <h3 class="mb-0">Write a Review</h3>
+    </div>
+    <div class="card-body">
+      <form #reviewForm="ngForm" (submit)="submitReview(reviewForm)">
+        <div class="mb-3">
+          <label class="form-label">Your Rating</label>
+          <div class="star-rating">
+            @for (star of [1,2,3,4,5]; track star) {
+              <button type="button"
+                      (click)="setRating(star)"
+                      [class.text-warning]="star <= newReview.rate"
+                      class="btn p-0 me-1 fs-2 ">
+                {{ star <= newReview.rate ? '★' : '☆' }}
+              </button>
+            }
+            <span class="ms-2">{{newReview.rate}} of 5 stars</span>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label for="reviewComment" class="form-label">Your Review</label>
+          <textarea class="form-control"
+                    id="reviewComment"
+                    rows="4"
+                    name="comment"
+                    required
+                    minlength="2"
+                     [(ngModel)]="newReview.comment"
+                    #commentInput="ngModel"
+                    ></textarea>
+          </div>
+          <div *ngIf="commentInput.invalid && (commentInput.dirty || commentInput.touched)" class="text-danger mt-1">
+            <div *ngIf="commentInput.errors?.['required']">Comment is required.</div>
+            <div *ngIf="commentInput.errors?.['minlength']">Comment must be at least 2 characters.</div>
+          </div>
+        <button type="submit"
+                class="btn btn-primary"
+                [disabled]="reviewForm.invalid"
+                >
+          Submit Review
+        </button>
+      </form>
+    </div>
+  </div>
+</div>

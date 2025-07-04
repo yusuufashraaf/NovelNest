@@ -1,0 +1,53 @@
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Orders</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover table-striped">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Order #</th>
+                                <th>Customer</th>
+                                <th>Items</th>
+                                <th>Total</th>
+                                <th>Status</th>
+                                <th>Payment</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for (order of allOrders; track order._id) {
+                            <tr>
+                                <td>{{ order.orderNumber }}</td>
+                                <td>{{ order.userId }}</td>
+                                <td>
+                                    <span class="badge bg-primary">
+                                        {{ order.items }}
+                                    </span>
+                                    <span class="badge bg-primary">
+                                        {{ order.items.length }} items
+                                    </span>
+                                </td>
+                                <td>{{ order.totalPrice }}</td>
+                                <td>
+                                    <span class="badge">
+                                        {{ order.status }}
+                                    </span>
+                                </td>
+                                <td>{{ order.paymentMethod }}</td>
+                                <td>{{ order.createdAt }}</td>
+                            </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="card-footer">
+                <small class="text-muted">Showing {{ allOrders.length }} orders</small>
+            </div>
+        </div>
+    </div>
+</div>

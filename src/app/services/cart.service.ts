@@ -1,37 +1,54 @@
-import { Injectable, signal } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
+interface cartData {
+  cartItems: {
+    productId: string;
+    title: string;
+    author: string;
+    img: string;
+    price: number;
+    quantity: number;
+    subtotal: number;
+  }[];
+  totalPrice: number;
+  totalQuantity: number;
+}
 @Injectable({
   providedIn: 'root',
 })
 export class CartService {
-  cart = signal([
-    {
-      id: 1,
-      title: 'The Midnight Garden',
-      author: 'F. Scott Fitzgerald',
-      img: 'https://images.unsplash.com/photo-1509021436665-8f07dbf5bf1d?auto=format&fit=crop&w=80&h=110',
-      url: 'https://example.com/gatsby',
-      stock: 10,
-      price: 15.99,
-    },
-    {
-      id: 2,
-      title: '1984',
-      author: 'Echoes of the Past',
-      img: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=80&h=110',
-      url: 'https://example.com/1984',
-      stock: 5,
-      price: 24.49,
-    },
-    {
-      id: 3,
-      title: 'Whispers of the Wind',
-      author: 'Harper Lee',
-      img: 'https://images.unsplash.com/photo-1553729784-e91953dec042?auto=format&fit=crop&w=80&h=110',
-      url: 'https://example.com/mockingbird',
-      stock: 8,
-      price: 14.25,
-    },
-  ]);
-  constructor() {}
+  private baseUrl = 'http://localhost:5000/api/v1/Cart';
+  private http = inject(HttpClient);
+  cart = signal<cartData>({
+    cartItems: [],
+    totalPrice: 0,
+    totalQuantity: 0,
+  });
+
+  // get cart per user
+  getCart(): Observable<any> {
+    return this.http.get(this.baseUrl);
+  }
+
+  // add item to cart
+  addToCart(productId: string, quantity: number = 1): Observable<any> {
+    return this.http.post(this.baseUrl, { productId, quantity });
+  }
+
+  // Update cart item
+  updateCartItem(productId: string, quantity: number): Observable<any> {
+    return this.http.patch(`${this.baseUrl}/${productId}`, { quantity });
+  }
+
+  // delete item from cart
+  deleteCartItem(productId: string): Observable<any> {
+    return this.http.delete(`${this.baseUrl}/${productId}`);
+  }
+
+  // clear cart
+  clearCart(): Observable<any> {
+    return this.http.delete(this.baseUrl);
+  }
 }

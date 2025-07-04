@@ -11,9 +11,13 @@
       </div>
 
       <!-- Cart Items -->
-      @for(item of cartService.cart(); track item.id) {
-      <app-cart-item [item]="item" />
-      }
+      <div>
+        <ng-container *ngFor="let item of cartService.cart().cartItems">
+          <app-cart-item *ngIf="item" [item]="item" (quantityChange)="updateQuantity($event.productId, $event.quantity)"
+            (remove)="deleteItem($event)">
+          </app-cart-item>
+        </ng-container>
+      </div>
 
       <!-- Summary -->
       <div class="row justify-content-end px-4 cart-summary-row">
@@ -21,12 +25,12 @@
           <ul class="list-unstyled mb-5">
             <li class="d-flex justify-content-between fw-bold py-1 fs-4">
               <span>Total</span>
-              <span>${{ totalPrice }}</span>
+              <span>${{ cartService.cart().totalPrice }}</span>
             </li>
           </ul>
-          <button class="btn w-100 cart-checkout-btn">
+          <a routerLink="/checkout" class="btn w-100 cart-checkout-btn">
             Proceed to Checkout &rarr;
-          </button>
+          </a>
         </div>
       </div>
     </div>

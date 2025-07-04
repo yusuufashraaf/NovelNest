@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ProfileTabs } from "../profile-tabs/profile-tabs";
+import { ProfileTabs } from './profile-tabs/profile-tabs';
 
 @Component({
   selector: 'app-user-profile',
