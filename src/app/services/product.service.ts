@@ -1,67 +1,67 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, catchError, tap, of } from 'rxjs';
-
-interface ProductApiResponse {
-  data?: any[];
-  [key: string]: any;
-}
+import { Observable, throwError } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
 })
 export class Product {
   private baseUrl = 'http://localhost:5000/api/v1/products';
+
   constructor(private http: HttpClient) {}
 
   getAllProducts(params: any): Observable<any> {
-    console.log('🔍 Fetching products from:', this.baseUrl);
-    return this.http.get<ProductApiResponse>(this.baseUrl, { params }).pipe(
-      tap(response => {
-
-      catchError(error => {
-
-        return of({ data: [] });
-      })
-    })
-    )}
-
-  getGenres(): Observable<{ genres: string[] }> {
-    return this.http.get<{ genres: string[] }>(`${this.baseUrl}/genres`);
-  }
-
-  getAuthors(): Observable<{ authors: string[] }> {
-    return this.http.get<{ authors: string[] }>(`${this.baseUrl}/authors`);
-  }
-
-  createProduct(productData: any): Observable<any> {
-    console.log('🔍 Creating product:', productData);
-    return this.http.post<any>(this.baseUrl, productData).pipe(
-      tap(response => {
-      }),
-      catchError(error => {
-        throw error;
-      })
+    return this.http.get(this.baseUrl, { params }).pipe(
+      catchError(this.handleError)
     );
   }
 
-  updateProduct(productId: string, productData: any): Observable<any> {
-    return this.http.put<any>(`${this.baseUrl}/${productId}`, productData).pipe(
-      tap(response => {
-      }),
-      catchError(error => {
-        throw error;
-      })
+  private handleError(error: HttpErrorResponse) {
+    let errorMessage = 'An unknown error occurred!';
+    if (error.error instanceof ErrorEvent) {
+      // Client-side error
+      errorMessage = `Error: ${error.error.message}`;
+    } else {
+      // Server-side error
+      errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
+    }
+    return throwError(() => new Error(errorMessage));
+  }
+
+  getProductById(id: string): Observable<any> {
+    return this.http.get(`${this.baseUrl}/${id}`).pipe(
+      catchError(this.handleError)
     );
   }
 
-  deleteProduct(productId: string): Observable<any> {
-    return this.http.delete<any>(`${this.baseUrl}/${productId}`).pipe(
-      tap(response => {
-      }),
-      catchError(error => {
-        throw error;
-      })
+  createProduct(productData: FormData): Observable<any> {
+    return this.http.post(this.baseUrl, productData).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  updateProduct(id: string, productData: FormData): Observable<any> {
+    return this.http.put(`${this.baseUrl}/${id}`, productData).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  deleteProduct(id: string): Observable<any> {
+    return this.http.delete(`${this.baseUrl}/${id}`).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  getGenres(): Observable<any> {
+    return this.http.get(`${this.baseUrl}/genres`).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  getAuthors(): Observable<any> {
+    return this.http.get(`${this.baseUrl}/authors`).pipe(
+      catchError(this.handleError)
     );
   }
 }

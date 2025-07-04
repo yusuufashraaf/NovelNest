@@ -24,7 +24,6 @@ export class DashboardSubcategories {
   // Form fields
   formSubcategoryId: string = '';
   formSubcategoryName: string = '';
-  formSubcategorySlug: string = '';
   formSubcategoryCategory: string = '';
 
   categories: Category[] = [];
@@ -57,7 +56,7 @@ export class DashboardSubcategories {
   loadCategories() {
     this.categoryService.getAll().subscribe({
       next: (res) => {
-        this.categories = res.data;
+        this.categories = res;
       },
       error: () => this.categories = []
     });
@@ -72,7 +71,6 @@ export class DashboardSubcategories {
     if (sub) {
       this.formSubcategoryId = sub._id;
       this.formSubcategoryName = sub.name;
-      this.formSubcategorySlug = sub.slug;
       this.formSubcategoryCategory = sub.category;
       this.changeState(2);
     }
@@ -112,20 +110,22 @@ export class DashboardSubcategories {
       // Reset form for add
       this.formSubcategoryId = '';
       this.formSubcategoryName = '';
-      this.formSubcategorySlug = '';
       this.formSubcategoryCategory = '';
     }
   }
 
   addSubcategory() {
-    if (!this.formSubcategoryName || !this.formSubcategorySlug || !this.formSubcategoryCategory) {
+    if (!this.formSubcategoryName ||  !this.formSubcategoryCategory) {
       this.errorMsg = 'All fields are required.';
       return;
     }
     this.isLoading = true;
     this.errorMsg = '';
     this.successMsg = '';
-    this.subcategoryService.add({ name: this.formSubcategoryName, slug: this.formSubcategorySlug, category: this.formSubcategoryCategory }).subscribe({
+    this.subcategoryService.add({
+      name: this.formSubcategoryName, category: this.formSubcategoryCategory,
+      slug:""
+      }).subscribe({
       next: (sub) => {
         this.successMsg = 'Subcategory added successfully!';
         this.loadSubcategories();
@@ -141,14 +141,17 @@ export class DashboardSubcategories {
   }
 
   updateSubcategory() {
-    if (!this.formSubcategoryId || !this.formSubcategoryName || !this.formSubcategorySlug || !this.formSubcategoryCategory) {
+    if (!this.formSubcategoryId || !this.formSubcategoryName ||   !this.formSubcategoryCategory) {
       this.errorMsg = 'All fields are required.';
       return;
     }
     this.isLoading = true;
     this.errorMsg = '';
     this.successMsg = '';
-    this.subcategoryService.update(this.formSubcategoryId, { name: this.formSubcategoryName, slug: this.formSubcategorySlug, category: this.formSubcategoryCategory }).subscribe({
+    this.subcategoryService.update(this.formSubcategoryId, {
+      name: this.formSubcategoryName, category: this.formSubcategoryCategory,
+      slug: ''
+    }).subscribe({
       next: (sub) => {
         this.successMsg = 'Subcategory updated successfully!';
         this.loadSubcategories();
@@ -160,5 +163,14 @@ export class DashboardSubcategories {
         Swal.fire('Error', err, 'error');
       }
     });
+  }
+
+  deleteAllBySlug(slug: string): void {
+    const matches = this.allSubcategories.filter(s => s.slug === slug);
+    if (matches.length === 0) {
+      Swal.fire('Error', 'No subcategories found with this slug.', 'error');
+      return;
+    }
+    matches.forEach(sub => this.deleteSubcategory(sub._id));
   }
 }

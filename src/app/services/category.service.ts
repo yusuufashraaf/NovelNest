@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { map,catchError } from 'rxjs/operators';
 
 export interface Category {
   _id: string;
@@ -19,19 +19,20 @@ export class CategoryService {
 
   constructor(private http: HttpClient) {}
 
-  getAll(page = 1, limit = 10): Observable<any> {
-    console.log('CategoryService.getAll called with page:', page, 'limit:', limit);
-    console.log('API URL:', this.apiUrl);
+  getAll(page = 1, limit = 10): Observable<Category[]> {
+
     return this.http.get<any>(this.apiUrl, {
       params: { page, limit }
     }).pipe(
+      map(res=>res.data || []),
       catchError(this.handleError)
     );
   }
 
-  getAllWithoutPagination(): Observable<any> {
-    console.log('CategoryService.getAllWithoutPagination called');
-    return this.http.get<any>(this.apiUrl).pipe(
+  getAllWithoutPagination(): Observable<Category[]> {
+    return this.http.get<{data: Category[]}>(this.apiUrl).pipe(
+      map(res => res.data || []),
+
       catchError(this.handleError)
     );
   }

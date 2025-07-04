@@ -2,30 +2,270 @@ import { Component, Inject, PLATFORM_ID } from '@angular/core';
 import { Product } from '../../services/product.service';
 import { ActivatedRoute } from '@angular/router';
 import { Products } from '../models/product.model';
-import e from 'express';
+import Swal from 'sweetalert2';
+import { CategoryService, Category } from '../../services/category.service';
+import { SubcategoryService, Subcategory } from '../../services/subcategory.service';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-dashboard-products',
+  imports: [CommonModule, FormsModule],
   templateUrl: './dashboard-products.html',
   styleUrl: './dashboard-products.css'
 })
 
 export class DashboardProducts {
-  booksInventory: Products[] = [//list of all books in the store
+  booksInventory: Products[] = [];
+  state: number = 0;
 
-  ];
-  state:number = 0;
+  categories: Category[] = [];
+  subcategories: Subcategory[] = [];
+  formError: string = '';
+
+  // Add form state
+  selectedCategoryId: string = '';
+  selectedSubcategoryId: string = '';
+  // If you want to support multiple subcategories:
+  // selectedSubcategoryIds: string[] = [];
+
+  // Update form state
+  selectedBookId: string = '';
+  editBookName: string = '';
+  editBookAuthor: string = '';
+  editCategoryId: string = '';
+  editSubcategoryId: string = '';
+  editBookPrice: string = '';
+  editBookQuantity: string = '';
+  editBookDescription: string = '';
+  editBookPriceAfterDiscount: string = '';
+
+  // Add form state for all fields
+  addTitle: string = '';
+  addAuthor: string = '';
+  addQuantity: string = '';
+  addPrice: string = '';
+  addPriceAfterDiscount: string = '';
+  addDescription: string = '';
+
+  // File handling properties
+  addImageCoverFile: File | null = null;
+  addImagesFiles: File[] = [];
+  addPdfFile: File | null = null;
+  addImageCoverPreview: string = '';
+  addImagesPreview: string[] = [];
+
+  editImageCoverFile: File | null = null;
+  editImagesFiles: File[] = [];
+  editPdfFile: File | null = null;
+  editImageCoverPreview: string = '';
+  editImagesPreview: string[] = [];
+
+  isUploading = false;
+  isLoading = true;
+
+  // Add property to store current book being edited
+  currentBook: Products | null = null;
 
   constructor(
     private productService: Product,
     private route: ActivatedRoute,
-    @Inject(PLATFORM_ID) private platformId: Object
+    @Inject(PLATFORM_ID) private platformId: Object,
+    private categoryService: CategoryService,
+    private subcategoryService: SubcategoryService
   ) {
-    this.loadBooks(1)
+    this.loadBooks(1);
+    this.loadCategoriesAndSubcategories();
   }
 
-  isLoading = true;
+  loadCategoriesAndSubcategories() {
+    this.categoryService.getAllWithoutPagination().subscribe({
+      next: (res) => {
+        this.categories = res || [];
+        console.log('Categories loaded:', this.categories);
+        if (this.state === 2 && this.currentBook) {
+          if (typeof this.currentBook.category === 'object' && this.currentBook.category !== null) {
+            this.editCategoryId = String((this.currentBook.category as any)._id || '');
+          } else {
+            this.editCategoryId = String(this.currentBook.category || '');
+          }
+          console.log('editCategoryId after categories loaded:', this.editCategoryId, typeof this.editCategoryId);
+        }
+      },
+      error: (err) => {
+        console.error('Failed to load categories:', err);
+        this.formError = 'Failed to load categories.';
+      }
+    });
 
+    this.subcategoryService.getAll().subscribe({
+      next: (data) => {
+        this.subcategories = data || [];
+        console.log('Subcategories loaded:', this.subcategories);
+      },
+      error: (err) => {
+        console.error('Failed to load subcategories:', err);
+        this.formError = 'Failed to load subcategories.';
+      }
+    });
+  }
+
+  getCategoryName(category: string | { _id: string, name: string }): string {
+    if (!category) return 'Unknown Category';
+    if (typeof category === 'object' && category.name) return category.name;
+    const found = this.categories.find(cat => cat._id === category);
+    return found ? found.name : 'Unknown Category';
+  }
+
+  getSubcategoryName(subcategoryId: string): string {
+    const sub = this.subcategories.find(s => s._id === subcategoryId);
+    return sub ? sub.name : 'Unknown Subcategory';
+  }
+
+  onImageError(event: Event): void {
+    const img = event.target as HTMLImageElement;
+    const originalSrc = img.src;
+
+    // Log the failed image URL for debugging
+    console.warn('⚠️ Image failed to load:', originalSrc);
+
+    // Use a simple placeholder data URL instead of a file path
+    img.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNzAiIGhlaWdodD0iNzAiIHZpZXdCb3g9IjAgMCA3MCA3MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjcwIiBoZWlnaHQ9IjcwIiBmaWxsPSIjRjVGNUY1Ii8+CjxwYXRoIGQ9Ik0yMCAyMEg1MFY1MEgyMFYyMFoiIGZpbGw9IiNEN0Q3RDciLz4KPHN2ZyB4PSIyNSIgeT0iMjUiIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCIgdmlld0JveD0iMCAwIDI4IDI4IiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgo8cGF0aCBkPSJNMTIgMkM2LjQ4IDIgMiA2LjQ4IDIgMTJzNC40OCAxMCAxMCAxMCAxMC00LjQ4IDEwLTEwUzE3LjUyIDIgMTIgMnptLTIgMTV2LTJoMTJ2MkgyMHptMC00di0yaDEydjJIMjB6IiBmaWxsPSIjOTk5Ii8+Cjwvc3ZnPgo8L3N2Zz4K';
+  }
+
+  // File handling methods for Add form
+  onImageCoverChange(event: any): void {
+    const file = event.target.files[0];
+    if (file) {
+      if (file.size > 5 * 1024 * 1024) { // 5MB limit
+        this.formError = 'Image file size must be less than 5MB';
+        event.target.value = '';
+        return;
+      }
+
+      if (!file.type.startsWith('image/')) {
+        this.formError = 'Please select a valid image file';
+        event.target.value = '';
+        return;
+      }
+
+      this.addImageCoverFile = file;
+      this.addImageCoverPreview = URL.createObjectURL(file);
+      this.formError = '';
+    }
+  }
+
+    onImagesChange(event: any): void {
+    const files = Array.from(event.target.files) as File[];
+    this.addImagesFiles = [];
+    this.addImagesPreview = [];
+
+    files.forEach((file: File) => {
+      if (file.size > 5 * 1024 * 1024) { // 5MB limit
+        this.formError = 'Image file size must be less than 5MB';
+        return;
+      }
+
+      if (!file.type.startsWith('image/')) {
+        this.formError = 'Please select valid image files';
+        return;
+      }
+
+      this.addImagesFiles.push(file);
+      this.addImagesPreview.push(URL.createObjectURL(file));
+    });
+
+    if (this.formError) {
+      event.target.value = '';
+    }
+  }
+
+  onPdfChange(event: any): void {
+    const file = event.target.files[0];
+    if (file) {
+      if (file.size > 50 * 1024 * 1024) { // 50MB limit
+        this.formError = 'PDF file size must be less than 50MB';
+        event.target.value = '';
+        return;
+      }
+
+      if (file.type !== 'application/pdf') {
+        this.formError = 'Please select a valid PDF file';
+        event.target.value = '';
+        return;
+      }
+
+      this.addPdfFile = file;
+      this.formError = '';
+    }
+  }
+
+  // File handling methods for Edit form
+  onEditImageCoverChange(event: any): void {
+    const file = event.target.files[0];
+    if (file) {
+      if (file.size > 5 * 1024 * 1024) { // 5MB limit
+        this.formError = 'Image file size must be less than 5MB';
+        event.target.value = '';
+        return;
+      }
+
+      if (!file.type.startsWith('image/')) {
+        this.formError = 'Please select a valid image file';
+        event.target.value = '';
+        return;
+      }
+
+      this.editImageCoverFile = file;
+      this.editImageCoverPreview = URL.createObjectURL(file);
+      this.formError = '';
+    }
+  }
+
+    onEditImagesChange(event: any): void {
+    const files = Array.from(event.target.files) as File[];
+    this.editImagesFiles = [];
+    this.editImagesPreview = [];
+
+    files.forEach((file: File) => {
+      if (file.size > 5 * 1024 * 1024) { // 5MB limit
+        this.formError = 'Image file size must be less than 5MB';
+        return;
+      }
+
+      if (!file.type.startsWith('image/')) {
+        this.formError = 'Please select valid image files';
+        return;
+      }
+
+      this.editImagesFiles.push(file);
+      this.editImagesPreview.push(URL.createObjectURL(file));
+    });
+
+    if (this.formError) {
+      event.target.value = '';
+    }
+  }
+
+  onEditPdfChange(event: any): void {
+    const file = event.target.files[0];
+    if (file) {
+      if (file.size > 50 * 1024 * 1024) { // 50MB limit
+        this.formError = 'PDF file size must be less than 50MB';
+        event.target.value = '';
+        return;
+      }
+
+      if (file.type !== 'application/pdf') {
+        this.formError = 'Please select a valid PDF file';
+        event.target.value = '';
+        return;
+      }
+
+      this.editPdfFile = file;
+      this.formError = '';
+    }
+  }
 
   loadBooks(page: number) {
     this.isLoading = true;
@@ -39,8 +279,10 @@ export class DashboardProducts {
       next: (res) => {
         this.booksInventory = res.data || [];
         this.isLoading = false;
+        console.log('✅ Books loaded successfully:', this.booksInventory.length);
       },
       error: (err) => {
+        console.error('❌ Error loading books:', err);
         if (err.status === 404) {
           this.booksInventory = [];
         }
@@ -50,34 +292,461 @@ export class DashboardProducts {
   }
 
   viewBook(bookId: string): void {
-    console.log('View book:', bookId);
+    console.log('👁️ View book:', bookId);
+    Swal.fire('Book Details', 'View functionality will be implemented here', 'info');
   }
 
   editBook(bookId: string): void {
-    console.log('Edit book:', bookId);
-    if(this.state == 2)
+    console.log('✏️ Edit book:', bookId);
+    this.currentBook = this.booksInventory.find(book => book._id === bookId) || null;
+
+    if (this.currentBook) {
+      this.selectedBookId = bookId;
+      this.editBookName = this.currentBook.title;
+      this.editBookAuthor = this.currentBook.author;
+      this.editBookQuantity = this.currentBook.quantity.toString();
+      this.editBookPrice = this.currentBook.price.toString();
+      this.editBookPriceAfterDiscount = this.currentBook.priceAfterDiscount?.toString() || '';
+      this.editBookDescription = this.currentBook.description;
+      // Robustly extract category _id
+      if (typeof this.currentBook.category === 'object' && this.currentBook.category !== null) {
+        this.editCategoryId = (this.currentBook.category as any)._id || '';
+      } else {
+        this.editCategoryId = this.currentBook.category || '';
+      }
+      // Robustly extract subcategory _id
+      if (Array.isArray(this.currentBook.subcategory)) {
+        if (this.currentBook.subcategory.length > 0) {
+          if (typeof this.currentBook.subcategory[0] === 'object' && this.currentBook.subcategory[0] !== null) {
+            this.editSubcategoryId = (this.currentBook.subcategory[0] as any)._id || '';
+          } else {
+            this.editSubcategoryId = this.currentBook.subcategory[0] || '';
+          }
+        } else {
+          this.editSubcategoryId = '';
+        }
+      } else if (typeof this.currentBook.subcategory === 'object' && this.currentBook.subcategory !== null) {
+        this.editSubcategoryId = (this.currentBook.subcategory as any)._id || '';
+      } else {
+        this.editSubcategoryId = this.currentBook.subcategory || '';
+      }
+    }
+
+    if (this.state == 2) {
       this.state = 0;
-    else
-    this.state = 2;
+    } else {
+      this.state = 2;
+    }
   }
 
   deleteBook(bookId: string): void {
-    console.log('Delete book:', bookId);
-    this.booksInventory = this.booksInventory.filter(book => book._id !== bookId);
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'You won\'t be able to revert this!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.isLoading = true;
+
+        this.productService.deleteProduct(bookId).subscribe({
+          next: (response: any) => {
+            console.log('Book deleted successfully from database:', response);
+
+            // Remove from local inventory
+            this.booksInventory = this.booksInventory.filter(book => book._id !== bookId);
+            Swal.fire('Deleted!', 'Book deleted successfully!', 'success');
+            this.isLoading = false;
+          },
+          error: (error: any) => {
+            console.error('Failed to delete book:', error);
+            Swal.fire('Error', 'Failed to delete book. Please try again.', 'error');
+            this.isLoading = false;
+          }
+        });
+      }
+    });
   }
 
-  canAddBook(){
-    if(this.state == 1)
+  canAddBook() {
+    if (this.state == 1)
       this.state = 0;
     else
-    this.state = 1;
+      this.state = 1;
   }
 
-  addBook(){
-    //add book logic
+  validateAddForm() {
+    this.formError = '';
+
+    if (!this.addTitle?.trim()) {
+      this.formError = 'Book title is required';
+      return;
+    }
+
+    if (this.addTitle.length < 3) {
+      this.formError = 'Title must be at least 3 characters long';
+      return;
+    }
+
+    if (this.addTitle.length > 80) {
+      this.formError = 'Title must be less than 80 characters';
+      return;
+    }
+
+    if (!this.addAuthor?.trim()) {
+      this.formError = 'Author name is required';
+      return;
+    }
+
+    if (!this.addQuantity || isNaN(parseInt(this.addQuantity)) || parseInt(this.addQuantity) < 0) {
+      this.formError = 'Valid quantity is required';
+      return;
+    }
+
+    if (!this.addPrice || isNaN(parseFloat(this.addPrice)) || parseFloat(this.addPrice) < 0) {
+      this.formError = 'Valid price is required';
+      return;
+    }
+
+    if (parseFloat(this.addPrice) > 150000) {
+      this.formError = 'Price cannot exceed 150,000';
+      return;
+    }
+
+    if (this.addPriceAfterDiscount && (isNaN(parseFloat(this.addPriceAfterDiscount)) || parseFloat(this.addPriceAfterDiscount) < 0)) {
+      this.formError = 'Valid discount price is required';
+      return;
+    }
+
+    if (!this.selectedCategoryId) {
+      this.formError = 'Category is required';
+      return;
+    }
+
+    if (!this.addImageCoverFile) {
+      this.formError = 'Image cover file is required';
+      return;
+    }
+
+    if (!this.addPdfFile) {
+      this.formError = 'PDF file is required';
+      return;
+    }
+
+    if (!this.addDescription?.trim()) {
+      this.formError = 'Description is required';
+      return;
+    }
+
+    if (this.addDescription.length < 20) {
+      this.formError = 'Description must be at least 20 characters long';
+      return;
+    }
   }
 
-  updateBook(){
-    //update book logic
+  validateUpdateForm() {
+    this.formError = '';
+
+    if (!this.editBookName?.trim()) {
+      this.formError = 'Book title is required';
+      return;
+    }
+
+    if (this.editBookName.length < 3) {
+      this.formError = 'Title must be at least 3 characters long';
+      return;
+    }
+
+    if (this.editBookName.length > 80) {
+      this.formError = 'Title must be less than 80 characters';
+      return;
+    }
+
+    if (!this.editBookAuthor?.trim()) {
+      this.formError = 'Author name is required';
+      return;
+    }
+
+    if (!this.editBookQuantity || isNaN(parseInt(this.editBookQuantity)) || parseInt(this.editBookQuantity) < 0) {
+      this.formError = 'Valid quantity is required';
+      return;
+    }
+
+    if (!this.editBookPrice || isNaN(parseFloat(this.editBookPrice)) || parseFloat(this.editBookPrice) < 0) {
+      this.formError = 'Valid price is required';
+      return;
+    }
+
+    if (parseFloat(this.editBookPrice) > 150000) {
+      this.formError = 'Price cannot exceed 150,000';
+      return;
+    }
+
+    if (this.editBookPriceAfterDiscount && (isNaN(parseFloat(this.editBookPriceAfterDiscount)) || parseFloat(this.editBookPriceAfterDiscount) < 0)) {
+      this.formError = 'Valid discount price is required';
+      return;
+    }
+
+    if (!this.editCategoryId) {
+      this.formError = 'Category is required';
+      return;
+    }
+
+    if (!this.editBookDescription?.trim()) {
+      this.formError = 'Description is required';
+      return;
+    }
+
+    if (this.editBookDescription.length < 20) {
+      this.formError = 'Description must be at least 20 characters long';
+      return;
+    }
+  }
+
+  resetAddForm() {
+    this.addTitle = '';
+    this.addAuthor = '';
+    this.addQuantity = '';
+    this.addPrice = '';
+    this.addPriceAfterDiscount = '';
+    this.addDescription = '';
+    this.selectedCategoryId = '';
+    this.selectedSubcategoryId = '';
+    this.addImageCoverFile = null;
+    this.addImagesFiles = [];
+    this.addPdfFile = null;
+    this.addImageCoverPreview = '';
+    this.addImagesPreview = [];
+    this.formError = '';
+  }
+
+  resetUpdateForm() {
+    this.selectedBookId = '';
+    this.editBookName = '';
+    this.editBookAuthor = '';
+    this.editCategoryId = '';
+    this.editSubcategoryId = '';
+    this.editBookPrice = '';
+    this.editBookQuantity = '';
+    this.editBookDescription = '';
+    this.editBookPriceAfterDiscount = '';
+    this.editImageCoverFile = null;
+    this.editImagesFiles = [];
+    this.editPdfFile = null;
+    this.editImageCoverPreview = '';
+    this.editImagesPreview = [];
+    this.currentBook = null;
+    this.formError = '';
+  }
+
+  // Test method to debug API requirements
+  async testAddBook() {
+    console.log('🧪 Testing minimal product creation...');
+
+    const formData = new FormData();
+    formData.append('title', 'Test Book');
+    formData.append('description', 'This is a test book description with more than 20 characters to meet the minimum requirement.');
+    formData.append('author', 'Test Author');
+    formData.append('quantity', '1');
+    formData.append('price', '100');
+    formData.append('imageCover', 'https://example.com/test-cover.jpg');
+    formData.append('pdfLink', 'https://example.com/test-book.pdf');
+    formData.append('category', this.categories[0]?._id || 'test-category-id');
+
+    console.log('🧪 Sending FormData with entries:');
+    for (let [key, value] of formData.entries()) {
+      console.log(`🧪 ${key}: ${value}`);
+    }
+
+    try {
+      const response = await this.productService.createProduct(formData).toPromise();
+      console.log('✅ Test successful:', response);
+      Swal.fire('Test Success', 'Minimal product creation works!', 'success');
+    } catch (error: any) {
+      console.error('❌ Test failed:', error);
+      Swal.fire('Test Failed', `Error: ${error.message}`, 'error');
+    }
+  }
+
+  async addBook() {
+    console.log('=== Starting Add Book Process ===');
+
+    this.validateAddForm();
+    if (this.formError) {
+      console.log('❌ Form validation failed:', this.formError);
+      Swal.fire('Error', this.formError, 'error');
+      return;
+    }
+
+    console.log('✅ Form validation passed');
+    this.isUploading = true;
+    this.formError = '';
+
+    try {
+      // Create FormData for file upload
+      const formData = new FormData();
+
+      // Append text fields
+      formData.append('title', this.addTitle);
+      formData.append('description', this.addDescription);
+      formData.append('author', this.addAuthor);
+      formData.append('quantity', this.addQuantity.toString());
+      formData.append('price', this.addPrice.toString());
+      formData.append('category', this.selectedCategoryId);
+
+      // Append optional fields
+      if (this.addPriceAfterDiscount && this.addPriceAfterDiscount.toString().trim()) {
+        formData.append('priceAfterDiscount', this.addPriceAfterDiscount.toString());
+      }
+
+      if (this.selectedSubcategoryId) {
+        // The backend expects an array of subcategory IDs, so we send a JSON stringified array.
+        formData.append('subcategory', JSON.stringify([this.selectedSubcategoryId]));
+      }
+
+      // Append files
+      if (this.addImageCoverFile) {
+        formData.append('imageCover', this.addImageCoverFile);
+      }
+
+      if (this.addPdfFile) {
+        formData.append('pdfLink', this.addPdfFile);
+      }
+
+      // Append additional images
+      this.addImagesFiles.forEach((file, index) => {
+        formData.append('images', file);
+      });
+
+      console.log('=== Sending to Backend ===');
+      console.log('📤 FormData entries:');
+      for (let [key, value] of formData.entries()) {
+        if (value instanceof File) {
+          console.log(`📤 ${key}: File(${value.name}, ${value.size} bytes, ${value.type})`);
+        } else {
+          console.log(`📤 ${key}: ${value}`);
+        }
+      }
+
+      // Send to backend
+      const response = await this.productService.createProduct(formData).toPromise();
+
+      console.log('✅ Backend response:', response);
+      Swal.fire('Success', 'Book added successfully!', 'success');
+      this.resetAddForm();
+      this.loadBooks(1);
+      this.state = 0;
+
+    } catch (error: any) {
+      console.error('❌ Add book error:', error);
+
+      let errorMessage = 'Failed to add book';
+      if (error.message) {
+        errorMessage += ': ' + error.message;
+      }
+
+      this.formError = errorMessage;
+      Swal.fire('Error', errorMessage, 'error');
+    } finally {
+      this.isUploading = false;
+      console.log('=== Add Book Process Complete ===');
+    }
+  }
+
+  async updateBook() {
+    console.log('=== Starting Update Book Process ===');
+
+    this.validateUpdateForm();
+    if (this.formError) {
+      console.log('❌ Form validation failed:', this.formError);
+      Swal.fire('Error', this.formError, 'error');
+      return;
+    }
+
+    console.log('✅ Form validation passed');
+    this.isUploading = true;
+    this.formError = '';
+
+    try {
+      // Create FormData for file upload
+      const formData = new FormData();
+
+      // Append text fields
+      formData.append('title', this.editBookName);
+      formData.append('description', this.editBookDescription);
+      formData.append('author', this.editBookAuthor);
+      formData.append('quantity', this.editBookQuantity.toString());
+      formData.append('price', this.editBookPrice.toString());
+      formData.append('category', this.editCategoryId);
+
+      // Append optional fields
+      if (this.editBookPriceAfterDiscount && this.editBookPriceAfterDiscount.toString().trim()) {
+        formData.append('priceAfterDiscount', this.editBookPriceAfterDiscount.toString());
+      }
+
+      if (this.editSubcategoryId) {
+        // The backend expects an array of subcategory IDs, so we send a JSON stringified array.
+        formData.append('subcategory', JSON.stringify([this.editSubcategoryId]));
+      }
+
+      // Handle image cover - use new file if uploaded, otherwise keep existing
+      if (this.editImageCoverFile) {
+        formData.append('imageCover', this.editImageCoverFile);
+      } else if (this.currentBook?.imageCover) {
+        formData.append('imageCover', this.currentBook.imageCover);
+      }
+
+      // Handle PDF - use new file if uploaded, otherwise keep existing
+      if (this.editPdfFile) {
+        formData.append('pdfLink', this.editPdfFile);
+      } else if (this.currentBook?.pdfLink) {
+        formData.append('pdfLink', this.currentBook.pdfLink);
+      }
+
+      // Handle additional images - use new files if uploaded, otherwise keep existing
+      if (this.editImagesFiles.length > 0) {
+        this.editImagesFiles.forEach((file) => {
+          formData.append('images', file);
+        });
+      } else if (this.currentBook?.images && this.currentBook.images.length > 0) {
+        this.currentBook.images.forEach((imageUrl) => {
+          formData.append('images', imageUrl);
+        });
+      }
+
+      console.log('=== Sending to Backend ===');
+      console.log('📤 FormData entries:');
+      for (let [key, value] of formData.entries()) {
+        if (value instanceof File) {
+          console.log(`📤 ${key}: File(${value.name}, ${value.size} bytes, ${value.type})`);
+        } else {
+          console.log(`📤 ${key}: ${value}`);
+        }
+      }
+
+      // Send to backend
+      const response = await this.productService.updateProduct(this.selectedBookId, formData).toPromise();
+
+      console.log('✅ Backend response:', response);
+      Swal.fire('Success', 'Book updated successfully!', 'success');
+      this.resetUpdateForm();
+      this.loadBooks(1);
+      this.state = 0;
+
+    } catch (error: any) {
+      console.error('❌ Update book error:', error);
+
+      let errorMessage = 'Failed to update book';
+      if (error.message) {
+        errorMessage += ': ' + error.message;
+      }
+
+      this.formError = errorMessage;
+      Swal.fire('Error', errorMessage, 'error');
+    } finally {
+      this.isUploading = false;
+      console.log('=== Update Book Process Complete ===');
+    }
   }
 }

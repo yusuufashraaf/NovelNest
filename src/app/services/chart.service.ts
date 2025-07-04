@@ -46,12 +46,12 @@ export class ChartService {
       products: this.getProductsForCharts(),
       orders: this.getOrdersForCharts().pipe(catchError(() => of([]))),
       users: this.getUsersForCharts().pipe(catchError(() => of([]))),
-      categories: this.categoryService.getAllWithoutPagination().pipe(catchError(() => of({ data: [] }))),
+      categories: this.categoryService.getAllWithoutPagination().pipe(catchError(() => of([]))),
       subcategories: this.subcategoryService.getAll().pipe(catchError(() => of([])))
     }).pipe(
       map(({ products, orders, users, categories, subcategories }) => {
         const monthlyProducts = this.processMonthlyProductData(products);
-        const categoryProducts = this.processCategoryProductData(products, categories.data || [], subcategories);
+        const categoryProducts = this.processCategoryProductData(products, categories, subcategories);
         const totalRevenue = this.calculateTotalRevenue(orders);
         const totalOrders = orders.length;
         const recentOrders = this.getRecentOrders(orders);
@@ -210,11 +210,11 @@ export class ChartService {
   getCategoryProductChart(): Observable<ChartData> {
     return forkJoin({
       products: this.getProductsForCharts(),
-      categories: this.categoryService.getAllWithoutPagination().pipe(catchError(() => of({ data: [] }))),
+      categories: this.categoryService.getAllWithoutPagination().pipe(catchError(() => of([]))),
       subcategories: this.subcategoryService.getAll().pipe(catchError(() => of([])))
     }).pipe(
       map(({ products, categories, subcategories }) =>
-        this.processCategoryProductData(products, categories.data || [], subcategories)
+        this.processCategoryProductData(products, categories, subcategories)
       )
     );
   }
