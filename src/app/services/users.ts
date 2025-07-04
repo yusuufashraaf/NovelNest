@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, catchError, map, tap, throwError } from 'rxjs';
+import { Observable, catchError, map, tap, throwError, of } from 'rxjs';
 
 // Define your User interface (recommend putting in a separate file)
 export interface User {
@@ -33,10 +33,34 @@ export class Users {
   private readonly baseUrl = 'http://localhost:5000/api/v1/users';
 
   constructor(private http: HttpClient) {}
+
   getAllUsers(): Observable<User[]> {
-  return this.http.get<ApiResponse>(this.baseUrl).pipe(
-    map(response => response.data), // Extract the data array
-    tap(data => console.log('Users data:', data))
-  );
-}
+    console.log('🔍 Fetching users from:', this.baseUrl);
+    return this.http.get<ApiResponse>(this.baseUrl).pipe(
+      tap(response => {
+        console.log('📡 Raw users API response:', response);
+        console.log('📊 Users data structure:', response?.data);
+      }),
+      map(response => {
+        if (!response) {
+          console.warn('⚠️ No response received from users API');
+          return [];
+        }
+        if (!response.data) {
+          console.warn('⚠️ No data property in users API response');
+          return [];
+        }
+        if (!Array.isArray(response.data)) {
+          console.warn('⚠️ Users data is not an array:', response.data);
+          return [];
+        }
+        console.log('✅ Users data extracted successfully:', response.data.length, 'users');
+        return response.data;
+      }),
+      catchError(error => {
+        console.error('❌ Error in getAllUsers:', error);
+        return of([]);
+      })
+    );
+  }
 }

@@ -3,6 +3,12 @@ import { Chart } from 'chart.js/auto';
 import { isPlatformBrowser } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { CustomerActivity, StoreInitiative, StoreMetric } from '../dashboard/dashboard';
+import { Users, User } from '../../services/users';
+import { Product } from '../../services/product.service';
+import { OrderService, Order } from '../../services/order.service';
+import { ChartService, DashboardChartData, ChartData } from '../../services/chart.service';
+import { forkJoin, of } from 'rxjs';
+import { map, catchError } from 'rxjs/operators';
 
 
 @Component({
@@ -15,138 +21,160 @@ export class DashboardMain implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('salesTrendChart') salesTrendChartRef!: ElementRef;
   @ViewChild('categorySalesChart') categorySalesChartRef!: ElementRef;
 
-  storeMetrics: StoreMetric[] = [//Generic Data
-    {
-      title: 'Monthly Reveniew',
-      value: '$28,450',
-      icon: 'bi bi-currency-dollar',
-      color: 'bg-primary',
-      change: 15
-    },
-    {
-      title: 'New Customers',
-      value: '842',
-      icon: 'bi bi-people',
-      color: 'bg-success',
-      change: 22
-    },
-    {
-      title: 'New Books',
-      value: '3,156',
-      icon: 'bi bi-book',
-      color: 'bg-info',
-      change: 18
-    },
-    {
-      title: 'New Orders',
-      value: '89',
-      icon: 'bi bi-cart',
-      color: 'bg-warning',
-      change: -8
-    }
-  ];
+  storeMetrics: StoreMetric[] = [];
 
-  recentCustomerActivities: CustomerActivity[] = [//Last Customer Purchases
-    {
-      id: 1,
-      customerName: 'Sarah Johnson',
-      booksPurchased: ['The Midnight Library', 'Where the Crawdads Sing', 'The Silent Patient'],
-      date: '15 mins ago',
-      avatar: 'https://randomuser.me/api/portraits/men/43.jpg',
-    },
-    {
-      id: 2,
-      customerName: 'Michael Chen',
-      booksPurchased: ['Atomic Habits', 'Deep Work'],
-      date: '32 mins ago',
-      avatar: 'https://randomuser.me/api/portraits/men/32.jpg',
-    },
-    {
-      id: 3,
-      customerName: 'Emma Wilson',
-      booksPurchased: ['Monthly Book Club Subscription'],
-      date: '1 hour ago',
-      avatar: 'https://randomuser.me/api/portraits/men/65.jpg'
-    },
-    {
-      id: 4,
-      customerName: 'David Rodriguez',
-      booksPurchased: ['The Silent Patient'],
-      date: '2 hours ago',
-      avatar: 'https://randomuser.me/api/portraits/men/22.jpg',
-    },
-    {
-      id: 5,
-      customerName: 'Lisa Thompson',
-      booksPurchased: ['Fairy Tale', 'The Institute'],
-      date: '3 hours ago',
-      avatar: 'https://randomuser.me/api/portraits/men/71.jpg',
-    }
-  ];
+  recentCustomerActivities: CustomerActivity[] = [];
 
-  storeInitiatives: StoreInitiative[] = [//Store Upgrades (Optional)
-    {
-      name: 'Website Redesign',
-      completion: 85,
-      deadline: 'June 15, 2023',
-      status: 'On Track'
-    },
-    {
-      name: 'Mobile App Development',
-      completion: 65,
-      deadline: 'July 30, 2023',
-      status: 'On Track'
-    },
-    {
-      name: 'Summer Reading Campaign',
-      completion: 45,
-      deadline: 'May 30, 2023',
-      status: 'Delayed'
-    },
-    {
-      name: 'Inventory System Upgrade',
-      completion: 100,
-      deadline: 'April 5, 2023',
-      status: 'Completed'
-    }
-  ];
+  storeInitiatives: StoreInitiative[] = [];
 
   salesTrendChart: any;
   categorySalesChart: any;
   isBrowser: boolean;
 
-  constructor(@Inject(PLATFORM_ID) private platformId: Object, private http: HttpClient) {
+  constructor(@Inject(PLATFORM_ID) private platformId: Object,
+              private http: HttpClient,
+              private usersService: Users,
+              private productService: Product,
+              private orderService: OrderService,
+              private chartService: ChartService
+  ) {
     this.isBrowser = isPlatformBrowser(platformId);
   }
 
   ngOnInit(): void {
-    this.FetchData();
+    this.loadDashboardData();
   }
 
+  async loadDashboardData() {
 
+    // Use the new ChartService to get all chart data
+    this.chartService.getDashboardChartData().subscribe({
+      next: (chartData: DashboardChartData) => {
 
-  async FetchData() {
+        // Update store metrics with real data
+        this.updateStoreMetrics(chartData);
+
+        // Create charts with real data
+        this.createChartsWithData(chartData);
+
+        // Update recent activities if orders are available
+        this.updateRecentActivities(chartData.recentOrders);
+
+      },
+      error: (error) => {
+        this.setDefaultValues();
+      }
+    });
+  }
+
+  private updateStoreMetrics(chartData: DashboardChartData) {
+    // Get user count from the chart service data
+    this.chartService.getUsersForCharts().subscribe(users => {
+      const userCount = users.length;
+
+      this.storeMetrics = [
+        {
+          title: 'Monthly Revenue',
+          value: `$${chartData.totalRevenue.toLocaleString()}`,
+          icon: 'bi bi-currency-dollar',
+          color: 'bg-primary',
+          change: 0
+        },
+        {
+          title: 'New Customers',
+          value: userCount.toLocaleString(),
+          icon: 'bi bi-people',
+          color: 'bg-success',
+          change: 0
+        },
+        {
+          title: 'New Books',
+          value: '0', // Will be calculated from chart data
+          icon: 'bi bi-book',
+          color: 'bg-info',
+          change: 0
+        },
+        {
+          title: 'New Orders',
+          value: chartData.totalOrders.toLocaleString(),
+          icon: 'bi bi-cart',
+          color: 'bg-warning',
+          change: 0
+        }
+      ];
+
+      // Use the real product count for New Books
+      const totalBooks = chartData.monthlyProducts.data.reduce((sum, count) => sum + count, 0);
+      this.storeMetrics[2].value = totalBooks.toLocaleString();
+
+    });
+  }
+
+  private createChartsWithData(chartData: DashboardChartData) {
+    // Destroy existing charts
+    if (this.salesTrendChart) this.salesTrendChart.destroy();
+    if (this.categorySalesChart) this.categorySalesChart.destroy();
+
+    // Create new charts with real data
+    this.createCharts(
+      chartData.monthlyProducts.labels,
+      chartData.monthlyProducts.data,
+      chartData.categoryProducts.labels,
+      chartData.categoryProducts.data
+    );
+
 
   }
 
-
-  ngAfterViewInit(): void {
-    if (this.isBrowser) {
-      this.createCharts();
+  private updateRecentActivities(recentOrders: any[]) {
+    if (recentOrders && recentOrders.length > 0) {
+      this.recentCustomerActivities = recentOrders.map((order, index) => ({
+        id: order._id || `order-${index}`,
+        customerName: order.userId || 'Unknown Customer',
+        booksPurchased: order.items?.map((item: any) => item.bookId || 'Unknown Book') || ['Unknown Book'],
+        date: new Date(order.createdAt).toLocaleDateString(),
+        avatar: 'https://via.placeholder.com/48'
+      }));
+    } else {
+      this.recentCustomerActivities = [];
     }
   }
 
-  
+  private setDefaultValues() {
+    this.storeMetrics = [
+      { title: 'Monthly Revenue', value: '$0', icon: 'bi bi-currency-dollar', color: 'bg-primary', change: 0 },
+      { title: 'New Customers', value: '0', icon: 'bi bi-people', color: 'bg-success', change: 0 },
+      { title: 'New Books', value: '0', icon: 'bi bi-book', color: 'bg-info', change: 0 },
+      { title: 'New Orders', value: '0', icon: 'bi bi-cart', color: 'bg-warning', change: 0 }
+    ];
+    this.recentCustomerActivities = [];
 
-  createCharts(): void {
+    // Create empty charts
+    this.createCharts([], [], [], []);
+  }
+
+  // Legacy method - keeping for backward compatibility
+  async FetchData() {
+    console.log('⚠️ Using legacy FetchData method - consider using loadDashboardData instead');
+    this.loadDashboardData();
+  }
+
+  ngAfterViewInit(): void {
+    if (this.isBrowser) {
+      // Charts are now created after data is fetched in loadDashboardData()
+    }
+  }
+
+  createCharts(salesLabels: string[], salesData: number[], categoryLabels: string[], categoryData: number[]): void {
+    if (!this.isBrowser) return;
     if (this.salesTrendChartRef) {
       this.salesTrendChart = new Chart(this.salesTrendChartRef.nativeElement, {
         type: 'line',
         data: {
-          labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
+          labels: salesLabels,
           datasets: [{
-            label: 'Monthly Book Sales ($)',
-            data: [18500, 22000, 19800, 24500, 28450, 26500, 30100],
+            label: 'New Books Added (Monthly)',
+            data: salesData,
             borderColor: '#0d6efd',
             backgroundColor: 'rgba(13, 110, 253, 0.1)',
             borderWidth: 2,
@@ -164,8 +192,16 @@ export class DashboardMain implements OnInit, AfterViewInit, OnDestroy {
             tooltip: {
               callbacks: {
                 label: (context) => {
-                  return `$${context.parsed.y.toLocaleString()} in sales`;
+                  return `${context.parsed.y} new books added`;
                 }
+              }
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              ticks: {
+                stepSize: 1
               }
             }
           }
@@ -176,10 +212,10 @@ export class DashboardMain implements OnInit, AfterViewInit, OnDestroy {
       this.categorySalesChart = new Chart(this.categorySalesChartRef.nativeElement, {
         type: 'bar',
         data: {
-          labels: ['Fiction', 'Non-Fiction', 'Children', 'Sci-Fi', 'Mystery'],
+          labels: categoryLabels,
           datasets: [{
-            label: 'Books Sold by Category',
-            data: [1250, 980, 750, 620, 550],
+            label: 'Books by Category',
+            data: categoryData,
             backgroundColor: [
               'rgba(13, 110, 253, 0.7)',
               'rgba(25, 135, 84, 0.7)',
@@ -200,8 +236,16 @@ export class DashboardMain implements OnInit, AfterViewInit, OnDestroy {
             tooltip: {
               callbacks: {
                 label: (context) => {
-                  return `${context.parsed.y} books sold`;
+                  return `${context.parsed.y} books in this category`;
                 }
+              }
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              ticks: {
+                stepSize: 1
               }
             }
           }

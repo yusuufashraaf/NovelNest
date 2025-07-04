@@ -32,19 +32,28 @@ export class WishlistService {
 
   // refresh wishlist
   refreshWishlist(): void {
-    this.getWishlist().subscribe((res) => {
-      if (res && res.data && res.data.wishlistItems) {
-        const transformedData: wishlistData = {
-          wishlistItems: res.data.wishlistItems.map((item: any) => ({
-            productId: item.productId,
-            title: item.title,
-            author: item.author,
-            img: item.image,
-          })),
-          totalQuantity: res.data.totalQuantity,
-        };
-        this.wishlist.set(transformedData);
-      } else {
+    this.getWishlist().subscribe({
+      next: (res) => {
+        if (res && res.data && res.data.wishlistItems) {
+          const transformedData: wishlistData = {
+            wishlistItems: res.data.wishlistItems.map((item: any) => ({
+              productId: item.productId,
+              title: item.title,
+              author: item.author,
+              img: item.image,
+            })),
+            totalQuantity: res.data.totalQuantity,
+          };
+          this.wishlist.set(transformedData);
+        } else {
+          this.wishlist.set({
+            wishlistItems: [],
+            totalQuantity: 0,
+          });
+        }
+      },
+      error: (err) => {
+        console.warn('Wishlist endpoint not available, setting empty wishlist');
         this.wishlist.set({
           wishlistItems: [],
           totalQuantity: 0,
