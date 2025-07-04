@@ -84,6 +84,7 @@ export class DashboardProducts {
         this.categories = res || [];
         console.log('Categories loaded:', this.categories);
         if (this.state === 2 && this.currentBook) {
+          // Category
           if (typeof this.currentBook.category === 'object' && this.currentBook.category !== null) {
             this.editCategoryId = String((this.currentBook.category as any)._id || '');
           } else {
@@ -102,6 +103,21 @@ export class DashboardProducts {
       next: (data) => {
         this.subcategories = data || [];
         console.log('Subcategories loaded:', this.subcategories);
+        if (this.state === 2 && this.currentBook) {
+          // Subcategory
+          if (Array.isArray(this.currentBook.subcategory) && this.currentBook.subcategory.length > 0) {
+            if (typeof this.currentBook.subcategory[0] === 'object' && this.currentBook.subcategory[0] !== null) {
+              this.editSubcategoryId = String((this.currentBook.subcategory[0] as any)._id || '');
+            } else {
+              this.editSubcategoryId = String(this.currentBook.subcategory[0] || '');
+            }
+          } else if (typeof this.currentBook.subcategory === 'object' && this.currentBook.subcategory !== null) {
+            this.editSubcategoryId = String((this.currentBook.subcategory as any)._id || '');
+          } else {
+            this.editSubcategoryId = String(this.currentBook.subcategory || '');
+          }
+          console.log('editSubcategoryId after subcategories loaded:', this.editSubcategoryId, typeof this.editSubcategoryId);
+        }
       },
       error: (err) => {
         console.error('Failed to load subcategories:', err);
