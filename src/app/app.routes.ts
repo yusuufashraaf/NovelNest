@@ -17,6 +17,7 @@ import { PersonalReviews } from './components/user-profile/profile-tabs/personal
 import { Login } from './components/login/login';
 import { Register } from './components/register/register';
 import { AuthGuard } from './Guards/auth-guard';
+import { AboutUs } from './components/about-us/about-us';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'Home', pathMatch: 'full' },
@@ -29,6 +30,8 @@ export const routes: Routes = [
   { path: 'err', component: PaymentError },
   { path: 'dashboard', component: Dashboard },
   { path: 'Wishlist', component: Wishlist },
+  {path:'dashboard',component:Dashboard},
+  { path: 'about-us', component: AboutUs },
   { path: 'thank-you', component: ThankYou },
   {
     path: 'profile',
