@@ -19,11 +19,7 @@ export class AddToCart {
     this.cartService.addToCart(this.productId, 1).subscribe({
       // update cart icon simultaneously
       next: (res) => {
-        const updatedCart = this.cartService.cart();
-        this.cartService.cart.set({
-          ...updatedCart,
-          totalQuantity: res.data.totalQuantity,
-        });
+        this.cartService.refreshCart();
         // show success message with sweetalert2
         Swal.fire({
           title: 'Added to cart!',
