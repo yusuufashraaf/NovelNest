@@ -11,7 +11,7 @@ import { CommonModule } from '@angular/common';
   templateUrl: './cart.html',
   styleUrl: './cart.css',
 })
-export class Cart {
+export class Cart implements OnInit {
   cartService = inject(CartService);
 
   ngOnInit() {
@@ -19,23 +19,8 @@ export class Cart {
   }
 
   loadCart() {
-    this.cartService.getCart().subscribe((res) => {
-      // Map backend fields to frontend expectations
-      const transformedData = {
-        cartItems: res.data.cartItems.map((item: any) => ({
-          productId: item.productId,
-          title: item.title,
-          author: item.author,
-          img: item.image, // map 'image' to 'img'
-          price: item.price,
-          quantity: item.quantity,
-          subtotal: item.subTotal, // map 'subTotal' to 'subtotal'
-        })),
-        totalPrice: res.data.totalPrice,
-        totalQuantity: res.data.totalQuantity,
-      };
-      this.cartService.cart.set(transformedData);
-    });
+    this.cartService.updateAndValidateEntries();
+    this.cartService.refreshCart();
   }
 
   updateQuantity(productId: string, quantity: number) {
@@ -45,6 +30,8 @@ export class Cart {
   }
 
   deleteItem(productId: string) {
+    console.log(productId);
+
     this.cartService.deleteCartItem(productId).subscribe(() => this.loadCart());
   }
 
