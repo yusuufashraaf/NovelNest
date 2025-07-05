@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { map, tap } from 'rxjs/operators';
 import { Observable, of } from 'rxjs';
+import { Router } from '@angular/router';
 
 export interface User {
   _id: string;
@@ -17,7 +18,7 @@ export interface User {
 export class AuthService {
   private baseUrl = 'http://localhost:5000/api/v1/users';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private router: Router) {}
 
   loginUser(credentials: { email: string; password: string }) {
     return this.http
@@ -77,6 +78,7 @@ export class AuthService {
     if (typeof window !== 'undefined') {
       localStorage.removeItem('user');
       localStorage.removeItem('token');
+      this.router.navigate(['/login']);
     }
   }
 
