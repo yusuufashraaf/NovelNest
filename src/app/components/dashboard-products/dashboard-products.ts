@@ -21,6 +21,7 @@ export class DashboardProducts {
 
   categories: Category[] = [];
   subcategories: Subcategory[] = [];
+  filteredSubcategories: Subcategory[] = [];
   formError: string = '';
 
   // Add form state
@@ -73,14 +74,11 @@ export class DashboardProducts {
     @Inject(PLATFORM_ID) private platformId: Object,
     private categoryService: CategoryService,
     private subcategoryService: SubcategoryService
-    
+
   ) {
     this.loadBooks(1);
     this.loadCategoriesAndSubcategories();
   }
-
-  
-
 
   loadCategoriesAndSubcategories() {
     this.categoryService.getAllWithoutPagination().subscribe({
@@ -138,7 +136,11 @@ export class DashboardProducts {
   }
 
   getSubcategoryName(subcategoryId: string): string {
-    const sub = this.subcategories.find(s => s._id === subcategoryId);
+    // First try to find in filtered subcategories, then in all subcategories
+    let sub = this.filteredSubcategories.find(s => s._id === subcategoryId);
+    if (!sub) {
+      sub = this.subcategories.find(s => s._id === subcategoryId);
+    }
     return sub ? sub.name : 'Unknown Subcategory';
   }
 
@@ -350,6 +352,11 @@ export class DashboardProducts {
       } else {
         this.editSubcategoryId = this.currentBook.subcategory || '';
       }
+
+      // Load filtered subcategories for the selected category
+      if (this.editCategoryId) {
+        this.onCategoryChange(this.editCategoryId, true);
+      }
     }
 
     if (this.state == 2) {
@@ -533,6 +540,7 @@ export class DashboardProducts {
     this.addDescription = '';
     this.selectedCategoryId = '';
     this.selectedSubcategoryId = '';
+    this.filteredSubcategories = [];
     this.addImageCoverFile = null;
     this.addImagesFiles = [];
     this.addPdfFile = null;
@@ -551,6 +559,7 @@ export class DashboardProducts {
     this.editBookQuantity = '';
     this.editBookDescription = '';
     this.editBookPriceAfterDiscount = '';
+    this.filteredSubcategories = [];
     this.editImageCoverFile = null;
     this.editImagesFiles = [];
     this.editPdfFile = null;
@@ -768,5 +777,67 @@ export class DashboardProducts {
       this.isUploading = false;
       console.log('=== Update Book Process Complete ===');
     }
+  }
+
+  // Add method to handle category selection changes
+  onCategoryChange(categoryId: string, isEditForm: boolean = false): void {
+    if (!categoryId) {
+      this.filteredSubcategories = [];
+      if (isEditForm) {
+        this.editSubcategoryId = '';
+      } else {
+        this.selectedSubcategoryId = '';
+      }
+      return;
+    }
+
+    this.subcategoryService.getByCategory(categoryId).subscribe({
+      next: (subcategories) => {
+        this.filteredSubcategories = subcategories;
+        console.log('Filtered subcategories for category', categoryId, ':', subcategories);
+
+        // Clear subcategory selection if current selection is not in filtered list
+        if (isEditForm) {
+          const isValidSelection = this.filteredSubcategories.some(sub => sub._id === this.editSubcategoryId);
+          if (!isValidSelection) {
+            this.editSubcategoryId = '';
+          }
+        } else {
+          const isValidSelection = this.filteredSubcategories.some(sub => sub._id === this.selectedSubcategoryId);
+          if (!isValidSelection) {
+            this.selectedSubcategoryId = '';
+          }
+        }
+      },
+      error: (err) => {
+        console.error('Failed to load subcategories for category:', categoryId, err);
+        // Fallback: filter subcategories locally if backend endpoint doesn't exist
+        this.filteredSubcategories = this.subcategories.filter(sub => sub.category === categoryId);
+        console.log('Using local filtering for subcategories:', this.filteredSubcategories);
+
+        // Clear subcategory selection if current selection is not in filtered list
+        if (isEditForm) {
+          const isValidSelection = this.filteredSubcategories.some(sub => sub._id === this.editSubcategoryId);
+          if (!isValidSelection) {
+            this.editSubcategoryId = '';
+          }
+        } else {
+          const isValidSelection = this.filteredSubcategories.some(sub => sub._id === this.selectedSubcategoryId);
+          if (!isValidSelection) {
+            this.selectedSubcategoryId = '';
+          }
+        }
+      }
+    });
+  }
+
+  // Add method to handle add form category change
+  onAddCategoryChange(): void {
+    this.onCategoryChange(this.selectedCategoryId, false);
+  }
+
+  // Add method to handle edit form category change
+  onEditCategoryChange(): void {
+    this.onCategoryChange(this.editCategoryId, true);
   }
 }

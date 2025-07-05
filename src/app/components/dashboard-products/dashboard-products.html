@@ -33,7 +33,7 @@
       </div>
       <div class="col-md-6">
         <label class="form-label">Category *</label>
-        <select class="form-control" [(ngModel)]="selectedCategoryId" name="category" required>
+        <select class="form-control" [(ngModel)]="selectedCategoryId" name="category" required (change)="onAddCategoryChange()">
           <option value="" disabled selected>Select Category</option>
           @for (cat of categories; track cat._id) {
             <option [value]="cat._id">{{cat.name}}</option>
@@ -47,8 +47,8 @@
         <label class="form-label">Subcategory</label>
         <select class="form-control" [(ngModel)]="selectedSubcategoryId" name="subcategory" multiple>
           <option value="" disabled selected>Select Subcategory</option>
-          @for (sub of subcategories; track sub._id) {
-            <option [value]="sub._id" *ngIf="sub.category != selectedCategoryId">{{sub.name}}</option>
+          @for (sub of filteredSubcategories; track sub._id) {
+            <option [value]="sub._id">{{sub.name}}</option>
           }
         </select>
       </div>
@@ -148,7 +148,7 @@
       </div>
       <div class="col-md-6">
         <label class="form-label">Category *</label>
-        <select class="form-control" [(ngModel)]="editCategoryId" name="category" >
+        <select class="form-control" [(ngModel)]="editCategoryId" name="category" (change)="onEditCategoryChange()">
           <option value="" disabled>Select Category</option>
           @for (cat of categories; track cat._id) {
             <option [value]="cat._id">{{cat.name}}</option>
@@ -162,8 +162,8 @@
         <label class="form-label">Subcategory</label>
         <select class="form-control" [(ngModel)]="editSubcategoryId" name="subcategory" multiple>
           <option value="" disabled>Select Subcategory</option>
-          @for (sub of subcategories; track sub._id) {
-            <option [value]="sub._id" *ngIf="sub.category != editCategoryId">{{sub.name}}</option>
+          @for (sub of filteredSubcategories; track sub._id) {
+            <option [value]="sub._id">{{sub.name}}</option>
           }
         </select>
       </div>
