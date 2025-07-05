@@ -92,11 +92,6 @@ export class BookDetails implements OnInit {
          this.reviews = reviews.comments;
          this.noOfReviews = reviews.count;
         this.avgRate = reviews.avgRate;
-
-        console.log(this.reviews[7].userId.name);
-
-
-
       },
       error: (err) => {
         console.error('Error fetching reviews:', err);
@@ -117,7 +112,17 @@ export class BookDetails implements OnInit {
   }
 
   deleteReview(id:String){
-    console.log(id);
+
+
+    this.reviewserv.deleteReview(id).subscribe({
+      next:(res)=>{
+        this.fetchBookReviews(this.bookId)
+      },
+      error(err){
+        console.log(err);
+
+      }
+    })
 
   }
   submitReview(form: NgForm) {
