@@ -1,7 +1,7 @@
 <div class="container py-4">
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
-      <li class="breadcrumb-item">Books</li>
+      <a class="breadcrumb-item" [routerLink]="['/Browse']" >Books</a>
       <li class="breadcrumb-item active">{{book.title}}</li>
     </ol>
   </nav>
@@ -26,7 +26,7 @@
     <div class="col-md-8">
       <div class="card h-100 border-0 shadow-sm">
         <div class="card-body">
-          <span class="badge bg-primary mb-2">{{book.subcategory}}</span>
+          <!-- <span class="badge bg-primary mb-2">{{book.subcategory}}</span> -->
           <h1 class="display-5 fw-bold">{{book.title}}</h1>
           <h3 class="text-muted">By {{book.author}}</h3>
 
@@ -64,10 +64,10 @@
       <h3 class="mb-0">Reviews</h3>
     </div>
     <div class="card-body">
-      @for (review of reviews; track review.userId) {
+      @for (review of reviews; track review.userId._id) {
       <div class="border-bottom pb-3 mb-3">
         <div class="d-flex justify-content-between mb-2">
-          <strong class="fs-5">{{review._id}}</strong>
+          <strong class="fs-5">{{review.userId.name}}</strong>
           <span class="text-muted">{{review.postedAt | date:'medium'}}</span>
         </div>
         <div class="text-warning mb-2">
