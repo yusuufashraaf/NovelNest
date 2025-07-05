@@ -14,9 +14,6 @@ import { PurchasedBooks } from './components/user-profile/profile-tabs/purchased
 import { PersonalInfo } from './components/user-profile/profile-tabs/personal-info/personal-info';
 import { BookDetails } from './components/book-details/book-details';
 import { PersonalReviews } from './components/user-profile/profile-tabs/personal-reviews/personal-reviews';
-
-import { PurchasedBooks } from './components/purchased-books/purchased-books';
-import { PersonalInfo } from './components/personal-info/personal-info';
 import { AboutUs } from './components/about-us/about-us';
 
 export const routes: Routes = [
