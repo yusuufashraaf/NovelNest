@@ -27,6 +27,13 @@ export class SubcategoryService {
     );
   }
 
+  getByCategory(categoryId: string): Observable<Subcategory[]> {
+    return this.http.get<{ data: Subcategory[] }>(`${this.apiUrl}/category/${categoryId}`).pipe(
+      map(res => res.data || []),
+      catchError(this.handleError)
+    );
+  }
+
   add(subcategory: { name: string; slug: string; category: string }): Observable<Subcategory> {
     return this.http.post<Subcategory>(this.apiUrl, subcategory).pipe(
       catchError(this.handleError)
