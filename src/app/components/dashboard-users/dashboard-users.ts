@@ -16,9 +16,7 @@ import { User, Users } from '../../services/users';
   styleUrl: './dashboard-users.css'
 })
 export class DashboardUsers {
-UsersData: User[] = [//list of all books in the store
-
-  ];
+UsersData: User[] = [];
 
   constructor(
     private usersService: Users,
@@ -41,7 +39,6 @@ UsersData: User[] = [//list of all books in the store
 
     this.usersService.getAllUsers().subscribe({
   next: (users) => {
-    console.log('Loaded users:', users);
     this.UsersData = users;
   },
   error: (err) => {

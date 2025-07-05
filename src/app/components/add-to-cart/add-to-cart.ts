@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CartService } from '../../services/cart.service';
 import Swal from 'sweetalert2';
 
@@ -10,6 +10,7 @@ import Swal from 'sweetalert2';
 })
 export class AddToCart {
   @Input() productId!: string;
+  @Output() removeFromWishlist = new EventEmitter<string>();
 
   constructor(private cartService: CartService) {}
 
@@ -27,6 +28,8 @@ export class AddToCart {
         Swal.fire({
           title: 'Added to cart!',
           icon: 'success',
+        }).then(() => {
+          this.removeFromWishlist.emit(this.productId);
         });
       },
       error: () => {
