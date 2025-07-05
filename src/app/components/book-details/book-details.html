@@ -32,11 +32,11 @@
 
           <div class="d-flex align-items-center my-4">
             <div class="me-4 text-center">
-              <div class="display-4 fw-bold">{{book.ratingQuantity}}</div>
+              <div class="display-4 fw-bold">{{ avgRate | number:'1.2-2' }}</div>
               <div class="text-warning fs-3 mb-1">
-                {{getStarRating(book.ratingQuantity || 0)}}
+                {{getStarRating(avgRate || 0)}}
               </div>
-              <small class="text-muted">{{book.ratingQuantity}} reviews</small>
+              <small class="text-muted">{{noOfReviews}} reviews</small>
             </div>
           </div>
 

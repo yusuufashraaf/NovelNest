@@ -2,7 +2,7 @@ import { NewReview } from './../../interfaces/new-review';
 import { Component, OnInit } from '@angular/core';
 import { Products } from '../models/product.model';
 import { ReviewService } from '../../services/review-service';
-import { Review } from '../../interfaces/review';
+import { Review, ReviewResponse } from '../../interfaces/review';
 import { CommonModule } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
@@ -36,6 +36,8 @@ export class BookDetails implements OnInit {
   // };
 
  reviews: Review[] = [];
+ noOfReviews:number=0;
+ avgRate:number=0;
   bookId:String ='';
   newReview:NewReview ={
     userId:"64fdb2e9f9e3e0a5a1b3c1d9",
@@ -95,9 +97,10 @@ export class BookDetails implements OnInit {
 
   fetchBookReviews(productId: String) {
     this.reviewserv.getReviews(productId).subscribe({
-      next: (reviews) => {
-         this.reviews = reviews;
-         console.log('Reviews:', this.reviews);
+      next:(reviews :ReviewResponse) => {
+         this.reviews = reviews.comments;
+         this.noOfReviews = reviews.count;
+        this.avgRate = reviews.avgRate;
 
       },
       error: (err) => {
@@ -119,6 +122,7 @@ export class BookDetails implements OnInit {
   }
 
   submitReview(form: NgForm) {
+    console.log("pressed");
 
     const reviewPayload:NewReview = {
       comment: this.newReview.comment,

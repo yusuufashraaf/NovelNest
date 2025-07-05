@@ -6,3 +6,8 @@ export interface Review {
   comment: string;
   rate: number,
 }
+export interface ReviewResponse {
+  comments: Review[];
+  count: number;
+  avgRate:number
+}
