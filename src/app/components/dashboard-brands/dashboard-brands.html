@@ -1,1 +1,81 @@
-<p>dashboard-brands works!</p>
+<div *ngIf="errorMsg" class="alert alert-danger mt-3">{{ errorMsg }}</div>
+<div *ngIf="successMsg" class="alert alert-success mt-3">{{ successMsg }}</div>
+<div *ngIf="isLoading" class="alert alert-info mt-3">Loading...</div>
+
+<div *ngIf="state == 1" class="form-control mt-5 ">
+  <h1 class="text-center">Add Brand</h1>
+  <label class="form-label">Brand Name</label>
+  <input class="form-control" type="text" [(ngModel)]="formBrandName" [disabled]="isLoading">
+  <label class="form-label">Product</label>
+  <select class="form-control" [(ngModel)]="formBrandProduct" [disabled]="isLoading">
+    <option value="" disabled selected>Select a product</option>
+    <option *ngFor="let product of allProducts" [value]="product._id">
+      {{ product.name || product.title || product.productName || product._id }}
+    </option>
+  </select>
+  <button (click)="addBrand()" class="btn btn-primary form-control mt-3" [disabled]="isLoading">Add New Brand</button>
+</div>
+
+<div *ngIf="state == 2" class="form-control mt-5 ">
+  <h1 class="text-center">Update Brand</h1>
+  <h5 class="form-label text-center">Brand ID: #{{ formBrandId }}</h5>
+  <label class="form-label">Brand Name</label>
+  <input class="form-control" type="text" [(ngModel)]="formBrandName" [disabled]="isLoading">
+  <label class="form-label">Product</label>
+  <select class="form-control" [(ngModel)]="formBrandProduct" [disabled]="isLoading">
+    <option value="" disabled>Select a product</option>
+    <option *ngFor="let product of allProducts" [value]="product._id" [selected]="product._id === formBrandProduct">
+      {{ product.name || product.title || product.productName || product._id }}
+    </option>
+  </select>
+  <button (click)="updateBrand()" class="btn btn-primary form-control mt-3" [disabled]="isLoading">Update Brand</button>
+</div>
+
+<div class="row mt-4">
+  <div class="col-12">
+    <div class="card">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">Brands</h5>
+        <button class="btn btn-sm btn-primary" (click)="changeState(1)">
+          <i class="bi bi-plus-circle"></i> Add New Brand
+        </button>
+      </div>
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table table-hover table-striped">
+            <thead class="table-light">
+              <tr>
+                <th>Name</th>
+                <th>Product</th>
+                <th>Created At</th>
+                <th>Last Update</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody class="container">
+              <tr *ngFor="let brand of allBrands">
+                <td>{{ brand.name }}</td>
+                <td>{{ getProductName(brand.product) }}</td>
+                <td>{{ brand.createdAt | date:'dd/MM/yyyy' }}</td>
+                <td>{{ brand.updatedAt | date:'dd/MM/yyyy' }}</td>
+                <td>
+                  <div class="btn-group btn-group-sm" role="group">
+                    <button class="btn btn-outline-success" (click)="editBrand(brand._id)" [disabled]="isLoading">
+                      <i class="bi bi-pencil"></i>
+                    </button>
+                    <button class="btn btn-outline-danger" (click)="deleteBrand(brand._id)" [disabled]="isLoading">
+                      <i class="bi bi-trash"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="card-footer">
+        <small class="text-muted">Showing {{ allBrands.length }} brands in inventory</small>
+      </div>
+    </div>
+  </div>
+</div>
