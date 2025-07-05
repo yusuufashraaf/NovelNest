@@ -116,6 +116,10 @@ export class BookDetails implements OnInit {
     this.newReview.rate = rating;
   }
 
+  deleteReview(id:String){
+    console.log(id);
+
+  }
   submitReview(form: NgForm) {
 
     const reviewPayload:NewReview = { // posted at will be handled from backend
