@@ -5,6 +5,7 @@ import { jwtDecode } from 'jwt-decode';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { UserInfo } from '../../services/user-info';
 
 @Component({
   selector: 'app-login',
@@ -21,7 +22,9 @@ export class Login implements OnInit {
   constructor(
     private http: HttpClient,
     private router: Router,
-    @Inject(PLATFORM_ID) private platformId: Object
+    @Inject(PLATFORM_ID) private platformId: Object,
+    private userdata:UserInfo
+
   ) {}
 
   ngOnInit(): void {
@@ -65,6 +68,12 @@ export class Login implements OnInit {
           console.log('Login response:', res);
 
           if (res.token) {
+
+            const token = res.token;
+            const userId = res.data?.user?._id;   //save data of the user to the service
+            this.userdata.setuserId(userId);
+            this.userdata.setToken(token);
+
             localStorage.setItem('token', res.token);
             this.router.navigate(['/home']);
           } else {
