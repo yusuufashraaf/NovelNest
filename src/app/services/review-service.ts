@@ -2,7 +2,7 @@
 import { HttpClient} from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { Review } from '../interfaces/review';
+import { Review, ReviewResponse } from '../interfaces/review';
 import { Observable } from 'rxjs';
 import { NewReview } from '../interfaces/new-review';
 @Injectable({
@@ -18,8 +18,8 @@ export class ReviewService {
     return this.http.post<Review>('http://localhost:5000/api/v1/comment/create', body);
 
     }
-    getReviews(Productid:String): Observable<Review[]>{
-        return this.http.get<Review[]>(`http://localhost:5000/api/v1/comment/${Productid}`);
+    getReviews(Productid:String): Observable<ReviewResponse>{
+        return this.http.get<ReviewResponse>(`http://localhost:5000/api/v1/comment/${Productid}`);
     }
     deleteReview(reviewId:any) {
         return this.http.delete<any>(`http://localhost:5000/api/v1/comment/${reviewId}`);
