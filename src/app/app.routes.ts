@@ -14,11 +14,17 @@ import { PurchasedBooks } from './components/user-profile/profile-tabs/purchased
 import { PersonalInfo } from './components/user-profile/profile-tabs/personal-info/personal-info';
 import { BookDetails } from './components/book-details/book-details';
 import { PersonalReviews } from './components/user-profile/profile-tabs/personal-reviews/personal-reviews';
+<<<<<<< HEAD
 import { AboutUs } from './components/about-us/about-us';
+=======
+import { Login } from './components/login/login';
+import { Register } from './components/register/register';
+import { AuthGuard } from './Guards/auth-guard';
+>>>>>>> 34064348367a59a8502b30d2b6253d56f4a36995
 
 export const routes: Routes = [
   { path: '', redirectTo: 'Home', pathMatch: 'full' },
-  { path: 'Home', component: Home },
+  { path: 'home', component: Home, canActivate: [AuthGuard] },
   { path: 'Browse', component: BrowseBooks },
   { path: 'Cart', component: Cart },
   { path: 'ContactUs', component: ContactUs },
@@ -40,4 +46,6 @@ export const routes: Routes = [
       { path: '', redirectTo: 'purchased', pathMatch: 'full' },
     ],
   },
+  { path: 'login', component: Login },
+  { path: 'register', component: Register },
 ];
