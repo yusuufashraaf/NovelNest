@@ -73,10 +73,14 @@ export class DashboardProducts {
     @Inject(PLATFORM_ID) private platformId: Object,
     private categoryService: CategoryService,
     private subcategoryService: SubcategoryService
+    
   ) {
     this.loadBooks(1);
     this.loadCategoriesAndSubcategories();
   }
+
+  
+
 
   loadCategoriesAndSubcategories() {
     this.categoryService.getAllWithoutPagination().subscribe({
