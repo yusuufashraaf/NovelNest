@@ -59,7 +59,7 @@
     </div>
   </div>
 
-  <div class="card mt-4 border-0 shadow-sm">
+  <!-- <div class="card mt-4 border-0 shadow-sm">
     <div class="card-header bg-white">
       <h3 class="mb-0">Reviews</h3>
     </div>
@@ -77,7 +77,34 @@
       </div>
       }
     </div>
+  </div> -->
+  <div class="card mt-4 border-0 shadow-sm">
+  <div class="card-header bg-white">
+    <h3 class="mb-0">Reviews</h3>
   </div>
+  <div class="card-body">
+    @for (review of reviews; track review.userId._id) {
+      <div class="border-bottom pb-3 mb-3">
+        <div class="d-flex justify-content-between mb-2">
+          <strong class="fs-5">{{review.userId.name}}</strong>
+          <div class="d-flex align-items-center gap-2">
+            <span class="text-muted">{{review.postedAt | date:'medium'}}</span>
+            <button
+              class="btn btn-outline-danger btn-sm"
+              (click)="deleteReview(review._id)"
+              title="Delete review">
+              <i class="fas fa-trash"></i>
+            </button>
+          </div>
+        </div>
+        <div class="text-warning mb-2">
+          {{getStarRating(review.rate)}}
+        </div>
+        <p class="mb-0">{{review.comment}}</p>
+      </div>
+    }
+  </div>
+</div>
   <div class="card mt-4 border-0 shadow-sm">
     <div class="card-header bg-white">
       <h3 class="mb-0">Write a Review</h3>
