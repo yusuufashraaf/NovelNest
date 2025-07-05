@@ -17,10 +17,15 @@ import { PersonalReviews } from './components/user-profile/profile-tabs/personal
 import { Login } from './components/login/login';
 import { Register } from './components/register/register';
 import { AuthGuard } from './Guards/auth-guard';
+import { VerifyEmail } from './components/verify-email/verify-email';
+import { ForgotPassword } from './components/forgot-password/forgot-password';
+import { VerifyCode } from './components/verify-code/verify-code';
+import { ResetPassword } from './components/reset-password/reset-password';
 import { AboutUs } from './components/about-us/about-us';
 
+
 export const routes: Routes = [
-  { path: '', redirectTo: 'Home', pathMatch: 'full' },
+  { path: '', redirectTo: 'home', pathMatch: 'full' },
   { path: 'home', component: Home, canActivate: [AuthGuard] },
   { path: 'Browse', component: BrowseBooks },
   { path: 'Cart', component: Cart },
@@ -45,4 +50,8 @@ export const routes: Routes = [
   },
   { path: 'login', component: Login },
   { path: 'register', component: Register },
+  { path: 'verify-email/:otp', component: VerifyEmail },
+  { path: 'forgot-password', component: ForgotPassword },
+  { path: 'verify-code', component: VerifyCode },
+  { path: 'reset-password', component: ResetPassword },
 ];
