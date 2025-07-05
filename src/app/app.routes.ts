@@ -11,6 +11,7 @@ import { ThankYou } from './components/thank-you/thank-you';
 import { UserProfile } from './components/user-profile/user-profile';
 import { PurchasedBooks } from './components/purchased-books/purchased-books';
 import { PersonalInfo } from './components/personal-info/personal-info';
+import { AboutUs } from './components/about-us/about-us';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'Home', pathMatch: 'full' },
@@ -22,6 +23,7 @@ export const routes: Routes = [
   { path: 'success', component: PaymentSuccess },
   { path: 'err', component: PaymentError },
   {path:'dashboard',component:Dashboard},
+  { path: 'about-us', component: AboutUs },
   { path: 'thank-you', component: ThankYou },
   {
     path: 'profile',
