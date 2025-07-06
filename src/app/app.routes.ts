@@ -18,6 +18,11 @@ import { Login } from './components/login/login';
 import { Register } from './components/register/register';
 import { AuthLayout } from './components/Layouts/auth-layout/auth-layout';
 import { MainLayout } from './components/Layouts/main-layout/main-layout';
+import { VerifyEmail } from './components/verify-email/verify-email';
+import { ForgotPassword } from './components/forgot-password/forgot-password';
+import { VerifyCode } from './components/verify-code/verify-code';
+import { ResetPassword } from './components/reset-password/reset-password';
+import { AboutUs } from './components/about-us/about-us';
 
 export const routes: Routes = [
 
