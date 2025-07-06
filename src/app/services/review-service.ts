@@ -43,4 +43,18 @@ export class ReviewService {
       `http://localhost:5000/api/v1/comment/user/${userId}`
     );
   }
+
+  updateReview(
+    reviewId: string,
+    body: { comment: string; rate: number }
+  ): Observable<Review> {
+    const headers = new HttpHeaders({
+      Authorization: `${this.userInfo.getToken()}`,
+    });
+    return this.http.put<Review>(
+      `http://localhost:5000/api/v1/comment/${reviewId}`,
+      body,
+      { headers }
+    );
+  }
 }

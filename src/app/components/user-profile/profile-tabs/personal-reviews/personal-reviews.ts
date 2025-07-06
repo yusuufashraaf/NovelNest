@@ -43,12 +43,12 @@ export class PersonalReviews implements OnInit {
         this.commentService.getUserComments(userId).subscribe({
           next: (data) => {
             console.log(data);
-            
+
             this.reviews = data.map((comment: any) => ({
               id: comment._id,
               bookTitle: comment.bookId.title,
               author: comment.bookId.author || 'Unknown',
-              bookImage: comment.bookId?.imageCover ,
+              bookImage: comment.bookId?.imageCover,
               reviewText: comment.comment,
               rating: comment.rate,
               postedAt: comment.postedAt,
@@ -70,5 +70,36 @@ export class PersonalReviews implements OnInit {
 
   getStars(): number[] {
     return [1, 2, 3, 4, 5];
+  }
+
+  deleteReview(review: Review): void {
+    if (confirm('Are you sure you want to delete this review?')) {
+      this.commentService.deleteReview(review.id).subscribe({
+        next: () => {
+          this.reviews = this.reviews.filter((r) => r.id !== review.id);
+        },
+        error: (err) => {
+          console.error('Failed to delete review:', err);
+        },
+      });
+    }
+  }
+  toggleEdit(review: Review): void {
+    if (review.editing) {
+      const payload = {
+        comment: review.reviewText,
+        rate: review.rating,
+      };
+      this.commentService.updateReview(review.id, payload).subscribe({
+        next: () => {
+          review.editing = false;
+        },
+        error: (err) => {
+          console.error('Failed to update review:', err);
+        },
+      });
+    } else {
+      review.editing = true;
+    }
   }
 }
