@@ -16,7 +16,7 @@ interface wishlistData {
   providedIn: 'root',
 })
 export class WishlistService {
-  private baseUrl = 'http://localhost:5000/api/v1/Wishlist';
+  private baseUrl = 'http://localhost:5000/api/v1/wishlist';
   private http = inject(HttpClient);
 
   // wishlist signal
@@ -58,7 +58,7 @@ export class WishlistService {
           wishlistItems: [],
           totalQuantity: 0,
         });
-      }
+      },
     });
   }
 

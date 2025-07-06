@@ -38,12 +38,6 @@ export class CartService {
 
   constructor() {
     this.refreshCart();
-    if (this.cart().cartItems.length > 0) {
-      this.updateAndValidateEntries();
-    }
-    // if (this.updateAndValidateEntries()) {
-    //   this.refreshCart();
-    // }
   }
 
   refreshCart(): void {
@@ -112,22 +106,5 @@ export class CartService {
   // clear cart
   clearCart(): Observable<any> {
     return this.http.delete(this.baseUrl);
-  }
-
-  // update invalid cartItems entries
-  updateAndValidateEntries(): boolean {
-    const currentCart = this.cart();
-    let updated = false;
-
-    currentCart.cartItems.forEach((item) => {
-      item.cartItemEntry.forEach((entry: any) => {
-        if (entry.expiresAt <= new Date()) {
-          updated = true;
-          this.deleteCartEntry(entry._id).subscribe(() => this.refreshCart());
-        }
-      });
-    });
-
-    return updated;
   }
 }
