@@ -19,7 +19,7 @@ export class Cart implements OnInit {
   }
 
   loadCart() {
-    this.cartService.updateAndValidateEntries();
+    // this.cartService.updateAndValidateEntries();
     this.cartService.refreshCart();
   }
 
