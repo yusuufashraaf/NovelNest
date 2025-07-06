@@ -14,17 +14,23 @@ import { PurchasedBooks } from './components/user-profile/profile-tabs/purchased
 import { PersonalInfo } from './components/user-profile/profile-tabs/personal-info/personal-info';
 import { BookDetails } from './components/book-details/book-details';
 import { PersonalReviews } from './components/user-profile/profile-tabs/personal-reviews/personal-reviews';
-import { AuthGuard } from './Guards/auth-guard';
 import { Login } from './components/login/login';
 import { Register } from './components/register/register';
-import { AboutUs } from './components/about-us/about-us';
-
 import { AuthLayout } from './components/Layouts/auth-layout/auth-layout';
 import { MainLayout } from './components/Layouts/main-layout/main-layout';
+import { AuthGuard } from './Guards/auth-guard';
+import { VerifyEmail } from './components/verify-email/verify-email';
+import { ForgotPassword } from './components/forgot-password/forgot-password';
+import { VerifyCode } from './components/verify-code/verify-code';
+import { ResetPassword } from './components/reset-password/reset-password';
+import { AboutUs } from './components/about-us/about-us';
+
+
 export const routes: Routes = [
-  { path: '', redirectTo: 'Home', pathMatch: 'full' },
+  { path: '', redirectTo: 'home', pathMatch: 'full' },
   { path: 'home', component: Home, canActivate: [AuthGuard] },
   { path: 'Browse', component: BrowseBooks },
+  { path: 'Browse/:id', component:BookDetails },
   { path: 'Cart', component: Cart },
   { path: 'ContactUs', component: ContactUs },
   { path: 'checkout', component: CheckOut },
@@ -79,4 +85,9 @@ export const routes: Routes = [
 
   // Wildcard
   { path: '**', redirectTo: 'login' },
+
+  { path: 'verify-email/:otp', component: VerifyEmail },
+  { path: 'forgot-password', component: ForgotPassword },
+  { path: 'verify-code', component: VerifyCode },
+  { path: 'reset-password', component: ResetPassword },
 ];

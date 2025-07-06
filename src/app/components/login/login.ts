@@ -4,22 +4,27 @@ import { HttpClient } from '@angular/common/http';
 import { jwtDecode } from 'jwt-decode';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { UserInfo } from '../../services/user-info';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, CommonModule],
   templateUrl: './login.html',
   styleUrls: ['./login.css'],
 })
 export class Login implements OnInit {
   email = '';
   password = '';
+  errorMessage = '';
 
   constructor(
     private http: HttpClient,
     private router: Router,
-    @Inject(PLATFORM_ID) private platformId: Object
+    @Inject(PLATFORM_ID) private platformId: Object,
+    private userdata:UserInfo
+
   ) {}
 
   ngOnInit(): void {
@@ -60,18 +65,26 @@ export class Login implements OnInit {
       .post('http://localhost:5000/api/v1/auth/login', credentials)
       .subscribe({
         next: (res: any) => {
-          console.log('Login response:', res); // Debug to see the full response
+          console.log('Login response:', res);
 
           if (res.token) {
+
+            const token = res.token;
+            const userId = res.data?.user?._id;   //save data of the user to the service
+            this.userdata.setuserId(userId);
+            this.userdata.setToken(token);
+
             localStorage.setItem('token', res.token);
             this.router.navigate(['/home']);
           } else {
-            alert('Unexpected response from server. Please try again.');
+            this.errorMessage =
+              'Unexpected response from server. Please try again.'; // ✅ Show in template
           }
         },
         error: (err) => {
-          console.error('Login failed', err.error?.message || err.message);
-          alert('Login failed. Please check your credentials.');
+          const msg = err.error?.message || err.message;
+          this.errorMessage = msg;
+          console.error('Login failed', msg);
         },
       });
   }

@@ -1,8 +1,9 @@
+import { UserInfo } from './user-info';
 
-import { HttpClient} from '@angular/common/http';
+import { HttpClient, HttpHeaders} from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { Review } from '../interfaces/review';
+import { Review, ReviewResponse } from '../interfaces/review';
 import { Observable } from 'rxjs';
 import { NewReview } from '../interfaces/new-review';
 @Injectable({
@@ -11,18 +12,27 @@ import { NewReview } from '../interfaces/new-review';
 export class ReviewService {
 
 
-  constructor(private router:Router,private http:HttpClient){};
+  constructor(
+    private router:Router,
+    private http:HttpClient,
+    private userInfo:UserInfo
+  ){};
+
+
 
 
     addReview(body:NewReview):Observable<Review> {
     return this.http.post<Review>('http://localhost:5000/api/v1/comment/create', body);
 
     }
-    getReviews(Productid:String): Observable<Review[]>{
-        return this.http.get<Review[]>(`http://localhost:5000/api/v1/comment/${Productid}`);
+    getReviews(Productid:String): Observable<ReviewResponse>{
+        return this.http.get<ReviewResponse>(`http://localhost:5000/api/v1/comment/${Productid}`);
     }
-    deleteReview(reviewId:any) {
-        return this.http.delete<any>(`http://localhost:5000/api/v1/comment/${reviewId}`);
+    deleteReview(reviewId:String): Observable<Review> {
+             const headers = new HttpHeaders({
+                Authorization: `${this.userInfo.getToken()}`
+              });
+        return this.http.delete<Review>(`http://localhost:5000/api/v1/comment/${reviewId}`,{headers});
 
     }
 }
