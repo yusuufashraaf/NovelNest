@@ -21,20 +21,8 @@ import { AboutUs } from './components/about-us/about-us';
 
 import { AuthLayout } from './components/Layouts/auth-layout/auth-layout';
 import { MainLayout } from './components/Layouts/main-layout/main-layout';
+
 export const routes: Routes = [
-  { path: '', redirectTo: 'Home', pathMatch: 'full' },
-  { path: 'home', component: Home, canActivate: [AuthGuard] },
-  { path: 'Browse', component: BrowseBooks },
-  { path: 'Cart', component: Cart },
-  { path: 'ContactUs', component: ContactUs },
-  { path: 'checkout', component: CheckOut },
-  { path: 'success', component: PaymentSuccess },
-  { path: 'err', component: PaymentError },
-  { path: 'dashboard', component: Dashboard },
-  { path: 'Wishlist', component: Wishlist },
-  {path:'dashboard',component:Dashboard},
-  { path: 'about-us', component: AboutUs },
-  { path: 'thank-you', component: ThankYou },
   // Auth layout: no navbar
   {
     path: '',
@@ -43,19 +31,22 @@ export const routes: Routes = [
       { path: '', redirectTo: 'login', pathMatch: 'full' },
       { path: 'login', component: Login },
       { path: 'register', component: Register },
-      { path: 'dashboard', component: Dashboard },
+      { path: 'verify-email/:otp', component: VerifyEmail },
+      { path: 'forgot-password', component: ForgotPassword },
+      { path: 'verify-code', component: VerifyCode },
+      { path: 'reset-password', component: ResetPassword },
     ],
   },
-  { path: 'login', component: Login },
-  { path: 'register', component: Register },
 
   // Main layout: with navbar
   {
     path: '',
     component: MainLayout,
     children: [
+      { path: '', redirectTo: 'home', pathMatch: 'full' },
       { path: 'home', component: Home },
       { path: 'Browse', component: BrowseBooks },
+      { path: 'Browse/:id', component: BookDetails },
       { path: 'Cart', component: Cart },
       { path: 'ContactUs', component: ContactUs },
       { path: 'checkout', component: CheckOut },
@@ -76,6 +67,9 @@ export const routes: Routes = [
       },
     ],
   },
+
+  // Special route with no navbar
+  { path: 'dashboard', component: Dashboard },
 
   // Wildcard
   { path: '**', redirectTo: 'login' },
