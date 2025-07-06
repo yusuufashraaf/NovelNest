@@ -14,15 +14,13 @@ import { PurchasedBooks } from './components/user-profile/profile-tabs/purchased
 import { PersonalInfo } from './components/user-profile/profile-tabs/personal-info/personal-info';
 import { BookDetails } from './components/book-details/book-details';
 import { PersonalReviews } from './components/user-profile/profile-tabs/personal-reviews/personal-reviews';
-import { AuthGuard } from './Guards/auth-guard';
 import { Login } from './components/login/login';
 import { Register } from './components/register/register';
-import { AboutUs } from './components/about-us/about-us';
-
 import { AuthLayout } from './components/Layouts/auth-layout/auth-layout';
 import { MainLayout } from './components/Layouts/main-layout/main-layout';
 
 export const routes: Routes = [
+
   // Auth layout: no navbar
   {
     path: '',
@@ -37,6 +35,9 @@ export const routes: Routes = [
       { path: 'reset-password', component: ResetPassword },
     ],
   },
+
+  // Special dashboard route with NO navbar
+  { path: 'dashboard', component: Dashboard },
 
   // Main layout: with navbar
   {
@@ -67,9 +68,6 @@ export const routes: Routes = [
       },
     ],
   },
-
-  // Special route with no navbar
-  { path: 'dashboard', component: Dashboard },
 
   // Wildcard
   { path: '**', redirectTo: 'login' },
