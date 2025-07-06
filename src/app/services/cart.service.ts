@@ -28,7 +28,7 @@ interface cartData {
 export class CartService {
   private baseUrl = 'http://localhost:5000/api/v1/cart';
   private http = inject(HttpClient);
-  private expiryDuration = 20 * 1000; // 10 seconds
+  private expiryDuration = 20 * 1000; // 20 seconds
 
   // cart signal
   cart = signal<cartData>({
@@ -39,8 +39,11 @@ export class CartService {
 
   constructor() {
     this.refreshCart();
-    // setInterval(() => this.updateAndValidateEntries(), 5000); // every 5 seconds
-    // this.updateAndValidateEntries();
+    setInterval(() => {
+      if (this.updateAndValidateEntries()) {
+        this.refreshCart();
+      }
+    }, 5000); // every 5 seconds
   }
 
   refreshCart(): void {
@@ -109,7 +112,7 @@ export class CartService {
   }
 
   // update invalid cartItems entries
-  updateAndValidateEntries(): void {
+  updateAndValidateEntries(): boolean {
     const currentCart = this.cart();
     let updated = false;
 
@@ -129,9 +132,6 @@ export class CartService {
         }
       }
     });
-
-    if (updated) {
-      setTimeout(() => this.refreshCart(), 5000); // refresh after 1 second
-    }
+    return updated;
   }
 }
