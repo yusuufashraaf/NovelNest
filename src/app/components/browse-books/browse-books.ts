@@ -22,6 +22,10 @@ export class BrowseBooks implements OnInit {
   constructor(
     private productService: Product,
     private route: ActivatedRoute,
+<<<<<<< Updated upstream
+=======
+    private router: Router,
+>>>>>>> Stashed changes
     @Inject(PLATFORM_ID) private platformId: Object
   ) {}
 
@@ -214,4 +218,11 @@ export class BrowseBooks implements OnInit {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   }
+<<<<<<< Updated upstream
+=======
+
+  goToProduct(productId: string) {
+    this.router.navigate(['/Browse', productId]);
+  }
+>>>>>>> Stashed changes
 }

@@ -6,6 +6,7 @@ import { Component } from '@angular/core';
   templateUrl: './purchased-books.html',
   styleUrl: './purchased-books.css',
 })
+<<<<<<< Updated upstream
 export class PurchasedBooks {
   books = [
     {
@@ -24,4 +25,33 @@ export class PurchasedBooks {
       image: 'https://images.unsplash.com/photo-1519681393784-d120267933ba',
     },
   ];
+=======
+export class PurchasedBooks implements OnInit {
+  orders: any[] = [];
+  loading = true;
+
+  private orderService = inject(OrdersService);
+
+  ngOnInit() {
+    this.orderService
+      .getMyOrders()
+      .pipe(
+        catchError((error) => {
+          this.loading = false;
+          if (error.status === 401) {
+            Swal.fire({
+              icon: 'warning',
+              title: 'Please log in first',
+              showConfirmButton: true,
+            });
+          }
+          return of({ data: [] });
+        })
+      )
+      .subscribe((response) => {
+        this.orders = response?.data || [];
+        this.loading = false;
+      });
+  }
+>>>>>>> Stashed changes
 }

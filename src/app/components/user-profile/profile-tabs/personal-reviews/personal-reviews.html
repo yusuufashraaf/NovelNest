@@ -36,12 +36,12 @@
 
                 <!-- Buttons Bottom-Right -->
                 <div class="d-flex justify-content-end gap-2 mt-3">
-                    <button class="btn btn-sm btn-outline-secondary" (click)="toggleEdit(review)">
+                    <button class="btn btn-sm btn-outline-secondary" >
                         <i class="bi" [class.bi-pencil]="!review.editing" [class.bi-save]="review.editing"></i>
                         {{ review.editing ? 'Save' : 'Edit' }}
                     </button>
 
-                    <button class="btn btn-sm btn-outline-secondary" (click)="deleteReview(review)">
+                    <button class="btn btn-sm btn-outline-secondary" >
                         <i class="bi bi-trash"></i> Delete
                     </button>
                 </div>
