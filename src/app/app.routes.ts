@@ -16,6 +16,8 @@ import { BookDetails } from './components/book-details/book-details';
 import { PersonalReviews } from './components/user-profile/profile-tabs/personal-reviews/personal-reviews';
 import { Login } from './components/login/login';
 import { Register } from './components/register/register';
+import { AuthLayout } from './components/Layouts/auth-layout/auth-layout';
+import { MainLayout } from './components/Layouts/main-layout/main-layout';
 import { AuthGuard } from './Guards/auth-guard';
 import { VerifyEmail } from './components/verify-email/verify-email';
 import { ForgotPassword } from './components/forgot-password/forgot-password';
@@ -39,18 +41,51 @@ export const routes: Routes = [
   {path:'dashboard',component:Dashboard},
   { path: 'about-us', component: AboutUs },
   { path: 'thank-you', component: ThankYou },
+  // Auth layout: no navbar
   {
-    path: 'profile',
-    component: UserProfile,
+    path: '',
+    component: AuthLayout,
     children: [
-      { path: 'purchased', component: PurchasedBooks },
-      { path: 'reviews', component: PersonalReviews },
-      { path: 'info', component: PersonalInfo },
-      { path: '', redirectTo: 'purchased', pathMatch: 'full' },
+      { path: '', redirectTo: 'login', pathMatch: 'full' },
+      { path: 'login', component: Login },
+      { path: 'register', component: Register },
+      { path: 'dashboard', component: Dashboard },
     ],
   },
   { path: 'login', component: Login },
   { path: 'register', component: Register },
+
+  // Main layout: with navbar
+  {
+    path: '',
+    component: MainLayout,
+    children: [
+      { path: 'home', component: Home },
+      { path: 'Browse', component: BrowseBooks },
+      { path: 'Cart', component: Cart },
+      { path: 'ContactUs', component: ContactUs },
+      { path: 'checkout', component: CheckOut },
+      { path: 'success', component: PaymentSuccess },
+      { path: 'err', component: PaymentError },
+      { path: 'Wishlist', component: Wishlist },
+      { path: 'about-us', component: AboutUs },
+      { path: 'thank-you', component: ThankYou },
+      {
+        path: 'profile',
+        component: UserProfile,
+        children: [
+          { path: 'purchased', component: PurchasedBooks },
+          { path: 'reviews', component: PersonalReviews },
+          { path: 'info', component: PersonalInfo },
+          { path: '', redirectTo: 'purchased', pathMatch: 'full' },
+        ],
+      },
+    ],
+  },
+
+  // Wildcard
+  { path: '**', redirectTo: 'login' },
+
   { path: 'verify-email/:otp', component: VerifyEmail },
   { path: 'forgot-password', component: ForgotPassword },
   { path: 'verify-code', component: VerifyCode },

@@ -1,3 +1,7 @@
 .navbar{
     background-color: #FAFAFA;
 }
+
+li a{
+    cursor: pointer;
+}
