@@ -28,7 +28,6 @@ interface cartData {
 export class CartService {
   private baseUrl = 'http://localhost:5000/api/v1/cart';
   private http = inject(HttpClient);
-  private expiryDuration = 20 * 1000; // 20 seconds
 
   // cart signal
   cart = signal<cartData>({
@@ -39,11 +38,12 @@ export class CartService {
 
   constructor() {
     this.refreshCart();
-    setInterval(() => {
-      if (this.updateAndValidateEntries()) {
-        this.refreshCart();
-      }
-    }, 5000); // every 5 seconds
+    if (this.cart().cartItems.length > 0) {
+      this.updateAndValidateEntries();
+    }
+    // if (this.updateAndValidateEntries()) {
+    //   this.refreshCart();
+    // }
   }
 
   refreshCart(): void {
@@ -89,7 +89,6 @@ export class CartService {
     return this.http.post(this.baseUrl, {
       productId,
       quantity,
-      expiryDuration: this.expiryDuration,
     });
   }
 
@@ -97,13 +96,17 @@ export class CartService {
   updateCartItem(productId: string, quantity: number): Observable<any> {
     return this.http.patch(`${this.baseUrl}/${productId}`, {
       quantity,
-      expiryDuration: this.expiryDuration,
     });
   }
 
   // delete item from cart
   deleteCartItem(productId: string): Observable<any> {
     return this.http.delete(`${this.baseUrl}/${productId}`);
+  }
+
+  // delete cart entry by entry id
+  deleteCartEntry(entryId: string): Observable<any> {
+    return this.http.delete(`${this.baseUrl}/entry/${entryId}`);
   }
 
   // clear cart
@@ -117,21 +120,14 @@ export class CartService {
     let updated = false;
 
     currentCart.cartItems.forEach((item) => {
-      const validEntries = item.cartItemEntry.filter(
-        (entry) => entry.expiresAt > new Date()
-      );
-
-      if (validEntries.length !== item.cartItemEntry.length) {
-        updated = true;
-        const newQuantity = validEntries.length;
-
-        if (newQuantity > 0) {
-          this.updateCartItem(item.productId, newQuantity).subscribe();
-        } else {
-          this.deleteCartItem(item.productId).subscribe();
+      item.cartItemEntry.forEach((entry: any) => {
+        if (entry.expiresAt <= new Date()) {
+          updated = true;
+          this.deleteCartEntry(entry._id).subscribe(() => this.refreshCart());
         }
-      }
+      });
     });
+
     return updated;
   }
 }
