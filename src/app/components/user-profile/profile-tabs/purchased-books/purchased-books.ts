@@ -11,8 +11,8 @@ import Swal from 'sweetalert2';
   templateUrl: './purchased-books.html',
   styleUrls: ['./purchased-books.css'],
 })
-
   
+
 export class PurchasedBooks implements OnInit {
   orders: any[] = [];
   loading = true;
@@ -38,8 +38,6 @@ export class PurchasedBooks implements OnInit {
       .subscribe((response) => {
         this.orders = response?.data || [];
         this.loading = false;
-      });
-  }
       });
   }
 }
