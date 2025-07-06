@@ -21,14 +21,17 @@
       <li class="nav-item"><a class="nav-link" routerLink="/home" routerLinkActive="active">Home</a></li>
       <li class="nav-item"><a class="nav-link" routerLink="/Browse">Browse</a></li>
       <li class="nav-item"><a class="nav-link" routerLink="/ContactUs">Contact Us</a></li>
+      <li class="nav-item"><a class="nav-link" routerLink="/about-us">About Us</a></li>
+      <li class="nav-item"><a class="nav-link" (click)="onLogout()">Logout</a></li>
     </ul>
 
   </div>
 
-
   <!-- Profile avatar only visible on desktop (outside collapse) -->
   <div class="d-none d-lg-flex align-items-center gap-3">
     <ng-content></ng-content>
+    <app-search></app-search>
+
     <!-- wishlist icon with quantity -->
     <a class="position-relative me-3 mt-2 wishlist-icon" routerLink="/Wishlist">
       <i class="bi bi-heart fs-4"></i>
