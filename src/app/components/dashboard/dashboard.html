@@ -1,14 +1,35 @@
 <div class="row">
-  <div class="col-2">
-    <button class="btn btn-primary mb-3 form-control">Switch</button>
-    <button class="btn btn-primary mb-3 form-control">Switch</button>
-    <button class="btn btn-primary mb-3 form-control">Switch</button>
-    <button class="btn btn-primary mb-3 form-control">Switch</button>
-    <button class="btn btn-primary mb-3 form-control">Switch</button>
+  <div class="col-2 text-center p-3">
+    <h3>Dashboard Control</h3>
+    <button (click)="changeState(0)" class="btn btn-primary mb-3 form-control">Main Dashboard</button>
+    <button (click)="changeState(1)" class="btn btn-primary mb-3 form-control">Categories</button>
+    <button (click)="changeState(2)" class="btn btn-primary mb-3 form-control">Subcategories</button>
+    <button (click)="changeState(3)" class="btn btn-primary mb-3 form-control">Products</button>
+    <button (click)="changeState(4)" class="btn btn-primary mb-3 form-control">Brands</button>
+    <button (click)="changeState(5)" class="btn btn-primary mb-3 form-control">Orders</button>
+    <button (click)="changeState(6)" class="btn btn-primary mb-3 form-control">Users</button>
   </div>
   <div class="col-10">
-    <app-dashboard-users></app-dashboard-users>
-    <app-dashboard-products></app-dashboard-products>
-    <app-dashboard-main></app-dashboard-main>
+    @if(state == 0){
+      <app-dashboard-main></app-dashboard-main>
+    }
+    @if(state == 1){
+      <app-dashboard-categories></app-dashboard-categories>
+    }
+    @if(state == 2){
+      <app-dashboard-subcategories></app-dashboard-subcategories>
+    }
+    @if(state == 3){
+      <app-dashboard-products></app-dashboard-products>
+    }
+    @if(state == 4){
+      <app-dashboard-brands></app-dashboard-brands>
+    }
+    @if(state == 5){
+      <app-dashboard-orders></app-dashboard-orders>
+    }
+    @if(state == 6){
+      <app-dashboard-users></app-dashboard-users>
+    }
   </div>
 </div>

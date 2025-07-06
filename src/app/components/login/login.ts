@@ -23,7 +23,8 @@ export class Login implements OnInit {
     private http: HttpClient,
     private router: Router,
     @Inject(PLATFORM_ID) private platformId: Object,
-    private userdata: UserInfo
+    private userdata:UserInfo
+
   ) {}
 
   ngOnInit(): void {
@@ -55,6 +56,7 @@ export class Login implements OnInit {
 
             this.userdata.setuserId(res.data.user._id);
             this.userdata.setToken(res.token);
+          console.log('Google login success', res.data.user);
 
             this.router.navigate(['/home']);
           } else {
@@ -100,7 +102,7 @@ export class Login implements OnInit {
         error: (err) => {
           const msg = err.error?.message || err.message;
           this.errorMessage = msg;
-          console.error('Login failed:', msg);
+          console.error('Login failed', msg);
         },
       });
   }

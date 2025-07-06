@@ -7,8 +7,7 @@ import {
   ValidationErrors,
   ReactiveFormsModule,
 } from '@angular/forms';
-import { AuthService,User } from '../../../../services/auth.service';
-import { NgIf } from '@angular/common';
+import { AuthService, User } from '../../../../services/auth.service';
 import { Subject, forkJoin } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import Swal from 'sweetalert2';
@@ -16,7 +15,7 @@ import Swal from 'sweetalert2';
 @Component({
   selector: 'app-personal-info',
   standalone: true,
-  imports: [ReactiveFormsModule, NgIf],
+  imports: [ReactiveFormsModule],
   templateUrl: './personal-info.html',
   styleUrls: ['./personal-info.css'],
 })
