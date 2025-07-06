@@ -32,7 +32,6 @@ export class PersonalInfo implements OnInit, OnDestroy {
       this.form = null as any;
       return;
     }
-
     this.loadUser();
   }
 
@@ -61,10 +60,13 @@ export class PersonalInfo implements OnInit, OnDestroy {
   private initializeForm() {
     this.form = this.fb.group(
       {
-        name: [{ value: this.user.name, disabled: true }],
+        name: [this.user.name, [Validators.required, Validators.minLength(2)]],
         email: [
           this.user.email,
-          [Validators.pattern(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)],
+          [
+            Validators.required,
+            Validators.pattern(/^[^\s@]+@[^\s@]+\.[^\s@]+$/),
+          ],
         ],
         currentPassword: [''],
         password: [
@@ -95,6 +97,9 @@ export class PersonalInfo implements OnInit, OnDestroy {
     return null;
   }
 
+  get name() {
+    return this.form.get('name');
+  }
   get email() {
     return this.form.get('email');
   }
@@ -114,14 +119,12 @@ export class PersonalInfo implements OnInit, OnDestroy {
       return;
     }
 
+    const nameChanged = this.name?.value && this.name.value !== this.user.name;
     const emailChanged =
-      this.email?.value &&
-      this.email.valid &&
-      this.email.value !== this.user.email;
-
+      this.email?.value && this.email.value !== this.user.email;
     const passwordChanged = this.password?.value && this.password.valid;
 
-    if (!emailChanged && !passwordChanged) {
+    if (!nameChanged && !emailChanged && !passwordChanged) {
       Swal.fire({
         icon: 'info',
         title: 'No changes',
@@ -130,93 +133,49 @@ export class PersonalInfo implements OnInit, OnDestroy {
       return;
     }
 
-    // Case 1: Only email changed
-    if (emailChanged && !passwordChanged) {
-      this.authService
-        .updateUser(this.user._id, { email: this.email.value })
-        .pipe(takeUntil(this.destroy$))
-        .subscribe({
-          next: () => {
-            Swal.fire({
-              icon: 'success',
-              title: 'Success!',
-              text: 'User email updated successfully',
-            });
-            this.loadUser(); // Refresh form with new email
-          },
-          error: (err) => this.handleServerError(err),
-        });
-      return;
+    // Prepare tasks
+    const tasks = [];
+
+    // 1. Update name and/or email
+    if (nameChanged || emailChanged) {
+      const updateData: any = {};
+      if (nameChanged) updateData.name = this.name?.value;
+      if (emailChanged) updateData.email = this.email?.value;
+
+      tasks.push(this.authService.updateUser(this.user._id, updateData));
     }
 
-    // Case 2: Only password changed
-    if (passwordChanged && !emailChanged) {
+    // 2. Change password
+    if (passwordChanged) {
       const currentPasswordValue = this.currentPassword?.value;
       if (!currentPasswordValue) {
         this.currentPassword?.setErrors({ required: true });
         return;
       }
 
-      this.authService
-        .changePassword(
-          this.user._id,
+      tasks.push(
+        this.authService.changePassword(
           currentPasswordValue,
           this.password.value,
           this.confirmPassword?.value || ''
         )
-        .pipe(takeUntil(this.destroy$))
-        .subscribe({
-          next: () => {
-            Swal.fire({
-              icon: 'success',
-              title: 'Success!',
-              text: 'Password updated successfully',
-            });
-            this.form.reset({
-              name: this.user.name,
-              email: this.user.email,
-              currentPassword: '',
-              password: '',
-              confirmPassword: '',
-            });
-          },
-          error: (err) => this.handleServerError(err),
-        });
-      return;
+      );
     }
 
-    // Case 3: Both email and password changed → all-or-nothing
-    if (emailChanged && passwordChanged) {
-      const currentPasswordValue = this.currentPassword?.value;
-      if (!currentPasswordValue) {
-        this.currentPassword?.setErrors({ required: true });
-        return;
-      }
-
-      forkJoin({
-        emailUpdate: this.authService.updateUser(this.user._id, {
-          email: this.email.value,
-        }),
-        passwordChange: this.authService.changePassword(
-          this.user._id,
-          currentPasswordValue,
-          this.password.value,
-          this.confirmPassword?.value || ''
-        ),
-      })
-        .pipe(takeUntil(this.destroy$))
-        .subscribe({
-          next: () => {
-            Swal.fire({
-              icon: 'success',
-              title: 'Success!',
-              text: 'Email and password updated successfully',
-            });
-            this.loadUser(); // Refresh form
-          },
-          error: (err) => this.handleServerError(err),
-        });
-    }
+    // Run all tasks in parallel
+    forkJoin(tasks)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: () => {
+          Swal.fire({
+            icon: 'success',
+            title: 'Success!',
+            text: 'Your information has been updated successfully.',
+          });
+          this.loadUser(); // Refresh user
+        },
+        error: (err) => this.handleServerError(err),
+      });
   }
 
   private handleServerError(err: any) {
@@ -226,6 +185,7 @@ export class PersonalInfo implements OnInit, OnDestroy {
       newPassword: 'password',
       currentPassword: 'currentPassword',
       email: 'email',
+      name: 'name',
     };
 
     const errors = err?.error?.errors || err?.error?.body;

@@ -23,6 +23,7 @@ export class BrowseBooks implements OnInit {
   constructor(
     private productService: Product,
     private route: ActivatedRoute,
+
     private router:Router,
     @Inject(PLATFORM_ID) private platformId: Object
   ) {}
@@ -217,8 +218,9 @@ export class BrowseBooks implements OnInit {
     }
   }
 
-
   goToProduct(productId: string) {
-  this.router.navigate(['/Browse', productId]);
-}
+    this.router.navigate(['/Browse', productId]);
+  }
+
+
 }

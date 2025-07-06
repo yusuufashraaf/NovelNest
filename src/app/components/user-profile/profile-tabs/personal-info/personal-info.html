@@ -3,13 +3,29 @@
     <div class="row justify-content-left">
         <div class="col-12 col-sm-10 col-md-8 col-lg-6">
 
-            <!-- name -->
+            <!-- Name -->
             <div class="mb-3">
                 <label for="name" class="form-label">Name</label>
-                <input id="name" class="form-control rounded-pill" formControlName="name" readonly />
+                <input id="name" type="text" class="form-control rounded-pill" formControlName="name"
+                    placeholder="Enter your name" />
+                @if (name?.errors?.['required'] && (name?.dirty || name?.touched)) {
+                <p class="text-danger ms-2 mt-1">
+                    Name is required.
+                </p>
+                }
+                @if (name?.errors?.['minlength'] && (name?.dirty || name?.touched)) {
+                <p class="text-danger ms-2 mt-1">
+                    Name must be at least 2 characters.
+                </p>
+                }
+                @if (name?.errors?.['serverError']) {
+                <p class="text-danger ms-2 mt-1">
+                    {{ name?.errors?.['serverError'] }}
+                </p>
+                }
             </div>
 
-            <!-- email -->
+            <!-- Email -->
             <div class="mb-3">
                 <label for="email" class="form-label">Email</label>
                 <input id="email" type="email" class="form-control rounded-pill" formControlName="email"
@@ -26,7 +42,7 @@
                 }
             </div>
 
-            <!-- current password -->
+            <!-- Current Password -->
             <div class="mb-3">
                 <label for="currentPass" class="form-label">Current Password</label>
                 <input type="password" id="currentPass" class="form-control rounded-pill"
@@ -43,7 +59,7 @@
                 }
             </div>
 
-            <!-- new password -->
+            <!-- New Password -->
             <div class="mb-3">
                 <label for="newPass" class="form-label">New Password</label>
                 <input type="password" id="newPass" class="form-control rounded-pill" formControlName="password"
@@ -70,7 +86,7 @@
                 }
             </div>
 
-            <!-- confirm password -->
+            <!-- Confirm Password -->
             <div class="mb-3">
                 <label for="confirmPass" class="form-label">Confirm Password</label>
                 <input type="password" id="confirmPass" class="form-control rounded-pill"
@@ -85,7 +101,6 @@
             <button type="submit" class="btn btn-outline-secondary rounded-pill w-40 mt-2">
                 Update
             </button>
-
         </div>
     </div>
 </form>

@@ -5,12 +5,27 @@
         <div class="col-12">
             <div
                 class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center bg-white p-3 rounded shadow-sm">
-
+                <!-- Left: Text Info -->
+                <div class="mb-3 mb-md-0">
+                    <h5 class="fw-bold mb-1">{{ book.title }}</h5>
+                    <h6 class="text-decoration-none text-primary small">{{ book.author }}</h6><br />
+                  
+                @if (bookItem.book) {
                 <!-- Left: Book Info -->
                 <div class="mb-3 mb-md-0">
                     <h5 class="fw-bold mb-1">{{ bookItem.book.title }}</h5>
                     <h6 class="text-decoration-none text-primary small">{{ bookItem.book.author }}</h6>
-                    <p class="mb-0 small">Quantity: {{ bookItem.quantity }} | Price: {{ bookItem.price | currency }}</p>
+                    <p class="mb-2 small">Quantity: {{ bookItem.quantity }} | Price: {{ bookItem.price }} L.E</p>
+
+                    <!--  PDF Link or Fallback Message -->
+                    @if (bookItem.book.pdfLink) {
+                    <a [href]="[bookItem.book.pdfLink]"  class="btn btn-sm btn-outline-secondary">
+                        <i class="bi bi-file-earmark-pdf me-1"></i> View PDF
+                    </a>
+                    } @else {
+                    <span class="text-danger noPdf small">No PDF available for this book.</span>
+                    }
+
                 </div>
 
                 <!-- Right: Book Image -->
@@ -18,6 +33,12 @@
                     <img [src]="bookItem.book.imageCover" [alt]="bookItem.book.title" class="img-fluid rounded"
                         style="max-height: 150px; object-fit: cover;" />
                 </div>
+                } @else {
+                <!-- Fallback if book is deleted -->
+                <div class="text-danger small">
+                    This book was removed from our catalog.
+                </div>
+                }
             </div>
         </div>
     </div>

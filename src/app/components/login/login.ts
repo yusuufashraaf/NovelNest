@@ -48,10 +48,27 @@ export class Login implements OnInit {
 
     this.http
       .post('http://localhost:5000/api/v1/auth/google', { token: credential })
-      .subscribe((res: any) => {
-        localStorage.setItem('token', res.token);
-        console.log('Google login success', res.data.user);
-        this.router.navigate(['/home']);
+      .subscribe({
+        next: (res: any) => {
+          if (res.token && res.data?.user) {
+            localStorage.setItem('token', res.token);
+            localStorage.setItem('user', JSON.stringify(res.data.user));
+
+            this.userdata.setuserId(res.data.user._id);
+            this.userdata.setToken(res.token);
+          console.log('Google login success', res.data.user);
+
+            this.router.navigate(['/home']);
+          } else {
+            this.errorMessage =
+              'Unexpected response from server. Please try again.';
+          }
+        },
+        error: (err) => {
+          const msg = err.error?.message || err.message;
+          this.errorMessage = msg;
+          console.error('Google login failed:', msg);
+        },
       });
   }
 
@@ -66,19 +83,20 @@ export class Login implements OnInit {
       .subscribe({
         next: (res: any) => {
           console.log('Login response:', res);
-
-          if (res.token) {
-
+          if (res.token && res.data?.user) {
             const token = res.token;
-            const userId = res.data?.user?._id;   //save data of the user to the service
-            this.userdata.setuserId(userId);
+            const user = res.data.user;
+
+            this.userdata.setuserId(user._id);
             this.userdata.setToken(token);
 
-            localStorage.setItem('token', res.token);
+            localStorage.setItem('token', token);
+            localStorage.setItem('user', JSON.stringify(user));
+
             this.router.navigate(['/home']);
           } else {
             this.errorMessage =
-              'Unexpected response from server. Please try again.'; // ✅ Show in template
+              'Unexpected response from server. Please try again.';
           }
         },
         error: (err) => {

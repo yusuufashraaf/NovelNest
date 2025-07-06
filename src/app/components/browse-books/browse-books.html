@@ -48,21 +48,6 @@
     </ul>
   </div>
 
-  <!-- Rating -->
-  <div class="dropdown flex-grow-1" style="min-width: 00px;">
-    <button class="btn btn-outline-secondary dropdown-toggle w-100" type="button" data-bs-toggle="dropdown"
-      aria-expanded="false">
-      {{ filters.rating ? filters.rating + ' Stars & Up' : 'Rating' }}
-    </button>
-    <ul class="dropdown-menu">
-      @for (rating of ratings; track $index) {
-      <li>
-        <a class="dropdown-item" (click)="filterByRating(rating)" [class.active]="filters.rating === rating">{{
-          rating }} Stars & Up</a>
-      </li>
-      }
-    </ul>
-  </div>
 </div>
 
 <!-- Sort dropdown below filters, same width -->

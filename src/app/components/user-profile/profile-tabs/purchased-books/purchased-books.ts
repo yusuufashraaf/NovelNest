@@ -11,8 +11,11 @@ import Swal from 'sweetalert2';
   templateUrl: './purchased-books.html',
   styleUrls: ['./purchased-books.css'],
 })
+
+  
 export class PurchasedBooks implements OnInit {
   orders: any[] = [];
+  loading = true;
 
   private orderService = inject(OrdersService);
 
@@ -21,6 +24,7 @@ export class PurchasedBooks implements OnInit {
       .getMyOrders()
       .pipe(
         catchError((error) => {
+          this.loading = false;
           if (error.status === 401) {
             Swal.fire({
               icon: 'warning',
@@ -28,11 +32,14 @@ export class PurchasedBooks implements OnInit {
               showConfirmButton: true,
             });
           }
-          return of([]);
+          return of({ data: [] });
         })
       )
       .subscribe((response) => {
         this.orders = response?.data || [];
+        this.loading = false;
+      });
+  }
       });
   }
 }
