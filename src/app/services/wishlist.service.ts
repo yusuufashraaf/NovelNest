@@ -52,13 +52,14 @@ export class WishlistService {
           });
         }
       },
-      error: (err) => {
-        console.warn('Wishlist endpoint not available, setting empty wishlist');
-        this.wishlist.set({
-          wishlistItems: [],
-          totalQuantity: 0,
-        });
-      },
+      // },
+      // error: (err) => {
+      //   console.warn(err);
+      //   this.wishlist.set({
+      //     wishlistItems: [],
+      //     totalQuantity: 0,
+      //   });
+      // },
     });
   }
 
