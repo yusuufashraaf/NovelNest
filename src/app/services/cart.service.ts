@@ -41,35 +41,39 @@ export class CartService {
   }
 
   refreshCart(): void {
-    this.getCart().subscribe((res) => {
-      if (res && res.data && res.data.cartItems) {
-        const transformedData: cartData = {
-          cartItems: res.data.cartItems.map((item: any) => ({
-            productId: item.productId,
-            title: item.title,
-            author: item.author,
-            img: item.image,
-            price: item.price,
-            quantity: item.quantity,
-            subtotal: item.subTotal,
-            cartItemEntry: (item.itemEntries || []).map((entry: any) => ({
-              productId: entry.productId,
-              addedAt: new Date(entry.addedAt),
-              expiresAt: new Date(entry.expiresAt),
-              _id: entry._id,
+    this.getCart().subscribe({
+      next: (res) => {
+        console.log(res);
+        if (res && res.data && res.data.cartItems) {
+          const transformedData: cartData = {
+            cartItems: res.data.cartItems.map((item: any) => ({
+              productId: item.productId,
+              title: item.title,
+              author: item.author,
+              img: item.image,
+              price: item.price,
+              quantity: item.quantity,
+              subtotal: item.subTotal,
+              cartItemEntry: (item.itemEntries || []).map((entry: any) => ({
+                productId: entry.productId,
+                addedAt: new Date(entry.addedAt),
+                expiresAt: new Date(entry.expiresAt),
+                _id: entry._id,
+              })),
             })),
-          })),
-          totalPrice: res.data.totalPrice,
-          totalQuantity: res.data.totalQuantity,
-        };
-        this.cart.set(transformedData);
-      } else {
-        this.cart.set({
-          cartItems: [],
-          totalPrice: 0,
-          totalQuantity: 0,
-        });
-      }
+            totalPrice: res.data.totalPrice,
+            totalQuantity: res.data.totalQuantity,
+          };
+          this.cart.set(transformedData);
+        } else {
+          console.log('no cart items');
+          this.cart.set({
+            cartItems: [],
+            totalPrice: 0,
+            totalQuantity: 0,
+          });
+        }
+      },
     });
   }
 

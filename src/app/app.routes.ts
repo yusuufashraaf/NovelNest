@@ -23,9 +23,9 @@ import { ForgotPassword } from './components/forgot-password/forgot-password';
 import { VerifyCode } from './components/verify-code/verify-code';
 import { ResetPassword } from './components/reset-password/reset-password';
 import { AboutUs } from './components/about-us/about-us';
+import { AuthGuard } from './Guards/auth-guard';
 
 export const routes: Routes = [
-
   // Auth layout: no navbar
   {
     path: '',
@@ -53,12 +53,12 @@ export const routes: Routes = [
       { path: 'home', component: Home },
       { path: 'Browse', component: BrowseBooks },
       { path: 'Browse/:id', component: BookDetails },
-      { path: 'Cart', component: Cart },
+      { path: 'Cart', component: Cart, canActivate: [AuthGuard] },
       { path: 'ContactUs', component: ContactUs },
       { path: 'checkout', component: CheckOut },
       { path: 'success', component: PaymentSuccess },
       { path: 'err', component: PaymentError },
-      { path: 'Wishlist', component: Wishlist },
+      { path: 'Wishlist', component: Wishlist, canActivate: [AuthGuard] },
       { path: 'about-us', component: AboutUs },
       { path: 'thank-you', component: ThankYou },
       {
