@@ -2,11 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { map, tap } from 'rxjs/operators';
 import { Observable, of } from 'rxjs';
-<<<<<<< Updated upstream
-=======
 import { Router } from '@angular/router';
 import {jwtDecode} from 'jwt-decode';
->>>>>>> Stashed changes
 
 export interface User {
   pic:string;
@@ -24,7 +21,7 @@ export interface User {
 export class AuthService {
   private baseUrl = 'http://localhost:5000/api/v1/users';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private router: Router) {}
 
   private getToken(): string | null {
     if (typeof window === 'undefined') return null;
@@ -91,6 +88,7 @@ export class AuthService {
     if (typeof window !== 'undefined') {
       localStorage.removeItem('user');
       localStorage.removeItem('token');
+      this.router.navigate(['/login']);
     }
   }
 

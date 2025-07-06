@@ -1,31 +1,18 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { OrdersService } from '../../../../services/orders.service';
+import { catchError, of } from 'rxjs';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-purchased-books',
-  imports: [],
+  standalone: true,
+  imports: [CommonModule],
   templateUrl: './purchased-books.html',
-  styleUrl: './purchased-books.css',
+  styleUrls: ['./purchased-books.css'],
 })
-<<<<<<< Updated upstream
-export class PurchasedBooks {
-  books = [
-    {
-      title: 'The Secret Garden',
-      author: 'Frances Bennett',
-      image: 'https://images.unsplash.com/photo-1524995997946-a1c2e315a42f',
-    },
-    {
-      title: 'Pride and Prejudice',
-      author: 'Jane Austen',
-      image: 'https://images.unsplash.com/photo-1512820790803-83ca734da794',
-    },
-    {
-      title: 'To Kill a Mockingbird',
-      author: 'Harper Lee',
-      image: 'https://images.unsplash.com/photo-1519681393784-d120267933ba',
-    },
-  ];
-=======
+
+  
 export class PurchasedBooks implements OnInit {
   orders: any[] = [];
   loading = true;
@@ -53,5 +40,6 @@ export class PurchasedBooks implements OnInit {
         this.loading = false;
       });
   }
->>>>>>> Stashed changes
+      });
+  }
 }

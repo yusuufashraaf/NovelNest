@@ -1,0 +1,45 @@
+<div class="register-container text-center">
+  <h2 class="mb-3" style="font-weight: 700;">Create an account</h2>
+
+  <!-- SUCCESS / ERROR MESSAGE -->
+  <div *ngIf="successMessage" class="alert alert-success">{{ successMessage }}</div>
+  <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+
+  <form (ngSubmit)="onSubmit()">
+    <div class="mb-3 text-start">
+      <label for="name" class="form-label">Full Name</label>
+      <input type="text" class="form-control" id="name" [(ngModel)]="name" name="name" required />
+    </div>
+
+    <div class="mb-3 text-start">
+      <label for="email" class="form-label">Email address</label>
+      <input type="email" class="form-control" id="email" [(ngModel)]="email" name="email" required />
+    </div>
+
+    <div class="mb-3 text-start">
+      <label for="password" class="form-label">Password</label>
+      <input type="password" class="form-control" id="password" [(ngModel)]="password" name="password" required />
+    </div>
+
+    <div class="mb-3 text-start">
+      <label for="confirmPassword" class="form-label">Confirm Password</label>
+      <input type="password" class="form-control" id="confirmPassword" [(ngModel)]="confirmPassword" name="confirmPassword" required />
+    </div>
+
+    <button type="submit" class="btn w-100 btn-register mb-3">
+      Get started
+    </button>
+
+    <div class="divider">or</div>
+
+    <button type="button" class="btn btn-google w-100 mb-3" id="googleBtn">
+      <img src="https://img.icons8.com/color/48/google-logo.png" alt="Google" />
+      Sign up with Google
+    </button>
+
+    <p class="register-footer mt-3" style="color: #5C708A;">
+      Already have an account?
+      <a href="login" class="text-decoration-none" style="color: #5C708A;">Sign in</a>
+    </p>
+  </form>
+</div>

@@ -9,32 +9,71 @@ import { PaymentError } from './components/payment-error/payment-error';
 import { Dashboard } from './components/dashboard/dashboard';
 import { ThankYou } from './components/thank-you/thank-you';
 import { UserProfile } from './components/user-profile/user-profile';
+import { Wishlist } from './components/wishlist/wishlist';
 import { PurchasedBooks } from './components/user-profile/profile-tabs/purchased-books/purchased-books';
 import { PersonalInfo } from './components/user-profile/profile-tabs/personal-info/personal-info';
-import { PersonalReviews } from './components/user-profile/profile-tabs/personal-reviews/personal-reviews';
 import { BookDetails } from './components/book-details/book-details';
-
+import { PersonalReviews } from './components/user-profile/profile-tabs/personal-reviews/personal-reviews';
+import { Login } from './components/login/login';
+import { Register } from './components/register/register';
+import { AuthLayout } from './components/Layouts/auth-layout/auth-layout';
+import { MainLayout } from './components/Layouts/main-layout/main-layout';
+import { VerifyEmail } from './components/verify-email/verify-email';
+import { ForgotPassword } from './components/forgot-password/forgot-password';
+import { VerifyCode } from './components/verify-code/verify-code';
+import { ResetPassword } from './components/reset-password/reset-password';
+import { AboutUs } from './components/about-us/about-us';
 
 export const routes: Routes = [
-  { path: '', redirectTo: 'Home', pathMatch: 'full' },
-  { path: 'Home', component: Home },
-  { path: 'Browse', component: BrowseBooks },
-  { path: 'Cart', component: Cart },
-  { path: 'ContactUs', component: ContactUs },
-  { path: 'checkout', component: CheckOut },
-  { path: 'success', component: PaymentSuccess },
-  { path: 'err', component: PaymentError },
-  {path:'dashboard',component:Dashboard},
-  {path:'book-details',component:BookDetails},
-  { path: 'thank-you', component: ThankYou },
+
+  // Auth layout: no navbar
   {
-    path: 'profile',
-    component: UserProfile,
+    path: '',
+    component: AuthLayout,
     children: [
-      { path: 'purchased', component: PurchasedBooks },
-      {path:'info',component:PersonalInfo},
-      {path:'reviews',component:PersonalReviews},
-      { path: '', redirectTo: 'purchased', pathMatch: 'full' }, 
+      { path: '', redirectTo: 'login', pathMatch: 'full' },
+      { path: 'login', component: Login },
+      { path: 'register', component: Register },
+      { path: 'verify-email/:otp', component: VerifyEmail },
+      { path: 'forgot-password', component: ForgotPassword },
+      { path: 'verify-code', component: VerifyCode },
+      { path: 'reset-password', component: ResetPassword },
     ],
   },
+
+  // Special dashboard route with NO navbar
+  { path: 'dashboard', component: Dashboard },
+
+  // Main layout: with navbar
+  {
+    path: '',
+    component: MainLayout,
+    children: [
+      { path: '', redirectTo: 'home', pathMatch: 'full' },
+      { path: 'home', component: Home },
+      { path: 'Browse', component: BrowseBooks },
+      { path: 'Browse/:id', component: BookDetails },
+      { path: 'Cart', component: Cart },
+      { path: 'ContactUs', component: ContactUs },
+      { path: 'checkout', component: CheckOut },
+      { path: 'success', component: PaymentSuccess },
+      { path: 'err', component: PaymentError },
+      { path: 'Wishlist', component: Wishlist },
+      { path: 'about-us', component: AboutUs },
+      { path: 'thank-you', component: ThankYou },
+      {
+        path: 'profile',
+        component: UserProfile,
+        children: [
+          { path: 'purchased', component: PurchasedBooks },
+          { path: 'reviews', component: PersonalReviews },
+          { path: 'info', component: PersonalInfo },
+          { path: '', redirectTo: 'purchased', pathMatch: 'full' },
+        ],
+      },
+    ],
+  },
+
+  // Wildcard
+  { path: '**', redirectTo: 'login' },
 ];

@@ -6,15 +6,16 @@ import {
   PLATFORM_ID,
 } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
-import { ActivatedRoute, RouterModule } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { AddToCart } from '../add-to-cart/add-to-cart';
+import { AddToWishlist } from '../add-to-wishlist/add-to-wishlist';
 import { Product } from '../../services/product.service';
 import { Products } from '../models/product.model';
 
 @Component({
   selector: 'app-browse-books',
   standalone: true,
-  imports: [RouterModule,AddToCart],
+  imports: [RouterModule, AddToCart, AddToWishlist],
   templateUrl: './browse-books.html',
   styleUrl: './browse-books.css',
 })
@@ -22,10 +23,8 @@ export class BrowseBooks implements OnInit {
   constructor(
     private productService: Product,
     private route: ActivatedRoute,
-<<<<<<< Updated upstream
-=======
-    private router: Router,
->>>>>>> Stashed changes
+
+    private router:Router,
     @Inject(PLATFORM_ID) private platformId: Object
   ) {}
 
@@ -159,7 +158,7 @@ export class BrowseBooks implements OnInit {
 
   filterByGenre(genre: string) {
     console.log(genre);
-    
+
     this.filters.genre = genre === 'All' ? null : genre;
     this.resetPageAndLoad();
     this.closeSidebarOnMobile();
@@ -218,11 +217,10 @@ export class BrowseBooks implements OnInit {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   }
-<<<<<<< Updated upstream
-=======
 
   goToProduct(productId: string) {
     this.router.navigate(['/Browse', productId]);
   }
->>>>>>> Stashed changes
+
+
 }
