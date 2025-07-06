@@ -10,8 +10,7 @@
   <div class="card-body d-flex flex-column">
     <h5 class="card-title mb-1 text-truncate">{{ item.title }}</h5>
     <p class="card-text text-muted mb-3 author">{{ item.author }}</p>
-    <app-add-to-cart [productId]="item.productId" class="mt-2 w-100"
-      (removeFromWishlist)="wishlistHandler(item.productId)">
+    <app-add-to-cart [productId]="item.productId" class="mt-2" (removeFromWishlist)="wishlistHandler(item.productId)">
     </app-add-to-cart>
 
   </div>
