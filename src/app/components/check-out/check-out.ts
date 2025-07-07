@@ -1,3 +1,4 @@
+import { UserInfo } from './../../services/user-info';
 import { PaymentService } from './../../services/payment-service';
 import { HttpClient} from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
@@ -20,12 +21,16 @@ export interface book {
 export class CheckOut  implements OnInit {
   router: any;
 
-  constructor(private paymentServ:PaymentService,private cart:CartService){}
+  constructor(private paymentServ:PaymentService,
+    private cart:CartService,
+    private userInfo:UserInfo
+
+  ){}
 
   cartItems:any;
   totalPrice:number=0;
   books:book[] = [];
-  userId = '664d75f285d1f2b4e7e4567a';
+  // userId = this.userInfo.;
 
   ngOnInit(): void {
     this.cartItems= this.cart.cart().cartItems;
@@ -162,7 +167,7 @@ checkoutForm= new FormGroup({
     const formValues = this.checkoutForm.value;
 
     const finalOrder = {
-      user: this.userId,
+      // user: this.userId,
       books: this.books,
       totalPrice: this.totalPrice,
       shippingAddress: {
