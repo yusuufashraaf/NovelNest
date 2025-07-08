@@ -25,24 +25,141 @@ export class DashboardMain implements OnInit, AfterViewInit, OnDestroy {
 
   recentCustomerActivities: CustomerActivity[] = [];
 
-  storeInitiatives: StoreInitiative[] = [];
+  storeInitiatives: StoreInitiative[] = [
+    {
+      name: 'Website Redesign',
+      completion: 75,
+      deadline: '2023-12-15',
+      status: 'On Track'
+    },
+    {
+      name: 'Inventory System Upgrade',
+      completion: 90,
+      deadline: '2023-11-30',
+      status: 'On Track'
+    },
+    {
+      name: 'Mobile App Development',
+      completion: 45,
+      deadline: '2024-02-28',
+      status: 'Delayed'
+    },
+    {
+      name: 'Customer Loyalty Program',
+      completion: 100,
+      deadline: '2023-10-15',
+      status: 'Completed'
+    },
+    {
+      name: 'Store Expansion',
+      completion: 30,
+      deadline: '2024-06-30',
+      status: 'Delayed'
+    }
+  ];
 
   salesTrendChart: any;
   categorySalesChart: any;
-  isBrowser: boolean;
 
-  constructor(@Inject(PLATFORM_ID) private platformId: Object,
-              private http: HttpClient,
-              private usersService: Users,
-              private productService: Product,
-              private orderService: OrderService,
-              private chartService: ChartService
+
+
+  allUsers: any[] = [];
+  allOrders: Order[] = [];
+  allProducts: any[] = [];
+  totalReveniew: number = 0;
+  chart1Data: any[] = [];
+
+  constructor(
+    private chartService: ChartService
   ) {
-    this.isBrowser = isPlatformBrowser(platformId);
+
+    chartService.getUsers().subscribe({
+      next: (res: any) => {
+        this.allUsers = res;
+        console.log(this.allUsers);
+      }
+    })
+
+    chartService.getOrders().subscribe({
+      next: (res: any) => {
+        this.allOrders = res.data;
+        console.log(this.allOrders);
+        this.calculateReveniew();
+      }
+    })
+
+    chartService.getChart1().subscribe({
+      next: (res: any) => {
+        this.chart1Data = res.data;
+        console.log(this.chart1Data);
+        this.createCharts(this.allOrders,this.chart1Data);
+      }
+    })
+
+    chartService.getProducts().subscribe({
+      next: (res: any) => {
+        this.allProducts = res.data;
+        console.log(this.allProducts);
+        this.LoadstoreMetrics();
+      }
+    })
+
+    
+
+    //this.LoadstoreMetrics();
+    
+    //this.updateRecentActivities(chartData.recentOrders);
   }
 
   ngOnInit(): void {
-    this.loadDashboardData();
+    //this.loadDashboardData();
+
+  }
+
+  calculateReveniew() {
+    this.totalReveniew = 0;
+    this.allOrders.forEach(element => {
+      this.totalReveniew += element.totalPrice;
+    });
+    console.log(this.totalReveniew);
+  }
+
+
+  LoadstoreMetrics() {
+    console.log(this.totalReveniew);
+    console.log(this.allUsers[0]);
+    console.log(this.allOrders);
+
+    this.storeMetrics = [
+      {
+        title: 'Total Revenue',
+        value: this.totalReveniew,
+        icon: 'bi bi-currency-dollar',
+        color: 'bg-primary',
+        change: 0
+      },
+      {
+        title: 'Number of Customers',
+        value: this.allUsers.length,
+        icon: 'bi bi-people',
+        color: 'bg-success',
+        change: 0
+      },
+      {
+        title: 'Number of Books',
+        value: this.allProducts.length, // Will be calculated from chart data
+        icon: 'bi bi-book',
+        color: 'bg-info',
+        change: 0
+      },
+      {
+        title: 'Number of Orders',
+        value: this.allOrders.length,
+        icon: 'bi bi-cart',
+        color: 'bg-warning',
+        change: 0
+      }
+    ];
   }
 
   async loadDashboardData() {
@@ -67,10 +184,12 @@ export class DashboardMain implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
+
+
   private updateStoreMetrics(chartData: DashboardChartData) {
     // Get user count from the chart service data
-    this.chartService.getUsersForCharts().subscribe(users => {
-      const userCount = users.length;
+    this.chartService.getDashboardChartData().subscribe(chartData => {
+      const userCount = chartData.userCount;
 
       this.storeMetrics = [
         {
@@ -116,12 +235,12 @@ export class DashboardMain implements OnInit, AfterViewInit, OnDestroy {
     if (this.categorySalesChart) this.categorySalesChart.destroy();
 
     // Create new charts with real data
-    this.createCharts(
-      chartData.monthlyProducts.labels,
-      chartData.monthlyProducts.data,
-      chartData.categoryProducts.labels,
-      chartData.categoryProducts.data
-    );
+    // this.createCharts(
+    //   chartData.monthlyProducts.labels,
+    //   chartData.monthlyProducts.data,
+    //   chartData.categoryProducts.labels,
+    //   //chartData.categoryProducts.data
+    // );
 
 
   }
@@ -150,7 +269,7 @@ export class DashboardMain implements OnInit, AfterViewInit, OnDestroy {
     this.recentCustomerActivities = [];
 
     // Create empty charts
-    this.createCharts([], [], [], []);
+    //this.createCharts([], [], [], []);
   }
 
   // Legacy method - keeping for backward compatibility
@@ -160,21 +279,17 @@ export class DashboardMain implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit(): void {
-    if (this.isBrowser) {
-      // Charts are now created after data is fetched in loadDashboardData()
-    }
   }
 
-  createCharts(salesLabels: string[], salesData: number[], categoryLabels: string[], categoryData: number[]): void {
-    if (!this.isBrowser) return;
+  createCharts(salesLabels: Order[], categoryLabels: any[]): void {
     if (this.salesTrendChartRef) {
       this.salesTrendChart = new Chart(this.salesTrendChartRef.nativeElement, {
         type: 'line',
         data: {
-          labels: salesLabels,
+          labels: salesLabels.map(res => res.books),
           datasets: [{
             label: 'New Books Added (Monthly)',
-            data: salesData,
+            data: salesLabels.map(res => res.createdAt),
             borderColor: '#0d6efd',
             backgroundColor: 'rgba(13, 110, 253, 0.1)',
             borderWidth: 2,
@@ -212,10 +327,10 @@ export class DashboardMain implements OnInit, AfterViewInit, OnDestroy {
       this.categorySalesChart = new Chart(this.categorySalesChartRef.nativeElement, {
         type: 'bar',
         data: {
-          labels: categoryLabels,
+          labels: categoryLabels.map(res => res.categoryname),
           datasets: [{
-            label: 'Books by Category',
-            data: categoryData,
+            label: 'Sales By Category',
+            data: categoryLabels.map(res => res.totalSold),
             backgroundColor: [
               'rgba(13, 110, 253, 0.7)',
               'rgba(25, 135, 84, 0.7)',
@@ -255,14 +370,7 @@ export class DashboardMain implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    if (this.isBrowser) {
-      if (this.salesTrendChart) {
-        this.salesTrendChart.destroy();
-      }
-      if (this.categorySalesChart) {
-        this.categorySalesChart.destroy();
-      }
-    }
+
   }
 
   getAbsoluteValue(num: number): number {

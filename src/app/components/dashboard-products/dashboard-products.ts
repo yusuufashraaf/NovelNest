@@ -7,6 +7,7 @@ import { CategoryService, Category } from '../../services/category.service';
 import { SubcategoryService, Subcategory } from '../../services/subcategory.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { lastValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-dashboard-products',
@@ -573,117 +574,140 @@ export class DashboardProducts {
   async testAddBook() {
     console.log('🧪 Testing minimal product creation...');
 
-    const formData = new FormData();
-    formData.append('title', 'Test Book');
-    formData.append('description', 'This is a test book description with more than 20 characters to meet the minimum requirement.');
-    formData.append('author', 'Test Author');
-    formData.append('quantity', '1');
-    formData.append('price', '100');
-    formData.append('imageCover', 'https://example.com/test-cover.jpg');
-    formData.append('pdfLink', 'https://example.com/test-book.pdf');
-    formData.append('category', this.categories[0]?._id || 'test-category-id');
-    formData.append('images', 'https://example.com/test-cover.jpg');
-    formData.append('images', 'https://example.com/test-cover.jpg');
-
-    console.log('🧪 Sending FormData with entries:');
-    for (let [key, value] of formData.entries()) {
-      console.log(`🧪 ${key}: ${value}`);
-    }
-
     try {
-      const response = await this.productService.createProduct(formData).toPromise();
-      console.log('✅ Test successful:', response);
-      Swal.fire('Test Success', 'Minimal product creation works!', 'success');
+        // Create FormData - matching exactly what your backend expects
+        const formData = new FormData();
+        
+        // Required fields (matching your Node.js validator)
+        formData.append('title', 'Test Book');
+        formData.append('description', 'This is a test book description');
+        formData.append('author', 'Test Author');
+        formData.append('quantity', '10'); // Must be numeric
+        formData.append('price', '100.50'); // Must be numeric
+        formData.append('category', this.categories[0]?._id || '65d4a1b3a3b1f8a1c8e3b1f8'); // Must be valid MongoID format
+
+        // Optional fields
+        formData.append('priceAfterDiscount', '80.25'); // Must be less than price if provided
+        
+        // Handle files properly (not as URLs)
+        // Create mock files if needed
+        const mockImageFile = new File([''], 'test-cover.jpg', { type: 'image/jpeg' });
+        formData.append('imageCover', mockImageFile);
+        
+        const mockPdfFile = new File([''], 'test-book.pdf', { type: 'application/pdf' });
+        formData.append('pdfLink', mockPdfFile);
+        
+        // Multiple images
+        formData.append('images', mockImageFile);
+        formData.append('images', mockImageFile);
+
+        // Subcategory (must be array of MongoIDs if provided)
+        // if (this.subcategories.length) {
+        //     formData.append('subcategory', JSON.stringify([this.subcategories[1]._id]));
+        // }
+
+        console.log('🧪 Sending FormData with entries:');
+        for (let [key, value] of formData.entries()) {
+            console.log(`🧪 ${key}:`, value instanceof File ? 
+                `File(${value.name}, ${value.size} bytes)` : 
+                value);
+        }
+
+        // Send to backend
+        const response = await lastValueFrom(
+            this.productService.createProduct(formData)
+        );
+
+        console.log('✅ Test successful:', response);
+        Swal.fire('Test Success', 'Minimal product creation works!', 'success');
     } catch (error: any) {
-      console.error('❌ Test failed:', error);
-      Swal.fire('Test Failed', `Error: ${error.message}`, 'error');
+        console.error('❌ Test failed:', error);
+        Swal.fire('Test Failed', error.message || 'Product creation failed', 'error');
     }
-  }
+}
 
   async addBook() {
-    console.log('=== Starting Add Book Process ===');
+  console.log('=== Starting Add Book Process ===');
 
-    this.validateAddForm();
-    if (this.formError) {
-      console.log('❌ Form validation failed:', this.formError);
-      Swal.fire('Error', this.formError, 'error');
-      return;
+  // Frontend validation
+  if (!this.addTitle || !this.addDescription || !this.addAuthor || 
+      !this.addQuantity || !this.addPrice || !this.selectedCategoryId) {
+    this.formError = 'Please fill all required fields';
+    Swal.fire('Error', this.formError, 'error');
+    return;
+  }
+
+  if (this.addPriceAfterDiscount && this.addPriceAfterDiscount >= this.addPrice) {
+    this.formError = 'Discounted price must be lower than regular price';
+    Swal.fire('Error', this.formError, 'error');
+    return;
+  }
+
+  this.isUploading = true;
+  this.formError = '';
+
+  try {
+    const formData = new FormData();
+
+    // Required fields
+    formData.append('title', this.addTitle);
+    formData.append('description', this.addDescription);
+    formData.append('author', this.addAuthor);
+    formData.append('quantity', this.addQuantity.toString());
+    formData.append('price', this.addPrice.toString());
+    formData.append('category', this.selectedCategoryId);
+
+    // Optional fields
+    if (this.addPriceAfterDiscount) {
+      formData.append('priceAfterDiscount', this.addPriceAfterDiscount.toString());
     }
 
-    console.log('✅ Form validation passed');
-    this.isUploading = true;
-    this.formError = '';
-
-    try {
-      // Create FormData for file upload
-      const formData = new FormData();
-
-      // Append text fields
-      formData.append('title', this.addTitle);
-      formData.append('description', this.addDescription);
-      formData.append('author', this.addAuthor);
-      formData.append('quantity', this.addQuantity.toString());
-      formData.append('price', this.addPrice.toString());
-      formData.append('category', this.selectedCategoryId);
-
-      // Append optional fields
-      if (this.addPriceAfterDiscount && this.addPriceAfterDiscount.toString().trim()) {
-        formData.append('priceAfterDiscount', this.addPriceAfterDiscount.toString());
-      }
-
-      if (this.selectedSubcategoryId) {
-        // The backend expects an array of subcategory IDs, so we send a JSON stringified array.
+    // Handle subcategories (convert to array if single value)
+    if (this.selectedSubcategoryId) {
+      if (Array.isArray(this.selectedSubcategoryId)) {
+        formData.append('subcategory', JSON.stringify(this.selectedSubcategoryId));
+      } else {
         formData.append('subcategory', JSON.stringify([this.selectedSubcategoryId]));
       }
+    }
 
-      // Append files
-      if (this.addImageCoverFile) {
-        formData.append('imageCover', this.addImageCoverFile);
-      }
-
-      if (this.addPdfFile) {
-        formData.append('pdfLink', this.addPdfFile);
-      }
-
-      // Append additional images
-      this.addImagesFiles.forEach((file, index) => {
+    // Files handling
+    if (this.addImageCoverFile) {
+      formData.append('imageCover', this.addImageCoverFile);
+    }
+    if (this.addPdfFile) {
+      formData.append('pdfLink', this.addPdfFile);
+    }
+    
+    // Multiple images
+    if (this.addImagesFiles?.length) {
+      this.addImagesFiles.forEach(file => {
         formData.append('images', file);
       });
-
-      console.log('=== Sending to Backend ===');
-      console.log('📤 FormData entries:');
-      for (let [key, value] of formData.entries()) {
-        if (value instanceof File) {
-          console.log(`📤 ${key}: File(${value.name}, ${value.size} bytes, ${value.type})`);
-        } else {
-          console.log(`📤 ${key}: ${value}`);
-        }
-      }
-
-      // Send to backend
-      const response = await this.productService.createProduct(formData).toPromise();
-
-      console.log('✅ Backend response:', response);
-      Swal.fire('Success', 'Book added successfully!', 'success');
-      this.resetAddForm();
-      this.loadBooks(1);
-      this.state = 0;
-
-    } catch (error: any) {
-      console.error('❌ Add book error:', error);
-
-      let errorMessage = 'Failed to add book';
-      if (error.message) {
-        errorMessage += ': ' + error.message;
-      }
-
-      this.formError = errorMessage;
-      Swal.fire('Error', errorMessage, 'error');
-    } finally {
-      this.isUploading = false;
-      console.log('=== Add Book Process Complete ===');
     }
+
+    console.log('FormData contents:');
+    formData.forEach((value, key) => {
+      console.log(key, value);
+    });
+
+    // Send to backend
+    const response = await lastValueFrom(
+      this.productService.createProduct(formData));
+
+    console.log('Success:', response);
+    Swal.fire('Success', 'Book added successfully!', 'success');
+    this.resetAddForm();
+    this.loadBooks(1);
+
+  } catch (error: any) {
+    console.error('Error:', error);
+    this.formError = error.message || 'Failed to add book';
+    Swal.fire('Error', this.formError, 'error');
+  } finally {
+    this.isUploading = false;
   }
+}
 
   async updateBook() {
     console.log('=== Starting Update Book Process ===');
