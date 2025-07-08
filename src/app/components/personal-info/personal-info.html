@@ -12,7 +12,7 @@
             <div class="mb-3">
                 <label for="email" class="form-label">Email</label>
                 <input id="email" type="email" class="form-control rounded-pill" formControlName="email"
-                    placeholder="Enter your email" />
+                    placeholder="Enter your email" readonly [disabled]="true" />
                 @if (email?.touched && email?.dirty && email?.invalid) {
                 <p class="text-danger ms-2 mt-1">
                     Please enter a valid email address.
