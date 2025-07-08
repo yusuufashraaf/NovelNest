@@ -5,14 +5,14 @@ import { catchError, map } from 'rxjs/operators';
 
 export interface Order {
   _id: string;
-  userId: string;
-  items: {
-    bookId: string;
+  user: string;
+  books: {
+    book: string;
     quantity: number;
     price: number;
   }[];
   totalPrice: number;
-  status: 'processing' | 'shipped' | 'delivered' | 'cancelled';
+  status: string;
   shippingAddress: {
     street: string;
     city: string;
@@ -20,7 +20,7 @@ export interface Order {
     zipCode: string;
     country: string;
   };
-  paymentMethod: 'paypal' | 'credit-card' | 'cash-on-delivery';
+  paymentMethod: string;
   orderNumber: string;
   paypalOrderId?: string;
   transactionRef?: string;

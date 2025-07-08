@@ -1,6 +1,9 @@
-import { Component, Inject, PLATFORM_ID } from '@angular/core';
+import { Component, inject, Inject, PLATFORM_ID } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { User, Users } from '../../services/users';
+import { userInfo } from 'os';
+import { UserInfo } from '../../services/user-info';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 // interface User{
 //   _id:string
@@ -16,15 +19,62 @@ import { User, Users } from '../../services/users';
   styleUrl: './dashboard-users.css'
 })
 export class DashboardUsers {
-UsersData: User[] = [];
+  UsersData: User[] = [];
 
   constructor(
-    private usersService: Users,
     private route: ActivatedRoute,
-    @Inject(PLATFORM_ID) private platformId: Object
+    private usersService: Users,
+    @Inject(UserInfo) private userinfo: UserInfo,
+    private http: HttpClient
   ) {
-    this.loadUsers(1)
+    this.loadUsers(1);
   }
+
+  
+
+  deleteUser(id:string) {
+    const headers = new HttpHeaders({
+      Authorization: `${this.userinfo.getToken()}`
+    });
+
+    console.log("Before request");
+
+    this.http.delete<any>('http://localhost:5000/api/v1/users/' + id, { headers })
+      .subscribe({
+        next: (response) => {
+          console.log("User Deleted data:", response);  // This will log the actual data
+          this.loadUsers(1);
+        },
+        error: (err) => {
+          console.error("Error fetching data:", err);
+        }
+      });
+
+    console.log("After request");
+  }
+
+  editRole(id:string) {
+    const headers = new HttpHeaders({
+      Authorization: `${this.userinfo.getToken()}`
+    });
+
+    console.log("Before request");
+
+    this.http.post<any>('http://localhost:5000/api/v1/users/changerole/' + id, { headers })
+      .subscribe({
+        next: (response) => {
+          console.log("Response data:", response);  // This will log the actual data
+          this.loadUsers(1);
+        },
+        error: (err) => {
+          console.error("Error fetching data:", err);
+        }
+      });
+
+    console.log("After request");
+  }
+
+
 
   isLoading = true;
 
@@ -38,13 +88,15 @@ UsersData: User[] = [];
     };
 
     this.usersService.getAllUsers().subscribe({
-  next: (users) => {
-    this.UsersData = users;
-  },
-  error: (err) => {
-    console.error('Error loading users:', err);
-    // Show error to user
-  }
-});
+      next: (users) => {
+        this.UsersData = users;
+        //console.log(this.UsersData);
+
+      },
+      error: (err) => {
+        console.error('Error loading users:', err);
+        // Show error to user
+      }
+    });
   }
 }

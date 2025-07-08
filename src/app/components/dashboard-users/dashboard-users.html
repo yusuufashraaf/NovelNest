@@ -14,6 +14,7 @@
                       <th>Email</th>
                       <th>Role</th>
                       <th>Created At</th>
+                      <th>Actions</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -26,6 +27,16 @@
                         <span class="badge bg-secondary">{{user.role}}</span>
                       </td>
                       <td>{{ user.createdAt }}</td>
+                      <td>
+                        <div class="btn-group btn-group-sm" role="group">
+
+                        <button class="btn btn-outline-success" (click)="editRole(user._id)">
+                          <i class="bi bi-pencil"></i>
+                        </button>
+                        <button class="btn btn-outline-danger" (click)="deleteUser(user._id)">
+                          <i class="bi bi-trash"></i>
+                        </button>
+                      </div>
                     </tr>
                     }
                   </tbody>

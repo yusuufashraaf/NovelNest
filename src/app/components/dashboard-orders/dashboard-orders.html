@@ -22,20 +22,19 @@
                             @for (order of allOrders; track order._id) {
                             <tr>
                                 <td>{{ order.orderNumber }}</td>
-                                <td>{{ order.userId }}</td>
+                                <td>{{ order.user }}</td>
                                 <td>
+                                    @for (b of order.books; track b.book) {
                                     <span class="badge bg-primary">
-                                        {{ order.items }}
-                                    </span>
+                                        {{ b.book }}
+                                    </span>}
                                     <span class="badge bg-primary">
-                                        {{ order.items.length }} items
+                                        {{ order.books.length }} items
                                     </span>
                                 </td>
                                 <td>{{ order.totalPrice }}</td>
                                 <td>
-                                    <span class="badge">
-                                        {{ order.status }}
-                                    </span>
+                                    {{ order.status }}
                                 </td>
                                 <td>{{ order.paymentMethod }}</td>
                                 <td>{{ order.createdAt }}</td>

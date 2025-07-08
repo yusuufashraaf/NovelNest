@@ -582,6 +582,8 @@ export class DashboardProducts {
     formData.append('imageCover', 'https://example.com/test-cover.jpg');
     formData.append('pdfLink', 'https://example.com/test-book.pdf');
     formData.append('category', this.categories[0]?._id || 'test-category-id');
+    formData.append('images', 'https://example.com/test-cover.jpg');
+    formData.append('images', 'https://example.com/test-cover.jpg');
 
     console.log('🧪 Sending FormData with entries:');
     for (let [key, value] of formData.entries()) {
