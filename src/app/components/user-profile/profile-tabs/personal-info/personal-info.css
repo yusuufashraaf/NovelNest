@@ -7,3 +7,10 @@ input::placeholder {
   font-size: 0.9rem;
   color: #aaa;
 }
+
+input.form-control:disabled,
+input.form-control[readonly] {
+  background-color: #e0e0e0;
+  color: #6c757d;
+  opacity: 1;
+}
