@@ -1,1 +1,85 @@
-<p>payment-success works!</p>
+<div class="show-success" >
+    <div class="container">
+        <div class="card">
+
+            <!-- Loading State -->
+            <div class="loading-state">
+                <div class="loading-spinner"></div>
+                <h2>Processing Payment</h2>
+                <p>Please wait while we confirm your payment...</p>
+            </div>
+
+            <!-- Success State -->
+            <div class="success-state">
+                <div class="success-icon">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                </div>
+                <h1>Payment Confirmed!</h1>
+                <p>Thank you for your purchase. Your payment has been successfully processed and your order is being prepared.</p>
+
+                <div class="order-details">
+                    <h3>Order Details</h3>
+                    <div class="detail-item">
+                        <span class="detail-label">Order ID:</span>
+                        <span class="detail-value">#ORD-2024-001234</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Transaction ID:</span>
+                        <span class="detail-value">TXN-89f7e3a2b1c4</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Amount:</span>
+                        <span class="detail-value">$149.99</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Payment Method:</span>
+                        <span class="detail-value">•••• 4242</span>
+                    </div>
+                </div>
+
+                <p class="countdown">Redirecting to thank you page in 15 seconds...</p>
+                <button class="btn btn-primary" onclick="handleContinue()">
+                    Continue to Thank You Page
+                </button>
+            </div>
+
+            <!-- Error State -->
+            <div class="error-state">
+                <div class="error-icon">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </div>
+                <h1>Payment Failed</h1>
+                <p>We encountered an issue processing your payment. Please check your payment details and try again.</p>
+
+                <div class="btn-group">
+                    <button class="btn btn-primary" onclick="handleRetry()">
+                        Try Again
+                    </button>
+                    <button class="btn btn-secondary" onclick="handlePaymentError()">
+                        Go to Payment Error Page
+                    </button>
+                </div>
+            </div>
+
+            <!-- Invalid State -->
+            <div class="invalid-state">
+                <div class="warning-icon">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16c-.77.833.192 2.5 1.732 2.5z"></path>
+                    </svg>
+                </div>
+                <h1>Invalid Payment Link</h1>
+                <p>The payment confirmation link is missing required parameters or has expired. Please return to the homepage and try again.</p>
+
+                <button class="btn btn-primary" onclick="handleGoHome()">
+                    Return to Home
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>

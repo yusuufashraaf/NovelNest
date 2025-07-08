@@ -1,157 +1,159 @@
 <!-- Filters container -->
 <div class="d-flex flex-wrap justify-content-center gap-3 mb-2 mt-4" style="max-width: 1000px; margin: 0 auto;">
-    <!-- Genre -->
-    <div class="dropdown flex-grow-1" style="min-width: 200px;">
-        <button class="btn btn-outline-secondary dropdown-toggle w-100" type="button" data-bs-toggle="dropdown"
-            aria-expanded="false">
-            {{ filters.genre ? filters.genre : 'Genre' }}
-        </button>
-        <ul class="dropdown-menu">
-            @for (genre of genres; track $index) {
-            <li>
-                <a class="dropdown-item" (click)="filterByGenre(genre)" [class.active]="filters.genre === genre">{{
-                    genre }}</a>
-            </li>
-            }
-        </ul>
-    </div>
+  <!-- Genre -->
+  <div class="dropdown flex-grow-1" style="min-width: 200px;">
+    <button class="btn btn-outline-secondary dropdown-toggle w-100" type="button" data-bs-toggle="dropdown"
+      aria-expanded="false">
+      {{ filters.genre ? filters.genre : 'Genre' }}
+    </button>
+    <ul class="dropdown-menu">
+      @for (genre of genres; track $index) {
+      <li>
+        <a class="dropdown-item" (click)="filterByGenre(genre)" [class.active]="filters.genre === genre">{{
+          genre }}</a>
+      </li>
+      }
+    </ul>
+  </div>
 
-    <!-- Author -->
-    <div class="dropdown flex-grow-1" style="min-width: 200px;">
-        <button class="btn btn-outline-secondary dropdown-toggle w-100" type="button" data-bs-toggle="dropdown"
-            aria-expanded="false">
-            {{ filters.author ? filters.author : 'Author' }}
-        </button>
-        <ul class="dropdown-menu">
-            @for (author of authors; track $index) {
-            <li>
-                <a class="dropdown-item" (click)="filterByAuthor(author)" [class.active]="filters.author === author">{{
-                    author }}</a>
-            </li>
-            }
-        </ul>
-    </div>
+  <!-- Author -->
+  <div class="dropdown flex-grow-1" style="min-width: 200px;">
+    <button class="btn btn-outline-secondary dropdown-toggle w-100" type="button" data-bs-toggle="dropdown"
+      aria-expanded="false">
+      {{ filters.author ? filters.author : 'Author' }}
+    </button>
+    <ul class="dropdown-menu">
+      @for (author of authors; track $index) {
+      <li>
+        <a class="dropdown-item" (click)="filterByAuthor(author)" [class.active]="filters.author === author">{{
+          author }}</a>
+      </li>
+      }
+    </ul>
+  </div>
 
-    <!-- Price Range -->
-    <div class="dropdown flex-grow-1" style="min-width: 200px;">
-        <button class="btn btn-outline-secondary dropdown-toggle w-100" type="button" data-bs-toggle="dropdown"
-            aria-expanded="false">
-            {{ filters.priceRange ? filters.priceRange : 'Price Range' }}
-        </button>
-        <ul class="dropdown-menu">
-            @for (range of priceRanges; track $index) {
-            <li>
-                <a class="dropdown-item" (click)="filterByPrice(range)" [class.active]="filters.priceRange === range">{{
-                    range }}</a>
-            </li>
-            }
-        </ul>
-    </div>
+  <!-- Price Range -->
+  <div class="dropdown flex-grow-1" style="min-width: 200px;">
+    <button class="btn btn-outline-secondary dropdown-toggle w-100" type="button" data-bs-toggle="dropdown"
+      aria-expanded="false">
+      {{ filters.priceRange ? filters.priceRange : 'Price Range' }}
+    </button>
+    <ul class="dropdown-menu">
+      @for (range of priceRanges; track $index) {
+      <li>
+        <a class="dropdown-item" (click)="filterByPrice(range)" [class.active]="filters.priceRange === range">{{
+          range }}</a>
+      </li>
+      }
+    </ul>
+  </div>
 
-    <!-- Rating -->
-    <div class="dropdown flex-grow-1" style="min-width: 00px;">
-        <button class="btn btn-outline-secondary dropdown-toggle w-100" type="button" data-bs-toggle="dropdown"
-            aria-expanded="false">
-            {{ filters.rating ? filters.rating + ' Stars & Up' : 'Rating' }}
-        </button>
-        <ul class="dropdown-menu">
-            @for (rating of ratings; track $index) {
-            <li>
-                <a class="dropdown-item" (click)="filterByRating(rating)" [class.active]="filters.rating === rating">{{
-                    rating }} Stars & Up</a>
-            </li>
-            }
-        </ul>
-    </div>
+  <!-- Rating -->
+  <div class="dropdown flex-grow-1" style="min-width: 00px;">
+    <button class="btn btn-outline-secondary dropdown-toggle w-100" type="button" data-bs-toggle="dropdown"
+      aria-expanded="false">
+      {{ filters.rating ? filters.rating + ' Stars & Up' : 'Rating' }}
+    </button>
+    <ul class="dropdown-menu">
+      @for (rating of ratings; track $index) {
+      <li>
+        <a class="dropdown-item" (click)="filterByRating(rating)" [class.active]="filters.rating === rating">{{
+          rating }} Stars & Up</a>
+      </li>
+      }
+    </ul>
+  </div>
 </div>
 
 <!-- Sort dropdown below filters, same width -->
 <div class="d-flex justify-content-center mb-3" style="max-width: 1000px; margin: 0 auto;">
-    <div class="dropdown" style="width: 40%;">
-        <button class="btn btn-outline-secondary dropdown-toggle w-100" type="button" id="sortDropdown"
-            data-bs-toggle="dropdown" aria-expanded="false">
-            {{
-            filters.sort
-            ? (filters.sort === 'price'
-            ? 'Price: Low to High'
-            : filters.sort === '-price'
-            ? 'Price: High to Low'
-            : filters.sort === 'author'
-            ? 'Author: A to Z'
-            : filters.sort === '-author'
-            ? 'Author: Z to A'
-            : 'Sort')
-            : 'Sort'
-            }}
-        </button>
-        <ul class="dropdown-menu" aria-labelledby="sortDropdown"
-            style="max-height: 200px; overflow-y: auto; width: 100%;">
-            <li><a class="dropdown-item" (click)="setSort('price')">Price: Low to High</a></li>
-            <li><a class="dropdown-item" (click)="setSort('-price')">Price: High to Low</a></li>
-            <li><a class="dropdown-item" (click)="setSort('author')">Author: A to Z</a></li>
-            <li><a class="dropdown-item" (click)="setSort('-author')">Author: Z to A</a></li>
-        </ul>
-    </div>
+  <div class="dropdown" style="width: 40%;">
+    <button class="btn btn-outline-secondary dropdown-toggle w-100" type="button" id="sortDropdown"
+      data-bs-toggle="dropdown" aria-expanded="false">
+      {{
+      filters.sort
+      ? (filters.sort === 'price'
+      ? 'Price: Low to High'
+      : filters.sort === '-price'
+      ? 'Price: High to Low'
+      : filters.sort === 'author'
+      ? 'Author: A to Z'
+      : filters.sort === '-author'
+      ? 'Author: Z to A'
+      : 'Sort')
+      : 'Sort'
+      }}
+    </button>
+    <ul class="dropdown-menu" aria-labelledby="sortDropdown" style="max-height: 200px; overflow-y: auto; width: 100%;">
+      <li><a class="dropdown-item" (click)="setSort('price')">Price: Low to High</a></li>
+      <li><a class="dropdown-item" (click)="setSort('-price')">Price: High to Low</a></li>
+      <li><a class="dropdown-item" (click)="setSort('author')">Author: A to Z</a></li>
+      <li><a class="dropdown-item" (click)="setSort('-author')">Author: Z to A</a></li>
+    </ul>
+  </div>
 </div>
 
 <!-- Reset Filters Button -->
 <div class="w-100 d-flex justify-content-center mt-3 mb-5">
-    <button (click)="resetFilters()" class="btn btn-reset-custom">
-        <i class="bi bi-x-circle me-2"></i>Reset Filters
-    </button>
+  <button (click)="resetFilters()" class="btn btn-reset-custom">
+    <i class="bi bi-x-circle me-2"></i>Reset Filters
+  </button>
 </div>
 
 <!-- Loading Spinner -->
 @if (isLoading) {
 <div class="text-center my-3">
-    <div class="spinner-border text-primary" role="status">
-        <span class="visually-hidden">Loading...</span>
-    </div>
+  <div class="spinner-border text-primary" role="status">
+    <span class="visually-hidden">Loading...</span>
+  </div>
 </div>
 }
 
 <!-- Book Grid -->
 <div class="container">
-    @if (books.length === 0 && !isLoading) {
-    <div class="text-center text-gray-500 py-5">
-        <p>No products found for the selected filters.</p>
+  @if (books.length === 0 && !isLoading) {
+  <div class="text-center text-gray-500 py-5">
+    <p>No products found for the selected filters.</p>
+  </div>
+  }
+
+  <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+    @for (book of books; track $index) {
+    <div>
+      <a href="">
+        <div class="col">
+          <div class="card h-100 border-0 shadow-sm fade-in-card">
+            <img [src]="book.imageCover" [alt]="book.title" class="card-img-top"
+              style="height: 320px; object-fit: contain" />
+            <div class="card-body px-2 py-3">
+              <h6 class="card-title mb-1 fw-semibold">{{ book.title }}</h6>
+              <p class="card-text text-muted small">{{ book.author }}</p>
+              <h6 class="card-title mb-1 fw-semibold">{{ book.price }} L.E</h6>
+            </div>
+          </div>
+        </div>
+      </a>
+      <app-add-to-cart [productId]="book._id"></app-add-to-cart>
     </div>
     }
-
-    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
-        @for (book of books; track $index) {
-        <a href="">
-            <div class="col">
-                <div class="card h-100 border-0 shadow-sm fade-in-card">
-                    <img [src]="book.imageCover" [alt]="book.title" class="card-img-top"
-                        style="height: 320px; object-fit: contain" />
-                    <div class="card-body px-2 py-3">
-                        <h6 class="card-title mb-1 fw-semibold">{{ book.title }}</h6>
-                        <p class="card-text text-muted small">{{ book.author }}</p>
-                        <h6 class="card-title mb-1 fw-semibold">{{ book.price }} L.E</h6>
-                    </div>
-                </div>
-            </div>
-        </a>
-        }
-    </div>
+  </div>
 </div>
 
 <!-- Pagination -->
 @if (totalPages > 1) {
 <nav class="mt-4 d-flex justify-content-center">
-    <ul class="pagination pagination-rounded">
-        <li class="page-item" [class.disabled]="currentPage === 1">
-            <a class="page-link" (click)="changePage(currentPage - 1)">&laquo;</a>
-        </li>
-        @for (page of [].constructor(totalPages); track $index) {
-        <li class="page-item" [class.active]="currentPage === $index + 1">
-            <a class="page-link" (click)="changePage($index + 1)">{{ $index + 1 }}</a>
-        </li>
-        }
-        <li class="page-item" [class.disabled]="currentPage === totalPages">
-            <a class="page-link" (click)="changePage(currentPage + 1)">&raquo;</a>
-        </li>
-    </ul>
+  <ul class="pagination pagination-rounded">
+    <li class="page-item" [class.disabled]="currentPage === 1">
+      <a class="page-link" (click)="changePage(currentPage - 1)">&laquo;</a>
+    </li>
+    @for (page of [].constructor(totalPages); track $index) {
+    <li class="page-item" [class.active]="currentPage === $index + 1">
+      <a class="page-link" (click)="changePage($index + 1)">{{ $index + 1 }}</a>
+    </li>
+    }
+    <li class="page-item" [class.disabled]="currentPage === totalPages">
+      <a class="page-link" (click)="changePage(currentPage + 1)">&raquo;</a>
+    </li>
+  </ul>
 </nav>
 }

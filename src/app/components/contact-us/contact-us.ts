@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-contact-us',
@@ -15,7 +14,6 @@ formData = {
     message: ''
   };
 
-  constructor(private modalService: NgbModal) {}
 
   onSubmit() {
     // Here you would typically send the form data to your backend

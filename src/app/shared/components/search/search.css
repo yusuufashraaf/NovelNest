@@ -2,3 +2,18 @@
   background-color: #ebedf2;
   border-radius: 0.5rem;
 }
+
+ .search-wrapper {
+    position: relative;
+    width: 300px;
+  }
+  .search-wrapper input.form-control {
+    padding-left: 2.5rem; /* space for icon */
+  }
+  .search-wrapper i.bi-search {
+    position: absolute;
+    top: 50%;
+    left: 0.75rem;
+    transform: translateY(-50%);
+    color: #6c757d; /* Bootstrap text-secondary color */
+  }
