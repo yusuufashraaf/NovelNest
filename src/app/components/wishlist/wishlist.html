@@ -1,0 +1,30 @@
+<div class="container py-5">
+  <h1 class="display-5 fw-bold mb-4 text-slate-800 wishlist-title">My Wishlist</h1>
+
+  <!-- 4 columns from ≥lg screens, collapses gracefully below that -->
+  <div
+    class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4 justify-content-center align-items-center text-center">
+    @for (item of paginatedWishlist; track item.productId) {
+    <div class="col">
+      @if (item) {
+      <app-wishlist-item [item]="item" (remove)="deleteItem($event)">
+      </app-wishlist-item>
+      }
+    </div>
+    }
+  </div>
+
+
+  <!-- Pagination -->
+  <div class="d-flex justify-content-center mt-4 mb-4 p-4">
+    @if (paginatedWishlist.length > 0) {
+    <ngb-pagination [(page)]="page" [pageSize]="pageSize" [collectionSize]="collectionSize" [maxSize]="5"
+      [rotate]="true" [ellipses]="false" [boundaryLinks]="true" size="lg">
+    </ngb-pagination>
+    } @else {
+    <div class="col-12 text-center">
+      <p class="fs-5 fw-bold text-muted mx-5">Your wishlist is empty</p>
+    </div>
+    }
+  </div>
+</div>

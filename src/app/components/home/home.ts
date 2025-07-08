@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
+import { Product } from '../../services/product.service';
 @Component({
   selector: 'app-home',
   standalone: true,
@@ -8,6 +9,7 @@ import { RouterModule } from '@angular/router';
   styleUrl: './home.css',
 })
 export class Home {
+  productService = inject(Product);
   topPicks = [
     {
       title: 'The Whispering Woods',
@@ -45,13 +47,5 @@ export class Home {
       image: 'https://images.unsplash.com/photo-1508057198894-247b23fe5ade',
     },
   ];
-
-  genres = [
-    'Fantasy',
-    'Science Fiction',
-    'Mystery',
-    'Romance',
-    'Thriller',
-    'Historical Fiction',
-  ];
+ 
 }

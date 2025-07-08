@@ -12,10 +12,10 @@ export class ThankYou {
   constructor(private router: Router) {}
 
   goToHome() {
-    this.router.navigate(['/']);
+    this.router.navigate(['/home']);
   }
 
   goToOrders() {
-    this.router.navigate(['/books']);
+    this.router.navigate(['/purchased']);
   }
 }

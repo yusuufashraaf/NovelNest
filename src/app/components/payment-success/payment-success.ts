@@ -110,7 +110,7 @@ export class PaymentSuccess implements OnInit {
     if (this.countdownInterval) {
       clearInterval(this.countdownInterval);
     }
-    this.router.navigate(['/thank-you']);
+    this.router.navigate(['/browse']);
   }
 
   redirectToPaymentError() {

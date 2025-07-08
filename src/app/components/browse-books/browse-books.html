@@ -48,21 +48,6 @@
     </ul>
   </div>
 
-  <!-- Rating -->
-  <div class="dropdown flex-grow-1" style="min-width: 00px;">
-    <button class="btn btn-outline-secondary dropdown-toggle w-100" type="button" data-bs-toggle="dropdown"
-      aria-expanded="false">
-      {{ filters.rating ? filters.rating + ' Stars & Up' : 'Rating' }}
-    </button>
-    <ul class="dropdown-menu">
-      @for (rating of ratings; track $index) {
-      <li>
-        <a class="dropdown-item" (click)="filterByRating(rating)" [class.active]="filters.rating === rating">{{
-          rating }} Stars & Up</a>
-      </li>
-      }
-    </ul>
-  </div>
 </div>
 
 <!-- Sort dropdown below filters, same width -->
@@ -120,7 +105,7 @@
   <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
     @for (book of books; track $index) {
     <div>
-      <a href="">
+      <a [routerLink]="['/Browse', book._id]">
         <div class="col">
           <div class="card h-100 border-0 shadow-sm fade-in-card">
             <img [src]="book.imageCover" [alt]="book.title" class="card-img-top"
@@ -133,7 +118,10 @@
           </div>
         </div>
       </a>
-      <app-add-to-cart [productId]="book._id"></app-add-to-cart>
+      <div class="d-flex justify-content-center gap-5">
+        <app-add-to-cart [productId]="book._id"></app-add-to-cart>
+        <app-add-to-wishlist [productId]="book._id"></app-add-to-wishlist>
+      </div>
     </div>
     }
   </div>

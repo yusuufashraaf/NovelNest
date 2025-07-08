@@ -1,0 +1,109 @@
+import { Component, OnInit, Inject, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
+import { jwtDecode } from 'jwt-decode';
+import { Router } from '@angular/router';
+import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { UserInfo } from '../../services/user-info';
+
+@Component({
+  selector: 'app-login',
+  standalone: true,
+  imports: [FormsModule, CommonModule],
+  templateUrl: './login.html',
+  styleUrls: ['./login.css'],
+})
+export class Login implements OnInit {
+  email = '';
+  password = '';
+  errorMessage = '';
+
+  constructor(
+    private http: HttpClient,
+    private router: Router,
+    @Inject(PLATFORM_ID) private platformId: Object,
+    private userdata:UserInfo
+
+  ) {}
+
+  ngOnInit(): void {
+    if (isPlatformBrowser(this.platformId) && (window as any).google) {
+      (window as any).google.accounts.id.initialize({
+        client_id:
+          '164201127750-so6g0tbctntsgqu5777aavd0kq3gv8l0.apps.googleusercontent.com',
+        callback: (response: any) => this.handleGoogle(response.credential),
+      });
+
+      (window as any).google.accounts.id.renderButton(
+        document.getElementById('googleBtn')!,
+        { theme: 'outline', size: 'large' }
+      );
+    }
+  }
+
+  handleGoogle(credential: string) {
+    const decodedToken = jwtDecode(credential);
+    console.log('Decoded Token:', decodedToken);
+
+    this.http
+      .post('http://localhost:5000/api/v1/auth/google', { token: credential })
+      .subscribe({
+        next: (res: any) => {
+          if (res.token && res.data?.user) {
+            localStorage.setItem('token', res.token);
+            localStorage.setItem('user', JSON.stringify(res.data.user));
+
+            this.userdata.setuserId(res.data.user._id);
+            this.userdata.setToken(res.token);
+          console.log('Google login success', res.data.user);
+
+            this.router.navigate(['/home']);
+          } else {
+            this.errorMessage =
+              'Unexpected response from server. Please try again.';
+          }
+        },
+        error: (err) => {
+          const msg = err.error?.message || err.message;
+          this.errorMessage = msg;
+          console.error('Google login failed:', msg);
+        },
+      });
+  }
+
+  onSubmit() {
+    const credentials = {
+      email: this.email,
+      password: this.password,
+    };
+
+    this.http
+      .post('http://localhost:5000/api/v1/auth/login', credentials)
+      .subscribe({
+        next: (res: any) => {
+          console.log('Login response:', res);
+          if (res.token && res.data?.user) {
+            const token = res.token;
+            const user = res.data.user;
+
+            this.userdata.setuserId(user._id);
+            this.userdata.setToken(token);
+
+            localStorage.setItem('token', token);
+            localStorage.setItem('user', JSON.stringify(user));
+
+            this.router.navigate(['/home']);
+          } else {
+            this.errorMessage =
+              'Unexpected response from server. Please try again.';
+          }
+        },
+        error: (err) => {
+          const msg = err.error?.message || err.message;
+          this.errorMessage = msg;
+          console.error('Login failed', msg);
+        },
+      });
+  }
+}

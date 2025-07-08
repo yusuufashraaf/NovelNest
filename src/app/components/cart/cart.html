@@ -12,15 +12,31 @@
 
       <!-- Cart Items -->
       <div>
-        <ng-container *ngFor="let item of cartService.cart().cartItems">
-          <app-cart-item *ngIf="item" [item]="item" (quantityChange)="updateQuantity($event.productId, $event.quantity)"
+        @for (item of cartService.cart().cartItems; track item.productId) {
+        <ng-container>
+          @if (item) {
+          <app-cart-item [item]="item" (quantityChange)="updateQuantity($event.productId, $event.quantity)"
             (remove)="deleteItem($event)">
           </app-cart-item>
+          }
+          @if (item.cartItemEntry.length > 0) {
+          <div class="row">
+            <div class="col-12 text-center">
+              <div class="d-flex justify-content-center align-items-center gap-2">
+                <span class="fs-5">Expires in</span>
+                <span class="fs-5">{{ item.cartItemEntry[0].expiresAt |
+                  date:'dd/MM/yyyy HH:mm:ss'}}</span>
+              </div>
+            </div>
+          </div>
+          }
         </ng-container>
+        }
       </div>
 
       <!-- Summary -->
       <div class="row justify-content-end px-4 cart-summary-row">
+        @if (cartService.cart().cartItems.length > 0) {
         <div class="col-md-6 col-lg-4 total-row">
           <ul class="list-unstyled mb-5">
             <li class="d-flex justify-content-between fw-bold py-1 fs-4">
@@ -32,6 +48,11 @@
             Proceed to Checkout &rarr;
           </a>
         </div>
+        } @else {
+        <div class="col-12 text-center">
+          <p class="fs-5 fw-bold text-muted mx-5">Your cart is empty</p>
+        </div>
+        }
       </div>
     </div>
   </div>
