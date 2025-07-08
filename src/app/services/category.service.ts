@@ -19,7 +19,7 @@ export class CategoryService {
 
   constructor(private http: HttpClient) {}
 
-  getAll(page = 1, limit = 10): Observable<Category[]> {
+  getAll(page = 1, limit = 100): Observable<Category[]> {
 
     return this.http.get<any>(this.apiUrl, {
       params: { page, limit }

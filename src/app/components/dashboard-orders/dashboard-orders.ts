@@ -1,6 +1,10 @@
 import { Component, Inject, PLATFORM_ID } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Order, OrderService } from '../../services/order.service';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { UserInfo } from '../../services/user-info';
+import { Users } from '../../services/users';
+import { AuthService } from '../../services/auth.service';
 
 // interface Order {
 //   _id: string;
@@ -36,42 +40,40 @@ import { Order, OrderService } from '../../services/order.service';
   styleUrl: './dashboard-orders.css'
 })
 export class DashboardOrders {
-allOrders: Order[] = [//list of all books in the store
+  allOrders: Order[] = [//list of all books in the store
 
   ];
 
   constructor(
     private route: ActivatedRoute,
     private orderService: OrderService,
-    @Inject(PLATFORM_ID) private platformId: Object
+    @Inject(UserInfo) private userinfo: UserInfo,
+    private http: HttpClient
   ) {
-    this.loadOrders(1,100)
+    this.getAllOrdersAPI();
   }
 
   isLoading = true;
 
-
-  loadOrders(page: number,limit:number) {
-    this.isLoading = true;
-
-    const params: any = {
-      page,
-      limit: 100,
-    };
-
-    this.orderService.getAllOrders(params).subscribe({
-      next: (res) => {
-        this.allOrders = res.data || [];
-        this.isLoading = false;
-        console.log('✅ Books loaded successfully:', this.allOrders.length);
-      },
-      error: (err) => {
-        console.error('❌ Error loading books:', err);
-        if (err.status === 404) {
-          this.allOrders = [];
-        }
-        this.isLoading = false;
-      },
+getAllOrdersAPI() {
+    const headers = new HttpHeaders({
+      Authorization: `${this.userinfo.getToken()}`
     });
-}
+
+    console.log("Before request");
+
+    this.http.get<any>('http://localhost:5000/api/v1/orders/all-orders', { headers })
+      .subscribe({
+        next: (response) => {
+          this.allOrders= response.data;
+          console.log("Response data:", response);  // This will log the actual data
+        },
+        error: (err) => {
+          console.error("Error fetching data:", err);
+        }
+      });
+
+    console.log("After request");
+  }
+
 }

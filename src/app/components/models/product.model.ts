@@ -1,8 +1,7 @@
 export interface Products {
-  category: string;
   _id: string;
   title: string;
-  slug?: string;
+  slug: string;
   description: string;
   author: string;
   quantity: number;
@@ -12,9 +11,13 @@ export interface Products {
   imageCover: string;
   images: string[];
   pdfLink: string;
-  subcategory: string[];
+  category: {
+    _id: string;
+    name: string;
+  };
+  subcategory: any[]; // Can be more specific if you know the structure
   ratingAverage?: number;
-  ratingQuantity?: number;
-  createdAt?: string;
-  updatedAt?: string;
+  ratingQuantity: number;
+  createdAt: string;
+  updatedAt: string;
 }

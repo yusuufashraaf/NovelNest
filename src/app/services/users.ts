@@ -1,29 +1,22 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, catchError, map, tap, throwError, of } from 'rxjs';
+import { Observable, of } from 'rxjs';
+import { catchError, map, tap } from 'rxjs/operators';
 
-// Define your User interface (recommend putting in a separate file)
 export interface User {
+  isVerified: boolean;
   _id: string;
   name: string;
   email: string;
   role: string;
   active: boolean;
-  createdAt: string | Date;
-  updatedAt?: string | Date;
-  __v?: number;
-  // Optional fields based on your API response
-  passwordChangedAt?: string;
-  passwordResetCode?: string;
-  passwordResetExpires?: string;
-  passwordResetVerified?: boolean;
-  lastPasswordResetVerifyAttempt?: string;
-  lastEmailSentAt?: string;
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
 }
 
 interface ApiResponse {
   data: User[];
-  // Add other response properties if they exist
 }
 
 @Injectable({
@@ -32,33 +25,33 @@ interface ApiResponse {
 export class Users {
   private readonly baseUrl = 'http://localhost:5000/api/v1/users';
 
-  constructor(private http: HttpClient) {}
+ constructor(private http: HttpClient) {}
 
   getAllUsers(): Observable<User[]> {
     console.log('🔍 Fetching users from:', this.baseUrl);
-    return this.http.get<ApiResponse>(this.baseUrl).pipe(
+    
+    return this.http.get<User[] | { data: User[] }>(this.baseUrl).pipe(
       tap(response => {
-        console.log('📡 Raw users API response:', response);
-        console.log('📊 Users data structure:', response?.data);
+        //console.log('📡 Raw users API response:', response);
       }),
       map(response => {
-        if (!response) {
-          console.warn('⚠️ No response received from users API');
-          return [];
+        // If response is already an array of users
+        if (Array.isArray(response)) {
+          console.log('✅ Received direct array of users:', response.length);
+          return response;
         }
-        if (!response.data) {
-          console.warn('⚠️ No data property in users API response');
-          return [];
+        
+        // If response is wrapped in data property
+        if (response && 'data' in response && Array.isArray(response.data)) {
+          console.log('✅ Received wrapped users array:', response.data.length);
+          return response.data;
         }
-        if (!Array.isArray(response.data)) {
-          console.warn('⚠️ Users data is not an array:', response.data);
-          return [];
-        }
-        console.log('✅ Users data extracted successfully:', response.data.length, 'users');
-        return response.data;
+        
+        console.warn('⚠️ Unexpected response format:', response);
+        return [];
       }),
       catchError(error => {
-        console.error('❌ Error in getAllUsers:', error);
+        console.error('❌ Error fetching users:', error);
         return of([]);
       })
     );

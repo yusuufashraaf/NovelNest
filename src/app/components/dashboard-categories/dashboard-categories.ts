@@ -21,7 +21,7 @@ export class DashboardCategories {
 
   // Pagination
   currentPage = 1;
-  pageSize = 15;
+  pageSize = 100;
   totalPages = 1;
   totalItems = 0;
 

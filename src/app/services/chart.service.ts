@@ -1,23 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, forkJoin, of } from 'rxjs';
-import { map, catchError, tap, switchMap } from 'rxjs/operators';
-import { CategoryService, Category } from './category.service';
-import { SubcategoryService, Subcategory } from './subcategory.service';
+import { map, catchError } from 'rxjs/operators';
 
 export interface ChartData {
   labels: string[];
   data: number[];
-}
-
-export interface MonthlyProductData {
-  month: string;
-  count: number;
-}
-
-export interface CategoryProductData {
-  category: string;
-  count: number;
 }
 
 export interface DashboardChartData {
@@ -25,228 +13,133 @@ export interface DashboardChartData {
   categoryProducts: ChartData;
   totalRevenue: number;
   totalOrders: number;
+  userCount: number;
+  totalBooks: number;
   recentOrders: any[];
 }
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class ChartService {
   private baseUrl = 'http://localhost:5000/api/v1';
 
-  constructor(
-    private http: HttpClient,
-    private categoryService: CategoryService,
-    private subcategoryService: SubcategoryService
-  ) {}
+  constructor(private http: HttpClient) {}
 
-  // Get all data needed for dashboard charts
   getDashboardChartData(): Observable<DashboardChartData> {
     return forkJoin({
-      products: this.getProductsForCharts(),
-      orders: this.getOrdersForCharts().pipe(catchError(() => of([]))),
-      users: this.getUsersForCharts().pipe(catchError(() => of([]))),
-      categories: this.categoryService.getAllWithoutPagination().pipe(catchError(() => of([]))),
-      subcategories: this.subcategoryService.getAll().pipe(catchError(() => of([])))
+      products: this.getProducts(),
+      orders: this.getOrders(),
+      users: this.getUsers()
     }).pipe(
-      map(({ products, orders, users, categories, subcategories }) => {
-        const monthlyProducts = this.processMonthlyProductData(products);
-        const categoryProducts = this.processCategoryProductData(products, categories, subcategories);
-        const totalRevenue = this.calculateTotalRevenue(orders);
+      map(({ products, orders, users }) => {
+        const monthlyProducts = this.processMonthlyProducts(products);
+        const categoryProducts = this.processCategories(products);
+        const totalRevenue = this.calculateRevenue(orders);
         const totalOrders = orders.length;
         const recentOrders = this.getRecentOrders(orders);
-
         return {
           monthlyProducts,
           categoryProducts,
           totalRevenue,
-          totalOrders,
-          recentOrders
+          totalOrders: orders.length,
+          userCount: users.length,
+          totalBooks: products.length,
+          recentOrders: this.getRecentOrders(orders)
         };
       }),
-      catchError(error => {
-        return of({
-          monthlyProducts: { labels: [], data: [] },
-          categoryProducts: { labels: [], data: [] },
-          totalRevenue: 0,
-          totalOrders: 0,
-          recentOrders: []
-        });
-      })
+      catchError(() => this.getDefaultData())
     );
   }
 
-  // Get products data for charts
-  private getProductsForCharts(): Observable<any[]> {
-    return this.http.get<any>(`${this.baseUrl}/products`).pipe(
-      map(response => {
-        return response.data || response || [];
-      }),
-      catchError(error => {
-        return of([]);
-      })
+  getProducts(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.baseUrl}/products`).pipe(
+      map(response => response),
+      catchError(() => of([]))
     );
   }
 
-  // Get orders data for charts (if endpoint exists)
-  private getOrdersForCharts(): Observable<any[]> {
-    return this.http.get<any>(`${this.baseUrl}/orders`).pipe(
-      map(response => {
-        return response.data || response || [];
-      }),
-      catchError(error => {
-        return of([]);
-      })
+  getOrders(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.baseUrl}/orders/all-orders`).pipe(
+      map(response => response),
+      catchError(() => of([]))
     );
   }
 
-  // Get users data for charts
-  getUsersForCharts(): Observable<any[]> {
-    return this.http.get<any>(`${this.baseUrl}/users`).pipe(
-      map(response => {
-        return response.data || response || [];
-      }),
-      catchError(error => {
-        return of([]);
-      })
+  getUsers(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.baseUrl}/users`).pipe(
+      map(response => response),
+      catchError(() => of([]))
     );
   }
 
-  // Process monthly product data for chart
-  private processMonthlyProductData(products: any[]): ChartData {
-    const monthlyProducts: { [key: string]: number } = {};
+  getChart1(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.baseUrl}/orders/noofordersincategory`).pipe(
+      map(response => response),
+      catchError(() => of([]))
+    );
+  }
+
+  private processMonthlyProducts(products: any[]): ChartData {
+    const monthlyCounts: Record<string, number> = {};
     const currentDate = new Date();
 
-    // Initialize last 6 months with 0
+    // Initialize last 6 months
     for (let i = 5; i >= 0; i--) {
       const date = new Date(currentDate.getFullYear(), currentDate.getMonth() - i, 1);
       const monthYear = date.toLocaleString('en-US', { month: 'short', year: 'numeric' });
-      monthlyProducts[monthYear] = 0;
+      monthlyCounts[monthYear] = 0;
     }
 
-    // Count products by creation month
+    // Count products by month
     products.forEach(product => {
       if (product.createdAt) {
         const monthYear = new Date(product.createdAt).toLocaleString('en-US', { month: 'short', year: 'numeric' });
-        monthlyProducts[monthYear] = (monthlyProducts[monthYear] || 0) + 1;
+        monthlyCounts[monthYear] = (monthlyCounts[monthYear] || 0) + 1;
       }
     });
 
-    const labels = Object.keys(monthlyProducts).sort((a, b) => new Date(a).getTime() - new Date(b).getTime());
-    const data = labels.map(label => monthlyProducts[label]);
+    const labels = Object.keys(monthlyCounts).sort((a, b) => new Date(a).getTime() - new Date(b).getTime());
+    const data = labels.map(label => monthlyCounts[label]);
 
     return { labels, data };
   }
 
-  // Process category product data for chart with real category names
-  private processCategoryProductData(products: any[], categories: Category[], subcategories: Subcategory[]): ChartData {
-    const categoryProducts: { [key: string]: number } = {};
-
-    // Create maps for quick lookup
-    const categoryMap = new Map(categories.map(cat => [cat._id, cat.name]));
-    const subcategoryMap = new Map(subcategories.map(sub => [sub._id, sub.name]));
+  private processCategories(products: any[]): ChartData {
+    const categoryCounts: Record<string, number> = {};
 
     products.forEach(product => {
-      let categoryName = 'Unknown Category';
-
-      // Try to get category name from different possible structures
-      if (product.category?.name) {
-        categoryName = product.category.name;
-      } else if (product.categoryName) {
-        categoryName = product.categoryName;
-      } else if (product.subcategory && Array.isArray(product.subcategory) && product.subcategory.length > 0) {
-        // Try to resolve subcategory IDs to names
-        const subcategoryNames = product.subcategory
-          .map((subId: string) => subcategoryMap.get(subId))
-          .filter((name: string | undefined) => name) // Remove undefined values
-          .slice(0, 2); // Take first 2 subcategory names
-
-        if (subcategoryNames.length > 0) {
-          categoryName = subcategoryNames.join(' / ');
-        } else {
-          // If we can't resolve subcategory names, use author as fallback
-          categoryName = product.author || 'Unknown Category';
-        }
-      } else if (product.author) {
-        // Use author as fallback if no category/subcategory info
-        categoryName = product.author;
-      }
-
-      categoryProducts[categoryName] = (categoryProducts[categoryName] || 0) + 1;
+      const category = product.category?.name || product.categoryName || product.author || 'Unknown';
+      categoryCounts[category] = (categoryCounts[category] || 0) + 1;
     });
 
-    // Sort by count and take top 5 categories
-    const sortedCategories = Object.entries(categoryProducts)
+    const sorted = Object.entries(categoryCounts)
       .sort(([,a], [,b]) => b - a)
       .slice(0, 5);
 
-    const labels = sortedCategories.map(([category]) => category);
-    const data = sortedCategories.map(([, count]) => count);
-
-    return { labels, data };
+    return {
+      labels: sorted.map(([category]) => category),
+      data: sorted.map(([, count]) => count)
+    };
   }
 
-  // Calculate total revenue from orders
-  private calculateTotalRevenue(orders: any[]): number {
-    return orders.reduce((total, order) => {
-      return total + (order.totalPrice || 0);
-    }, 0);
+  private calculateRevenue(orders: any[]): number {
+    return orders.reduce((total, order) => total + (order.totalPrice || 0), 0);
   }
 
-  // Get recent orders for dashboard
   private getRecentOrders(orders: any[]): any[] {
     return orders
       .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
       .slice(0, 5);
   }
 
-  // Get specific chart data by type
-  getMonthlyProductChart(): Observable<ChartData> {
-    return this.getProductsForCharts().pipe(
-      map(products => this.processMonthlyProductData(products))
-    );
-  }
-
-  getCategoryProductChart(): Observable<ChartData> {
-    return forkJoin({
-      products: this.getProductsForCharts(),
-      categories: this.categoryService.getAllWithoutPagination().pipe(catchError(() => of([]))),
-      subcategories: this.subcategoryService.getAll().pipe(catchError(() => of([])))
-    }).pipe(
-      map(({ products, categories, subcategories }) =>
-        this.processCategoryProductData(products, categories, subcategories)
-      )
-    );
-  }
-
-  // Get revenue data for charts
-  getRevenueData(): Observable<ChartData> {
-    return this.getOrdersForCharts().pipe(
-      map(orders => {
-        const monthlyRevenue: { [key: string]: number } = {};
-        const currentDate = new Date();
-
-        // Initialize last 6 months with 0
-        for (let i = 5; i >= 0; i--) {
-          const date = new Date(currentDate.getFullYear(), currentDate.getMonth() - i, 1);
-          const monthYear = date.toLocaleString('en-US', { month: 'short', year: 'numeric' });
-          monthlyRevenue[monthYear] = 0;
-        }
-
-        // Sum revenue by month
-        orders.forEach(order => {
-          if (order.createdAt && order.totalPrice) {
-            const monthYear = new Date(order.createdAt).toLocaleString('en-US', { month: 'short', year: 'numeric' });
-            monthlyRevenue[monthYear] = (monthlyRevenue[monthYear] || 0) + order.totalPrice;
-          }
-        });
-
-        const labels = Object.keys(monthlyRevenue).sort((a, b) => new Date(a).getTime() - new Date(b).getTime());
-        const data = labels.map(label => monthlyRevenue[label]);
-
-        return { labels, data };
-      }),
-      catchError(() => of({ labels: [], data: [] }))
-    );
+  private getDefaultData(): Observable<DashboardChartData> {
+    return of({
+      monthlyProducts: { labels: [], data: [] },
+      categoryProducts: { labels: [], data: [] },
+      totalRevenue: 0,
+      totalOrders: 0,
+      userCount: 0,
+      totalBooks: 0,
+      recentOrders: []
+    });
   }
 }

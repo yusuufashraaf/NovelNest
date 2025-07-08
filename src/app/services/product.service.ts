@@ -36,10 +36,25 @@ export class Product {
   }
 
   createProduct(productData: FormData): Observable<any> {
-    return this.http.post(this.baseUrl, productData).pipe(
-      catchError(this.handleError)
-    );
-  }
+  return this.http.post(`${this.baseUrl}`, productData, {
+    headers: {
+      // No Content-Type! Let browser set it with boundary
+    },
+    reportProgress: true,
+    observe: 'response'
+  }).pipe(
+    catchError(error => {
+      // Extract meaningful error message from server response
+      let errorMsg = 'Failed to add product';
+      if (error.error?.message) {
+        errorMsg = error.error.message;
+      } else if (error.error?.errors?.length) {
+        errorMsg = error.error.errors[0].msg;
+      }
+      return throwError(() => new Error(errorMsg));
+    })
+  );
+}
 
   updateProduct(id: string, productData: FormData): Observable<any> {
     return this.http.put(`${this.baseUrl}/${id}`, productData).pipe(
