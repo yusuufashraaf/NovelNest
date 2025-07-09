@@ -26,9 +26,7 @@ export class WishlistService {
   });
 
   // constructor
-  constructor() {
-    this.refreshWishlist();
-  }
+  constructor() {}
 
   // refresh wishlist
   refreshWishlist(): void {

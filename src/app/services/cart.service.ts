@@ -36,9 +36,7 @@ export class CartService {
     totalQuantity: 0,
   });
 
-  constructor() {
-    this.refreshCart();
-  }
+  constructor() {}
 
   refreshCart(): void {
     this.getCart().subscribe({
