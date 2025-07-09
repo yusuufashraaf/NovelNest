@@ -9,11 +9,13 @@ import { ActivatedRoute, RouterModule } from '@angular/router';
 import { ProductService } from '../../services/product-service';
 import { Product } from '../../interfaces/product';
 import { UserInfo } from '../../services/user-info';
+import { AddToCart } from "../add-to-cart/add-to-cart";
+import { AddToWishlist } from "../add-to-wishlist/add-to-wishlist";
 
 
 @Component({
   selector: 'app-book-details',
-  imports:[CommonModule,FormsModule,RouterModule],
+  imports: [CommonModule, FormsModule, RouterModule, AddToCart, AddToWishlist],
   templateUrl: './book-details.html',
   standalone: true,
   styleUrls: ['./book-details.css']
@@ -174,6 +176,9 @@ export class BookDetails implements OnInit {
     }
 
   }
+  // handleRemoveFromWishlist(){
+
+  // }
 
 }
 
