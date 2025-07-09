@@ -5,14 +5,14 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class UserInfo {
-  userId:String='';
-  token:String='';
+  userId:string='';
+  token:string='';
   constructor(){};
 
-  setuserId(id:String){
+  setuserId(id:string){
     this.userId =id;
   }
-  setToken(token:String){
+  setToken(token:string){
     this.token=token;
   }
   getToken(){

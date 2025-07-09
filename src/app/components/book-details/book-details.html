@@ -59,25 +59,6 @@
     </div>
   </div>
 
-  <!-- <div class="card mt-4 border-0 shadow-sm">
-    <div class="card-header bg-white">
-      <h3 class="mb-0">Reviews</h3>
-    </div>
-    <div class="card-body">
-      @for (review of reviews; track review.userId._id) {
-      <div class="border-bottom pb-3 mb-3">
-        <div class="d-flex justify-content-between mb-2">
-          <strong class="fs-5">{{review.userId.name}}</strong>
-          <span class="text-muted">{{review.postedAt | date:'medium'}}</span>
-        </div>
-        <div class="text-warning mb-2">
-          {{getStarRating(review.rate)}}
-        </div>
-        <p class="mb-0">{{review.comment}}</p>
-      </div>
-      }
-    </div>
-  </div> -->
   <div class="card mt-4 border-0 shadow-sm">
   <div class="card-header bg-white">
     <h3 class="mb-0">Reviews</h3>
@@ -89,12 +70,14 @@
           <strong class="fs-5">{{review.userId.name}}</strong>
           <div class="d-flex align-items-center gap-2">
             <span class="text-muted">{{review.postedAt | date:'medium'}}</span>
+            @if(review.userId._id === userId){
             <button
               class="btn btn-outline-danger btn-sm"
               (click)="deleteReview(review._id)"
               title="Delete review">
               <i class="fas fa-trash"></i>
             </button>
+            }
           </div>
         </div>
         <div class="text-warning mb-2">
@@ -105,50 +88,52 @@
     }
   </div>
 </div>
+@if(isCurrentUserBoughtThisBook && !isCurrentUserReviewedBeforeThisBook){
   <div class="card mt-4 border-0 shadow-sm">
     <div class="card-header bg-white">
       <h3 class="mb-0">Write a Review</h3>
     </div>
-    <div class="card-body">
-      <form #reviewForm="ngForm" (submit)="submitReview(reviewForm)">
-        <div class="mb-3">
-          <label class="form-label">Your Rating</label>
-          <div class="star-rating">
-            @for (star of [1,2,3,4,5]; track star) {
-              <button type="button"
-                      (click)="setRating(star)"
-                      [class.text-warning]="star <= newReview.rate"
-                      class="btn p-0 me-1 fs-2 ">
-                {{ star <= newReview.rate ? '★' : '☆' }}
-              </button>
-            }
-            <span class="ms-2">{{newReview.rate}} of 5 stars</span>
+      <div class="card-body">
+        <form #reviewForm="ngForm" (submit)="submitReview(reviewForm)">
+          <div class="mb-3">
+            <label class="form-label">Your Rating</label>
+            <div class="star-rating">
+              @for (star of [1,2,3,4,5]; track star) {
+                <button type="button"
+                        (click)="setRating(star)"
+                        [class.text-warning]="star <= newReview.rate"
+                        class="btn p-0 me-1 fs-2 ">
+                  {{ star <= newReview.rate ? '★' : '☆' }}
+                </button>
+              }
+              <span class="ms-2">{{newReview.rate}} of 5 stars</span>
+            </div>
           </div>
-        </div>
 
-        <div class="mb-3">
-          <label for="reviewComment" class="form-label">Your Review</label>
-          <textarea class="form-control"
-                    id="reviewComment"
-                    rows="4"
-                    name="comment"
-                    required
-                    minlength="2"
-                     [(ngModel)]="newReview.comment"
-                    #commentInput="ngModel"
-                    ></textarea>
-          </div>
-          <div *ngIf="commentInput.invalid && (commentInput.dirty || commentInput.touched)" class="text-danger mt-1">
-            <div *ngIf="commentInput.errors?.['required']">Comment is required.</div>
-            <div *ngIf="commentInput.errors?.['minlength']">Comment must be at least 2 characters.</div>
-          </div>
-        <button type="submit"
-                class="btn btn-primary"
-                [disabled]="reviewForm.invalid"
-                >
-          Submit Review
-        </button>
-      </form>
+          <div class="mb-3">
+            <label for="reviewComment" class="form-label">Your Review</label>
+            <textarea class="form-control"
+                      id="reviewComment"
+                      rows="4"
+                      name="comment"
+                      required
+                      minlength="2"
+                      [(ngModel)]="newReview.comment"
+                      #commentInput="ngModel"
+                      ></textarea>
+            </div>
+            <div *ngIf="commentInput.invalid && (commentInput.dirty || commentInput.touched)" class="text-danger mt-1">
+              <div *ngIf="commentInput.errors?.['required']">Comment is required.</div>
+              <div *ngIf="commentInput.errors?.['minlength']">Comment must be at least 2 characters.</div>
+            </div>
+          <button type="submit"
+                  class="btn btn-primary"
+                  [disabled]="reviewForm.invalid"
+                  >
+            Submit Review
+          </button>
+        </form>
+      </div>
     </div>
-  </div>
+  }
 </div>

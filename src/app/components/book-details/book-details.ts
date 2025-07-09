@@ -23,7 +23,10 @@ export class BookDetails implements OnInit {
   reviews: Review[] = [];
   noOfReviews:number=0;
   avgRate:number=0;
-    bookId:String ='';
+  bookId:string ='';
+  userId:string='';
+  isCurrentUserBoughtThisBook=false;
+  isCurrentUserReviewedBeforeThisBook=false;
 
   newReview:NewReview ={
     userId:'',
@@ -70,8 +73,12 @@ export class BookDetails implements OnInit {
       this.newReview.bookId = id;
       this.fetchBookReviews(id);
       this.fetchBookData(this.bookId);
+      this.fetchIsreviewedandIsBought(this.bookId);
+
     }
     this.newReview.userId = this.userInfo.getUserId();
+    this.userId =this.newReview.userId ;
+
 
   }
   fetchBookData(productId:String) {
@@ -99,7 +106,21 @@ export class BookDetails implements OnInit {
     });
   }
 
+  fetchIsreviewedandIsBought(bookId:string){
 
+    this.reviewserv.getIsboughtandIsreviewed(bookId).subscribe({
+      next:(res)=>{
+          this.isCurrentUserBoughtThisBook=res[0].isBought;
+          this.isCurrentUserReviewedBeforeThisBook =res[0].isReviewed;
+
+      },error(err){
+        console.log(err);
+
+      }
+
+    })
+
+  }
   getStarRating(rating: number): string {
     const fullStars = '★'.repeat(Math.floor(rating));
     const halfStar = rating % 1 >= 0.5 ? '☆' : '';
@@ -153,6 +174,7 @@ export class BookDetails implements OnInit {
     }
 
   }
+
 }
 
 
