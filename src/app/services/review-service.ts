@@ -43,6 +43,16 @@ export class ReviewService {
       `http://localhost:5000/api/v1/comment/user/${userId}`
     );
   }
+  getIsboughtandIsreviewed(bookId:string): Observable<any[]>{
+    const headers = new HttpHeaders({
+      Authorization: `${this.userInfo.getToken()}`,
+    });
+
+    return this.http.get<any[]>(
+      `http://localhost:5000/api/v1/comment/check/${bookId}`
+    ,{headers}
+    );
+  }
 
   updateReview(
     reviewId: string,

@@ -1,5 +1,5 @@
 export interface NewReview {
-    userId: String,
+    userId: string,
     bookId: string,
     comment: string;
     rate: number,
