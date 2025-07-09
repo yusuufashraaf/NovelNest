@@ -12,14 +12,16 @@
         <img [src]="book.imageCover || 'https://via.placeholder.com/300x450?text=No+Cover'"
              class="card-img-top img-fluid"
              alt="{{book.title}} cover">
-        <div class="card-body text-center">
-          <button class="btn btn-primary w-100 mb-2">
-            <i class="bi bi-cart-plus me-2"></i>Add to Cart
-          </button>
-          <button class="btn btn-outline-secondary w-100">
-            <i class="bi bi-bookmark me-2"></i>Save for Later
-          </button>
+     <div class="card-body text-center">
+      <div class="d-flex justify-content-center gap-2">
+        <div style="flex: 1;">
+          <app-add-to-cart [productId]="book._id"></app-add-to-cart>
         </div>
+        <div style="flex: 1;">
+          <app-add-to-wishlist [productId]="book._id"></app-add-to-wishlist>
+        </div>
+      </div>
+    </div>
       </div>
     </div>
 
