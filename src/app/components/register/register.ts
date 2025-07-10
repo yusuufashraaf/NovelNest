@@ -1,8 +1,9 @@
 import { Component, Inject, PLATFORM_ID, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { isPlatformBrowser, CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { jwtDecode } from 'jwt-decode';
 
 @Component({
   selector: 'app-register',
@@ -22,14 +23,19 @@ export class Register implements OnInit {
   constructor(
     private http: HttpClient,
     private router: Router,
+    private route: ActivatedRoute,
     @Inject(PLATFORM_ID) private platformId: Object
   ) {}
 
   ngOnInit(): void {
+    this.initGoogleButton();
+    this.handleOAuthTokenRedirect();
+  }
+
+  initGoogleButton() {
     if (isPlatformBrowser(this.platformId) && (window as any).google) {
       (window as any).google.accounts.id.initialize({
-        client_id:
-          '164201127750-so6g0tbctntsgqu5777aavd0kq3gv8l0.apps.googleusercontent.com',
+        client_id: '164201127750-so6g0tbctntsgqu5777aavd0kq3gv8l0.apps.googleusercontent.com',
         callback: (response: any) => this.handleGoogle(response.credential),
       });
 
@@ -76,12 +82,21 @@ export class Register implements OnInit {
       });
   }
 
-  registerWithGithub() {
-    const clientId = 'Ov23liEbl4JMupNSPBjD';
-    const redirectUri = 'http://localhost:4200/github-callback';
+  registerWithGithub(): void {
+    window.location.href = 'http://localhost:5000/api/v1/auth/github';
+  }
 
-    const githubAuthUrl = `https://github.com/login/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&scope=user:email`;
+  handleOAuthTokenRedirect(): void {
+    this.route.queryParams.subscribe((params) => {
+      const token = params['token'];
+      if (!token) return;
 
-    window.location.href = githubAuthUrl;
+      const decoded: any = jwtDecode(token);
+      if (isPlatformBrowser(this.platformId)) {
+        localStorage.setItem('token', token);
+      }
+
+      this.router.navigate(['/home']);
+    });
   }
 }
