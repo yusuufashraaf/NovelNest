@@ -23,7 +23,8 @@
 
     <div class="mb-3 text-start">
       <label for="confirmPassword" class="form-label">Confirm Password</label>
-      <input type="password" class="form-control" id="confirmPassword" [(ngModel)]="confirmPassword" name="confirmPassword" required />
+      <input type="password" class="form-control" id="confirmPassword" [(ngModel)]="confirmPassword"
+        name="confirmPassword" required />
     </div>
 
     <button type="submit" class="btn w-100 btn-register mb-3">
@@ -35,6 +36,11 @@
     <button type="button" class="btn btn-google w-100 mb-3" id="googleBtn">
       <img src="https://img.icons8.com/color/48/google-logo.png" alt="Google" />
       Sign up with Google
+    </button>
+
+    <button type="button" class="btn btn-github w-100" (click)="registerWithGithub()">
+      <img src="https://img.icons8.com/ios-filled/50/000000/github.png" alt="GitHub" />
+      Sign in with GitHub
     </button>
 
     <p class="register-footer mt-3" style="color: #5C708A;">

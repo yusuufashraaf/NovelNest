@@ -59,3 +59,15 @@ body {
 .register-footer {
   font-size: 0.875rem;
 }
+
+.btn-github {
+  border: 1px solid #dee2e6;
+  background-color: #000;
+  color: #fff;
+}
+
+.btn-github img {
+  width: 20px;
+  margin-right: 8px;
+  filter: invert(1);
+}
