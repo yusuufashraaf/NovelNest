@@ -1,0 +1,47 @@
+/* About Us Container */
+.about-us-container {
+  background-color: #fff9f2;
+  font-family: 'Crimson Text', serif;
+}
+
+/* Headings */
+.about-us-container h1, 
+.about-us-container h2 {
+  font-family: 'Playfair Display', serif;
+  color: #5c3a21;
+}
+
+/* Divider */
+.divider {
+  width: 100px;
+  height: 3px;
+  background-color: #a78a6f;
+}
+
+/* Cards */
+.about-card {
+  background-color: #f8f1e7;
+  border-radius: 12px;
+  box-shadow: 0 5px 15px rgba(92, 58, 33, 0.08);
+  transition: transform 0.3s;
+}
+
+/* Team Images */
+.team-img {
+  border: 3px solid #f0e6d9;
+}
+
+/* Contact Button */
+.contact-btn {
+  background-color: #8c6e5d;
+  color: white;
+  border-radius: 8px;
+  border-bottom: 3px solid #5c3a21;
+  font-family: 'Playfair Display', serif;
+  transition: all 0.3s;
+}
+
+.contact-btn:hover {
+  background-color: #5c3a21;
+  transform: translateY(-2px);
+}

@@ -10,3 +10,45 @@ img {
 .bookTitle{
     overflow: hidden;
 }
+
+.purchased-books-container {
+  background-color: #fffcf8;
+  padding: 25px;
+  border-radius: 10px;
+  border: 1px solid #f0e6d9;
+}
+
+.book-card {
+  background-color: white;
+  border-radius: 8px;
+  border: 1px solid #f0e6d9;
+  transition: all 0.3s;
+}
+
+.book-card:hover {
+  box-shadow: 0 5px 15px rgba(92, 58, 33, 0.1);
+}
+
+.bookTitle {
+  font-family: 'Playfair Display', serif;
+  color: #5c3a21;
+}
+
+.text-primary {
+  color: #a78a6f !important;
+}
+
+.btn-outline-secondary {
+  color: #8c6e5d;
+  border-color: #8c6e5d;
+  transition: all 0.3s;
+}
+
+.btn-outline-secondary:hover {
+  background-color: #8c6e5d;
+  color: white;
+}
+
+.text-danger {
+  color: #c45c40 !important;
+}

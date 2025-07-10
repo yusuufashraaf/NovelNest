@@ -14,3 +14,41 @@ input.form-control[readonly] {
   color: #6c757d;
   opacity: 1;
 }
+.personal-info-form {
+  background-color: #fffcf8;
+  padding: 25px;
+  border-radius: 10px;
+  border: 1px solid #f0e6d9;
+}
+
+.form-label {
+  color: #5c3a21;
+  font-weight: 500;
+}
+
+.form-control {
+  background-color: #fffcf8;
+  border: 1px solid #d4b999;
+  color: #5c3a21;
+}
+
+.form-control:focus {
+  background-color: white;
+  border-color: #a78a6f;
+  box-shadow: 0 0 0 0.25rem rgba(167, 138, 111, 0.25);
+}
+
+.btn-outline-secondary {
+  color: #8c6e5d;
+  border-color: #8c6e5d;
+  transition: all 0.3s;
+}
+
+.btn-outline-secondary:hover {
+  background-color: #8c6e5d;
+  color: white;
+}
+
+.text-danger {
+  color: #c45c40 !important;
+}

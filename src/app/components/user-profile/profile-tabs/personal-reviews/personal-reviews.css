@@ -1,27 +1,62 @@
-.card img {
-  border-radius: 0.25rem;
+.reviews-container {
+  background-color: #fffcf8;
+  padding: 25px;
+  border-radius: 10px;
+  border: 1px solid #f0e6d9;
 }
 
-textarea {
-  resize: vertical;
+.reviews-container h2 {
+  font-family: 'Playfair Display', serif;
+  color: #5c3a21;
+  border-bottom: 2px solid #f0e6d9;
+  padding-bottom: 10px;
 }
 
-.bi-star,
+.review-card {
+  background-color: white;
+  border-radius: 8px;
+  border: 1px solid #f0e6d9;
+  transition: all 0.3s;
+}
+
+.review-card:hover {
+  box-shadow: 0 5px 15px rgba(92, 58, 33, 0.1);
+  transform: translateY(-3px);
+}
+
+.card-title {
+  font-family: 'Playfair Display', serif;
+  color: #5c3a21;
+}
+
+.text-muted {
+  color: #8c6e5d !important;
+}
+
 .bi-star-fill {
-  color: black;
-  font-size: 1.3rem;
-  transition: color 0.2s;
-  margin-right: 2px;
+  color: #f1c40f;
 }
 
-/* Only show hover effect in edit mode */
-.editable-star:hover {
-  color: orange;
+.bi-star {
+  color: #d4b999;
+}
+
+.editable-star {
   cursor: pointer;
+  transition: all 0.2s;
 }
 
-@media (max-width: 576px) {
-  .card-body {
-    padding: 0.75rem;
-  }
+.editable-star:hover {
+  transform: scale(1.2);
+}
+
+.btn-outline-secondary {
+  color: #8c6e5d;
+  border-color: #8c6e5d;
+  transition: all 0.3s;
+}
+
+.btn-outline-secondary:hover {
+  background-color: #8c6e5d;
+  color: white;
 }

@@ -1,15 +1,26 @@
-<div class="container px-2 px-sm-3 py-4">
+<div class="bookstore-container">
+  <!-- Header Section -->
+  <div class="bookstore-header">
+    <h1 class="bookstore-title">Explore Our Collection</h1>
+    <p class="bookstore-subtitle">Find your next favorite book</p>
+  </div>
+
   <!-- Mobile Search -->
-  <div class="d-md-none mb-3">
-    <input type="text" class="form-control" placeholder="Search books..." [ngModel]="filters.keyword"
-      (ngModelChange)="onKeywordChange($event)" (keyup.enter)="searchBooks()" />
+  <div class="d-md-none mb-4">
+    <div class="input-group bookstore-search">
+      <input type="text" class="form-control" placeholder="Search books..." [ngModel]="filters.keyword"
+        (ngModelChange)="onKeywordChange($event)" (keyup.enter)="searchBooks()" />
+      <button class="btn btn-primary" (click)="searchBooks()">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
   </div>
 
   <!-- Mobile Filter Toggle -->
   <div class="d-md-none mb-3">
-    <button class="btn btn-outline-secondary w-100" type="button" data-bs-toggle="collapse"
+    <button class="btn btn-filter-toggle w-100" type="button" data-bs-toggle="collapse"
       data-bs-target="#mobileFilters">
-      Filters & Sort
+      <i class="bi bi-funnel-fill me-2"></i> Filters & Sort
     </button>
     <div id="mobileFilters" class="collapse mt-2">
       <ng-container *ngTemplateOutlet="filtersTemplate"></ng-container>
@@ -23,18 +34,17 @@
 
   <!-- Filters Template -->
   <ng-template #filtersTemplate>
-    <div class="d-flex flex-wrap gap-2 align-items-start">
-
+    <div class="bookstore-filters">
       <!-- Genre -->
       <div class="dropdown">
-        <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
-          Genre
+        <button class="btn btn-filter dropdown-toggle" type="button" data-bs-toggle="dropdown">
+          <i class="bi bi-bookmarks-fill me-2"></i> Genre
         </button>
         <ul class="dropdown-menu genresDropdownList">
           @for (genre of genres; track $index) {
           <li>
             <a class="dropdown-item" (click)="filterByGenre(genre._id); $event.preventDefault()">
-              {{ genre.name }}
+              <i class="bi bi-bookmark-check me-2"></i>{{ genre.name }}
             </a>
           </li>
           }
@@ -43,14 +53,14 @@
 
       <!-- Author -->
       <div class="dropdown">
-        <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
-          Author
+        <button class="btn btn-filter dropdown-toggle" type="button" data-bs-toggle="dropdown">
+          <i class="bi bi-person-fill me-2"></i> Author
         </button>
         <ul class="dropdown-menu authorsDropdownList">
           @for (author of authors; track $index) {
           <li>
             <a class="dropdown-item" (click)="filterByAuthor(author); $event.preventDefault()">
-              {{ author }}
+              <i class="bi bi-person-check me-2"></i>{{ author }}
             </a>
           </li>
           }
@@ -59,128 +69,184 @@
 
       <!-- Price Range -->
       <div class="dropdown">
-        <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
-          Price Range
+        <button class="btn btn-filter dropdown-toggle" type="button" data-bs-toggle="dropdown">
+          <i class="bi bi-tag-fill me-2"></i> Price Range
         </button>
-        <div class="dropdown-menu p-3" style="min-width: 250px">
-          <label class="form-label small d-block">
-            From {{ selectedMin }} to {{ selectedMax }} L.E
-          </label>
+        <div class="dropdown-menu p-3 bookstore-price-range">
+          <div class="d-flex justify-content-between mb-2">
+            <span class="badge bg-light text-dark">{{ selectedMin }} L.E</span>
+            <span class="badge bg-light text-dark">{{ selectedMax }} L.E</span>
+          </div>
           <input type="range" class="form-range" [min]="minPrice" [max]="maxPrice" [(ngModel)]="selectedMin" />
           <input type="range" class="form-range mt-2" [min]="minPrice" [max]="maxPrice" [(ngModel)]="selectedMax" />
-          <button class="btn btn-sm btn-primary w-100 mt-2" [disabled]="selectedMin > selectedMax"
+          <button class="btn btn-apply-price mt-3 w-100" [disabled]="selectedMin > selectedMax"
             (click)="applyPriceRange(); $event.preventDefault()">
-            Apply
+            Apply Price Range
           </button>
         </div>
       </div>
 
       <!-- Publication Date -->
       <div class="dropdown">
-        <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
-          Publication Date
+        <button class="btn btn-filter dropdown-toggle" type="button" data-bs-toggle="dropdown">
+          <i class="bi bi-calendar-fill me-2"></i> Publication Date
         </button>
         <ul class="dropdown-menu">
           <li>
-            <a class="dropdown-item" (click)="setSort('-createdAt'); $event.preventDefault()">Newest First</a>
+            <a class="dropdown-item" (click)="setSort('-createdAt'); $event.preventDefault()">
+              <i class="bi bi-sort-down-alt me-2"></i>Newest First
+            </a>
           </li>
           <li>
-            <a class="dropdown-item" (click)="setSort('createdAt'); $event.preventDefault()">Oldest First</a>
+            <a class="dropdown-item" (click)="setSort('createdAt'); $event.preventDefault()">
+              <i class="bi bi-sort-up-alt me-2"></i>Oldest First
+            </a>
           </li>
         </ul>
       </div>
 
       <!-- Sort -->
       <div class="dropdown">
-        <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
-          Sort
+        <button class="btn btn-filter dropdown-toggle" type="button" data-bs-toggle="dropdown">
+          <i class="bi bi-sort-down me-2"></i> Sort
         </button>
         <ul class="dropdown-menu">
-          <li><a class="dropdown-item" (click)="setSort(''); $event.preventDefault()">Default</a></li>
-          <li><a class="dropdown-item" (click)="setSort('price'); $event.preventDefault()">Price: Low to
-              High</a></li>
-          <li><a class="dropdown-item" (click)="setSort('-price'); $event.preventDefault()">Price: High to
-              Low</a></li>
-          <li><a class="dropdown-item" (click)="setSort('author'); $event.preventDefault()">Author: A-Z</a>
-          </li>
-          <li><a class="dropdown-item" (click)="setSort('-author'); $event.preventDefault()">Author: Z-A</a>
-          </li>
+          <li><a class="dropdown-item" (click)="setSort(''); $event.preventDefault()">
+              <i class="bi bi-filter-circle me-2"></i>Default
+            </a></li>
+          <li><a class="dropdown-item" (click)="setSort('price'); $event.preventDefault()">
+              <i class="bi bi-arrow-up me-2"></i>Price: Low to High
+            </a></li>
+          <li><a class="dropdown-item" (click)="setSort('-price'); $event.preventDefault()">
+              <i class="bi bi-arrow-down me-2"></i>Price: High to Low
+            </a></li>
+          <li><a class="dropdown-item" (click)="setSort('author'); $event.preventDefault()">
+              <i class="bi bi-sort-alpha-down me-2"></i>Author: A-Z
+            </a></li>
+          <li><a class="dropdown-item" (click)="setSort('-author'); $event.preventDefault()">
+              <i class="bi bi-sort-alpha-down-alt me-2"></i>Author: Z-A
+            </a></li>
         </ul>
       </div>
 
       <!-- Items Per Page -->
       <div class="dropdown">
-        <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
-          Items per Page
+        <button class="btn btn-filter dropdown-toggle" type="button" data-bs-toggle="dropdown">
+          <i class="bi bi-collection-fill me-2"></i> Items per Page
         </button>
         <ul class="dropdown-menu">
           @for (count of booksPerPageOptions; track $index) {
           <li>
             <a class="dropdown-item" (click)="setBooksPerPage(count); $event.preventDefault()">
-              {{ count }} items
+              <i class="bi bi-book me-2"></i>{{ count }} items
             </a>
           </li>
           }
         </ul>
       </div>
-
     </div>
   </ng-template>
 
   <!-- Active Filters -->
   @if (activeFilterLabels.length) {
-  <div class="mb-3">
-    @for (label of activeFilterLabels; track $index) {
-    <span class="badge bg-secondary me-2">
-      {{ label }}
-    </span>
-    }
-    <button class="btn btn-sm btn-outline-danger ms-2" (click)="resetFilters()">Clear All</button>
-
+  <div class="bookstore-active-filters mb-4">
+    <div class="d-flex flex-wrap align-items-center gap-2">
+      <span class="filter-label">Active Filters:</span>
+      @for (label of activeFilterLabels; track $index) {
+      <span class="badge bg-filter-active">
+        {{ label }}
+        <button class="btn-close-filter" (click)="resetFilters()">
+          <i class="bi bi-x"></i>
+        </button>
+      </span>
+      }
+    </div>
   </div>
   }
 
   <!-- Loading Spinner -->
   @if (isLoading) {
-  <div>
+  <div class="bookstore-loading text-center py-5">
     <div class="spinner-border text-primary" role="status">
       <span class="visually-hidden">Loading...</span>
     </div>
-
+    <p class="mt-3">Finding your perfect books...</p>
   </div>
   }
 
   <!-- No Results -->
   @if (!isLoading && books.length === 0) {
-  <div class="text-center text-muted py-5">
-    No books found.
+  <div class="bookstore-no-results text-center py-5">
+    <i class="bi bi-book-exclamation display-4 text-muted"></i>
+    <h3 class="mt-3">No books found</h3>
+    <p class="text-muted">Try adjusting your filters or search term</p>
+    <button class="btn btn-primary mt-3" (click)="resetFilters()">
+      Reset All Filters
+    </button>
   </div>
   }
 
   <!-- Books Grid -->
   @if (books.length) {
-  <div class="row g-3">
+  <div class="bookstore-grid">
     @for (book of books; track $index) {
-    <div class="col-12 col-sm-6 col-md-4 col-lg-3">
-      <div class="card h-100 shadow-sm position-relative">
-        <a [routerLink]="['/Browse', book._id]">
-          <img [src]="book.imageCover" [alt]="book.title" class="card-img-top" />
-        </a>
-        <div class="card-body">
-          <h6 class="fw-bold">{{ book.title }}</h6>
-          <p class="text-muted mb-1">{{ book.author }}</p>
-          <h4 class="text-primary">{{ book.price }} L.E</h4>
+    <div class="bookstore-book-card">
+      <div class="book-card-inner">
+        <!-- Book Badges -->
+        <div class="book-badges">
           @if (book.quantity === 0) {
-          <span class="badge bg-danger position-absolute top-0 end-0 m-2">
+          <span class="badge bg-sold-out">
             Sold Out
           </span>
           }
+          @if (book.price > book.priceAfterDiscount) {
+          <span class="badge bg-discount">
+            Sale
+          </span>
+          }
         </div>
-        <div class="card-footer bg-transparent border-0">
-          <div class="d-flex flex-column flex-sm-row gap-2">
-            <app-add-to-cart [productId]="book._id" class="flex-fill"></app-add-to-cart>
-            <app-add-to-wishlist [productId]="book._id" class="flex-fill"></app-add-to-wishlist>
+        
+        <!-- Book Cover -->
+        <a [routerLink]="['/Browse', book._id]" class="book-cover-link">
+          <img [src]="book.imageCover" [alt]="book.title" class="book-cover" />
+        </a>
+        
+        <!-- Book Details -->
+        <div class="book-details">
+          <h3 class="book-title">{{ book.title }}</h3>
+          <p class="book-author">{{ book.author }}</p>
+          
+          <!-- Price -->
+          <div class="book-price">
+            @if(book.price == book.priceAfterDiscount || book.priceAfterDiscount == null){
+            <div class="current-price">{{ book.price }} L.E</div>
+            }
+            @else{
+            <div class="original-price">{{ book.price }} L.E</div>
+            <div class="current-price">{{ book.priceAfterDiscount }} L.E</div>
+            }
           </div>
+          
+          <!-- Rating -->
+          <div class="book-rating">
+            <div class="stars">
+              @for (star of [1,2,3,4,5]; track $index) {
+              <i class="bi bi-star-fill" [class.filled]="star <= book.ratingAverage"></i>
+              }
+            </div>
+            <small class="review-count">({{book.ratingQuantity}} reviews)</small>
+          </div>
+          
+          <!-- Updated Date -->
+          <div class="book-update">
+            <i class="bi bi-clock-history"></i> Updated: {{book.updatedAt }}
+          </div>
+        </div>
+        
+        <!-- Actions -->
+        <div class="book-actions">
+          <app-add-to-cart [productId]="book._id"></app-add-to-cart>
+          <app-add-to-wishlist [productId]="book._id"></app-add-to-wishlist>
         </div>
       </div>
     </div>
@@ -190,10 +256,12 @@
 
   <!-- Pagination -->
   @if (totalPages > 1) {
-  <nav class="mt-4 d-flex justify-content-center">
-    <ul class="pagination pagination-sm">
+  <nav class="bookstore-pagination mt-5">
+    <ul class="pagination">
       <li class="page-item" [class.disabled]="currentPage === 1">
-        <a class="page-link" (click)="changePage(currentPage - 1)">&laquo;</a>
+        <a class="page-link" (click)="changePage(currentPage - 1)">
+          <i class="bi bi-chevron-left"></i> Previous
+        </a>
       </li>
       @for (page of [].constructor(totalPages); track $index) {
       <li class="page-item" [class.active]="currentPage === $index + 1">
@@ -201,7 +269,9 @@
       </li>
       }
       <li class="page-item" [class.disabled]="currentPage === totalPages">
-        <a class="page-link" (click)="changePage(currentPage + 1)">&raquo;</a>
+        <a class="page-link" (click)="changePage(currentPage + 1)">
+          Next <i class="bi bi-chevron-right"></i>
+        </a>
       </li>
     </ul>
   </nav>
@@ -209,7 +279,7 @@
 
   <!-- Scroll to Top -->
   @if (showScrollTop) {
-  <button class="btn btn-dark scroll-top-btn" (click)="scrollToTop()">
+  <button class="btn btn-scroll-top" (click)="scrollToTop()">
     <i class="bi bi-arrow-up"></i>
   </button>
   }

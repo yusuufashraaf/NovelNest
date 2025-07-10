@@ -1,4 +1,73 @@
-/* Simple styling, adjust as needed */
-button {
-  margin-top: 0.5rem;
+/* Add to Wishlist Button */
+.btn-secondary {
+  width: 100%;
+  background-color: #f8f1e7;
+  color: #c45c40;
+  border: 2px solid #c45c40;
+  border-radius: 6px;
+  padding: 12px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(196, 92, 64, 0.1);
+  font-family: 'Crimson Text', serif;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.btn-secondary:hover {
+  background-color: #c45c40;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(196, 92, 64, 0.2);
+}
+
+.btn-secondary:active {
+  transform: translateY(0);
+}
+
+.btn-secondary i {
+  font-size: 1rem;
+  margin-right: 5px;
+}
+
+
+/* Button States */
+.btn-primary.full-width:disabled,
+.btn-secondary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+.btn-primary.full-width:focus,
+.btn-secondary:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(140, 110, 93, 0.3);
+}
+
+/* Button Layout */
+.book-actions {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 12px;
+  padding: 15px;
+  border-top: 1px solid #f0e6d9;
+  background-color: #f8f1e7;
+}
+
+@media (max-width: 768px) {
+  .book-actions {
+    grid-template-columns: 1fr;
+  }
+  
+  .btn-primary.full-width,
+  .btn-secondary {
+    padding: 10px;
+  }
 }

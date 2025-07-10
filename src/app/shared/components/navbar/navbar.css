@@ -5,3 +5,134 @@
 li a{
     cursor: pointer;
 }
+
+/* ===== Navbar Base Styles ===== */
+.navbar {
+  background-color: #fff9f2;
+  border-bottom: 1px solid #f0e6d9;
+  box-shadow: 0 2px 10px rgba(92, 58, 33, 0.05);
+  padding: 8px 0; /* Reduced from 15px */
+  font-family: 'Crimson Text', serif;
+  min-height: 60px; /* Set a fixed minimum height */
+}
+
+/* ===== Navbar Brand ===== */
+.navbar-brand {
+  font-family: 'Playfair Display', serif;
+  color: #5c3a21 !important;
+  font-weight: 600;
+  transition: all 0.3s;
+}
+
+.navbar-brand:hover {
+  opacity: 0.8;
+}
+
+/* ===== Nav Links ===== */
+.nav-link {
+  color: #8c6e5d !important;
+  padding: 8px 15px !important;
+  border-radius: 20px;
+  transition: all 0.3s;
+  font-weight: 500;
+}
+
+.nav-link:hover {
+  color: #5c3a21 !important;
+  background-color: #f8f1e7;
+}
+
+.nav-link.active {
+  color: #5c3a21 !important;
+  font-weight: 600;
+  background-color: #f0e6d9;
+}
+
+/* ===== Toggler Icon ===== */
+.navbar-toggler {
+  border-color: #d4b999 !important;
+}
+
+.navbar-toggler-icon {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%2892, 58, 33, 0.8%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e") !important;
+}
+
+/* ===== Icons ===== */
+.bi-heart, .bi-cart {
+  color: #8c6e5d;
+  transition: all 0.3s;
+}
+
+.bi-heart:hover {
+  color: #c45c40;
+}
+
+.bi-cart:hover {
+  color: #5a8f5a;
+}
+
+/* ===== Badges ===== */
+.badge {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 0.6rem;
+  padding: 0.25em 0.4em;
+}
+
+.bg-secondary {
+  background-color: #c45c40 !important;
+}
+
+.bg-danger {
+  background-color: #5a8f5a !important;
+}
+
+/* ===== Avatar ===== */
+.rounded-circle {
+  border: 2px solid #f0e6d9;
+  transition: all 0.3s;
+}
+
+.rounded-circle:hover {
+  border-color: #a78a6f;
+  transform: scale(1.05);
+}
+
+/* ===== Mobile Menu ===== */
+.navbar-collapse {
+  background-color: #fff9f2;
+  /* padding: 0.5rem 1rem; */
+  border-radius: 0 0 8px 8px;
+  border: 1px solid #f0e6d9;
+  border-top: none;
+  margin-top: 0.5rem;
+}
+
+/* ===== Search Component ===== */
+/* app-search {
+  margin-right: 15px;
+} */
+
+/* ===== Responsive Styles ===== */
+@media (min-width: 992px) {
+  .navbar {
+    /* padding: 15px 30px; */
+  }
+  
+  .nav-link {
+    margin: 0 5px;
+  }
+}
+
+@media (max-width: 991.98px) {
+  .navbar-collapse {
+    box-shadow: 0 5px 15px rgba(92, 58, 33, 0.1);
+  }
+  
+  .nav-item {
+    margin-bottom: 5px;
+  }
+  
+  .nav-link {
+    padding: 10px 15px !important;
+  }
+}
