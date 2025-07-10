@@ -3,7 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ReviewService } from '../../../../services/review-service';
 import { AuthService } from '../../../../services/auth.service';
-
+import Swal from 'sweetalert2';
 interface Review {
   id: string;
   bookTitle: string;
@@ -72,18 +72,33 @@ export class PersonalReviews implements OnInit {
     return [1, 2, 3, 4, 5];
   }
 
-  deleteReview(review: Review): void {
-    if (confirm('Are you sure you want to delete this review?')) {
+deleteReview(review: Review): void {
+  Swal.fire({
+    title: 'Are you sure?',
+    text: 'Do you want to delete this review?',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#d33',
+    cancelButtonColor: '#6c757d',
+    confirmButtonText: 'Yes, delete it!',
+    cancelButtonText: 'Cancel',
+  }).then((result) => {
+    if (result.isConfirmed) {
       this.commentService.deleteReview(review.id).subscribe({
         next: () => {
           this.reviews = this.reviews.filter((r) => r.id !== review.id);
+          Swal.fire('Deleted!', 'The review has been deleted.', 'success');
         },
         error: (err) => {
           console.error('Failed to delete review:', err);
+          Swal.fire('Error', 'Failed to delete the review.', 'error');
         },
       });
     }
-  }
+  });
+}
+
+
   toggleEdit(review: Review): void {
     if (review.editing) {
       const payload = {
