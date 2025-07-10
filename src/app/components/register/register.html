@@ -1,9 +1,14 @@
 <div class="register-container text-center">
   <h2 class="mb-3" style="font-weight: 700;">Create an account</h2>
 
-  <!-- SUCCESS / ERROR MESSAGE -->
   <div *ngIf="successMessage" class="alert alert-success">{{ successMessage }}</div>
   <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+
+  <div *ngIf="validationErrors.length" class="alert alert-danger text-start">
+    <ul class="mb-0 ps-3">
+      <li *ngFor="let err of validationErrors">{{ err }}</li>
+    </ul>
+  </div>
 
   <form (ngSubmit)="onSubmit()">
     <div class="mb-3 text-start">
