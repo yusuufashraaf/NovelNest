@@ -1,27 +1,47 @@
+/* Base Link Style */
 a {
   cursor: pointer;
   text-decoration: none;
   color: inherit;
 }
 
+/* Host Container */
+:host {
+  width: 100%;
+}
+
+/* Column & Flex */
 .col {
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
+.flex-fill {
+  width: 100% !important;
+}
 
+/* Card Hover Effect */
 .col:hover {
   transform: scale(1.05);
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
   border-radius: 10px;
 }
 
+/* Dropdown Scrolling */
+.genresDropdownList,
+.authorsDropdownList {
+  overflow-y: auto;
+  max-height: 30rem;
+}
+
+/* Active Dropdown Item */
 .dropdown-item.active {
   background-color: #007bff;
   color: white;
   font-weight: 500;
 }
 
+/* Reset Button */
 .btn-reset-custom {
-  background-color: #f44336;
+  background-color: #6c757d;
   color: white;
   border: none;
   padding: 8px 20px;
@@ -29,34 +49,172 @@ a {
   font-weight: 500;
   transition: background-color 0.3s ease, transform 0.2s ease;
 }
-
 .btn-reset-custom:hover {
-  background-color: #d32f2f;
-  transform: scale(1.05);
+  background-color: #5a6268;
+  transform: scale(1.03);
 }
 
+/* Dropdown Toggle */
+.dropdown-toggle {
+  font-size: 0.9rem;
+  background-color: #f1f1f1;
+  border: 1px solid #ccc;
+}
+
+/* Card Base */
+.card {
+  background-color: #f5f5f5;
+  transition: transform 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  font-size: 0.85rem;
+}
+.card:hover {
+  transform: scale(1.03);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Card Footer */
+.card-footer {
+  background: transparent;
+  border-top: none;
+  padding: 0.75rem 1rem;
+}
+
+/* Book Image Styling */
+.card-img-top {
+  height: 260px;
+  object-fit:scale-down !important;
+  background-color: #e9e9e9;
+}
+
+/* Book Card Structure */
+.book-card {
+  border-radius: 10px;
+  transition: transform 0.2s ease;
+  background-color: #fff;
+}
+.book-card:hover {
+  transform: translateY(-4px);
+}
+.book-image {
+  height: 200px;
+  object-fit: contain;
+  padding: 10px;
+}
+.book-title {
+  font-weight: 600;
+  font-size: 0.95rem;
+  margin-bottom: 4px;
+}
+.book-author {
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 4px;
+}
+.book-price {
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+/* Pagination Style */
+.pagination-rounded .page-item .page-link,
+.pagination .page-link {
+  border-radius: 50px;
+  margin: 0 4px;
+  color: #6c757d;
+  border: 1px solid #dee2e6;
+  transition: background-color 0.2s ease;
+}
+.pagination-rounded .page-item.active .page-link,
+.pagination .page-item.active .page-link {
+  background-color: #6c757d;
+  color: white;
+  font-weight: 500;
+}
+
+/* List Groups */
+.list-group-item-action.active {
+  background-color: #6c757d;
+  color: white;
+}
+.list-group-item {
+  font-size: 0.85rem;
+  padding: 6px 10px;
+}
+
+/* Scroll to Top */
+.scroll-top-btn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 999;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+}
+
+/* Fade In Animation */
 .fade-in-card {
   opacity: 0;
   transform: translateY(20px);
   animation: fadeInUp 0.5s ease forwards;
 }
-
 @keyframes fadeInUp {
   to {
     opacity: 1;
     transform: translateY(0);
   }
 }
-.pagination-rounded .page-item .page-link {
-  border-radius: 50px;
-  margin: 0 4px;
-  color: #333;
-  border: 1px solid #ddd;
-  transition: background-color 0.2s ease;
+
+/* Sticky Sidebar on Desktop */
+@media (min-width: 768px) {
+  aside {
+    position: sticky;
+    top: 80px;
+  }
 }
 
-.pagination-rounded .page-item.active .page-link {
-  background-color: black;
-  color: white;
-  font-weight: 500;
+/* Responsive Enhancements for Mobile & Landscape */
+@media (max-width: 768px), (orientation: landscape) and (max-height: 500px) {
+  .card-img-top {
+    height: 160px;
+    object-fit: contain !important;
+  }
+
+  .pagination {
+    flex-wrap: wrap;
+    gap: 0.25rem;
+  }
+
+  .btn-reset-custom {
+    width: 50%;
+    padding: 10px;
+  }
+
+  .dropdown-menu {
+    max-height: 250px;
+    overflow-y: auto;
+    max-width: 90vw;
+  }
+
+  .card-footer .d-flex {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  app-add-to-cart button,
+  app-add-to-wishlist button {
+    width: 100%;
+  }
+}
+
+/* Horizontal Scroll on Mobile Filters */
+@media (max-width: 767.98px) {
+  .flex-nowrap {
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+  }
 }

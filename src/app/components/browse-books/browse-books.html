@@ -1,147 +1,216 @@
-<!-- Filters container -->
-<div class="d-flex flex-wrap justify-content-center gap-3 mb-2 mt-4" style="max-width: 1000px; margin: 0 auto;">
-  <!-- Genre -->
-  <div class="dropdown flex-grow-1" style="min-width: 200px;">
-    <button class="btn btn-outline-secondary dropdown-toggle w-100" type="button" data-bs-toggle="dropdown"
-      aria-expanded="false">
-      {{ filters.genre ? filters.genre : 'Genre' }}
+<div class="container px-2 px-sm-3 py-4">
+  <!-- Mobile Search -->
+  <div class="d-md-none mb-3">
+    <input type="text" class="form-control" placeholder="Search books..." [ngModel]="filters.keyword"
+      (ngModelChange)="onKeywordChange($event)" (keyup.enter)="searchBooks()" />
+  </div>
+
+  <!-- Mobile Filter Toggle -->
+  <div class="d-md-none mb-3">
+    <button class="btn btn-outline-secondary w-100" type="button" data-bs-toggle="collapse"
+      data-bs-target="#mobileFilters">
+      Filters & Sort
     </button>
-    <ul class="dropdown-menu">
-      @for (genre of genres; track $index) {
-      <li>
-        <a class="dropdown-item" (click)="filterByGenre(genre)" [class.active]="filters.genre === genre">{{
-          genre }}</a>
-      </li>
-      }
-    </ul>
+    <div id="mobileFilters" class="collapse mt-2">
+      <ng-container *ngTemplateOutlet="filtersTemplate"></ng-container>
+    </div>
   </div>
 
-  <!-- Author -->
-  <div class="dropdown flex-grow-1" style="min-width: 200px;">
-    <button class="btn btn-outline-secondary dropdown-toggle w-100" type="button" data-bs-toggle="dropdown"
-      aria-expanded="false">
-      {{ filters.author ? filters.author : 'Author' }}
-    </button>
-    <ul class="dropdown-menu">
-      @for (author of authors; track $index) {
-      <li>
-        <a class="dropdown-item" (click)="filterByAuthor(author)" [class.active]="filters.author === author">{{
-          author }}</a>
-      </li>
-      }
-    </ul>
+  <!-- Desktop Filters -->
+  <div class="d-none d-md-block mb-4">
+    <ng-container *ngTemplateOutlet="filtersTemplate"></ng-container>
   </div>
 
-  <!-- Price Range -->
-  <div class="dropdown flex-grow-1" style="min-width: 200px;">
-    <button class="btn btn-outline-secondary dropdown-toggle w-100" type="button" data-bs-toggle="dropdown"
-      aria-expanded="false">
-      {{ filters.priceRange ? filters.priceRange : 'Price Range' }}
-    </button>
-    <ul class="dropdown-menu">
-      @for (range of priceRanges; track $index) {
-      <li>
-        <a class="dropdown-item" (click)="filterByPrice(range)" [class.active]="filters.priceRange === range">{{
-          range }}</a>
-      </li>
-      }
-    </ul>
-  </div>
+  <!-- Filters Template -->
+  <ng-template #filtersTemplate>
+    <div class="d-flex flex-wrap gap-2 align-items-start">
 
-</div>
+      <!-- Genre -->
+      <div class="dropdown">
+        <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+          Genre
+        </button>
+        <ul class="dropdown-menu genresDropdownList">
+          @for (genre of genres; track $index) {
+          <li>
+            <a class="dropdown-item" (click)="filterByGenre(genre._id); $event.preventDefault()">
+              {{ genre.name }}
+            </a>
+          </li>
+          }
+        </ul>
+      </div>
 
-<!-- Sort dropdown below filters, same width -->
-<div class="d-flex justify-content-center mb-3" style="max-width: 1000px; margin: 0 auto;">
-  <div class="dropdown" style="width: 40%;">
-    <button class="btn btn-outline-secondary dropdown-toggle w-100" type="button" id="sortDropdown"
-      data-bs-toggle="dropdown" aria-expanded="false">
-      {{
-      filters.sort
-      ? (filters.sort === 'price'
-      ? 'Price: Low to High'
-      : filters.sort === '-price'
-      ? 'Price: High to Low'
-      : filters.sort === 'author'
-      ? 'Author: A to Z'
-      : filters.sort === '-author'
-      ? 'Author: Z to A'
-      : 'Sort')
-      : 'Sort'
-      }}
-    </button>
-    <ul class="dropdown-menu" aria-labelledby="sortDropdown" style="max-height: 200px; overflow-y: auto; width: 100%;">
-      <li><a class="dropdown-item" (click)="setSort('price')">Price: Low to High</a></li>
-      <li><a class="dropdown-item" (click)="setSort('-price')">Price: High to Low</a></li>
-      <li><a class="dropdown-item" (click)="setSort('author')">Author: A to Z</a></li>
-      <li><a class="dropdown-item" (click)="setSort('-author')">Author: Z to A</a></li>
-    </ul>
-  </div>
-</div>
+      <!-- Author -->
+      <div class="dropdown">
+        <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+          Author
+        </button>
+        <ul class="dropdown-menu authorsDropdownList">
+          @for (author of authors; track $index) {
+          <li>
+            <a class="dropdown-item" (click)="filterByAuthor(author); $event.preventDefault()">
+              {{ author }}
+            </a>
+          </li>
+          }
+        </ul>
+      </div>
 
-<!-- Reset Filters Button -->
-<div class="w-100 d-flex justify-content-center mt-3 mb-5">
-  <button (click)="resetFilters()" class="btn btn-reset-custom">
-    <i class="bi bi-x-circle me-2"></i>Reset Filters
-  </button>
-</div>
+      <!-- Price Range -->
+      <div class="dropdown">
+        <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+          Price Range
+        </button>
+        <div class="dropdown-menu p-3" style="min-width: 250px">
+          <label class="form-label small d-block">
+            From {{ selectedMin }} to {{ selectedMax }} L.E
+          </label>
+          <input type="range" class="form-range" [min]="minPrice" [max]="maxPrice" [(ngModel)]="selectedMin" />
+          <input type="range" class="form-range mt-2" [min]="minPrice" [max]="maxPrice" [(ngModel)]="selectedMax" />
+          <button class="btn btn-sm btn-primary w-100 mt-2" [disabled]="selectedMin > selectedMax"
+            (click)="applyPriceRange(); $event.preventDefault()">
+            Apply
+          </button>
+        </div>
+      </div>
 
-<!-- Loading Spinner -->
-@if (isLoading) {
-<div class="text-center my-3">
-  <div class="spinner-border text-primary" role="status">
-    <span class="visually-hidden">Loading...</span>
-  </div>
-</div>
-}
+      <!-- Publication Date -->
+      <div class="dropdown">
+        <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+          Publication Date
+        </button>
+        <ul class="dropdown-menu">
+          <li>
+            <a class="dropdown-item" (click)="setSort('-createdAt'); $event.preventDefault()">Newest First</a>
+          </li>
+          <li>
+            <a class="dropdown-item" (click)="setSort('createdAt'); $event.preventDefault()">Oldest First</a>
+          </li>
+        </ul>
+      </div>
 
-<!-- Book Grid -->
-<div class="container">
-  @if (books.length === 0 && !isLoading) {
-  <div class="text-center text-gray-500 py-5">
-    <p>No products found for the selected filters.</p>
+      <!-- Sort -->
+      <div class="dropdown">
+        <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+          Sort
+        </button>
+        <ul class="dropdown-menu">
+          <li><a class="dropdown-item" (click)="setSort(''); $event.preventDefault()">Default</a></li>
+          <li><a class="dropdown-item" (click)="setSort('price'); $event.preventDefault()">Price: Low to
+              High</a></li>
+          <li><a class="dropdown-item" (click)="setSort('-price'); $event.preventDefault()">Price: High to
+              Low</a></li>
+          <li><a class="dropdown-item" (click)="setSort('author'); $event.preventDefault()">Author: A-Z</a>
+          </li>
+          <li><a class="dropdown-item" (click)="setSort('-author'); $event.preventDefault()">Author: Z-A</a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Items Per Page -->
+      <div class="dropdown">
+        <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+          Items per Page
+        </button>
+        <ul class="dropdown-menu">
+          @for (count of booksPerPageOptions; track $index) {
+          <li>
+            <a class="dropdown-item" (click)="setBooksPerPage(count); $event.preventDefault()">
+              {{ count }} items
+            </a>
+          </li>
+          }
+        </ul>
+      </div>
+
+    </div>
+  </ng-template>
+
+  <!-- Active Filters -->
+  @if (activeFilterLabels.length) {
+  <div class="mb-3">
+    @for (label of activeFilterLabels; track $index) {
+    <span class="badge bg-secondary me-2">
+      {{ label }}
+    </span>
+    }
+    <button class="btn btn-sm btn-outline-danger ms-2" (click)="resetFilters()">Clear All</button>
+
   </div>
   }
 
-  <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+  <!-- Loading Spinner -->
+  @if (isLoading) {
+  <div>
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+
+  </div>
+  }
+
+  <!-- No Results -->
+  @if (!isLoading && books.length === 0) {
+  <div class="text-center text-muted py-5">
+    No books found.
+  </div>
+  }
+
+  <!-- Books Grid -->
+  @if (books.length) {
+  <div class="row g-3">
     @for (book of books; track $index) {
-    <div>
-      <a [routerLink]="['/Browse', book._id]">
-        <div class="col">
-          <div class="card h-100 border-0 shadow-sm fade-in-card">
-            <img [src]="book.imageCover" [alt]="book.title" class="card-img-top"
-              style="height: 320px; object-fit: contain" />
-            <div class="card-body px-2 py-3">
-              <h6 class="card-title mb-1 fw-semibold">{{ book.title }}</h6>
-              <p class="card-text text-muted small">{{ book.author }}</p>
-              <h6 class="card-title mb-1 fw-semibold">{{ book.price }} L.E</h6>
-            </div>
+    <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+      <div class="card h-100 shadow-sm position-relative">
+        <a [routerLink]="['/Browse', book._id]">
+          <img [src]="book.imageCover" [alt]="book.title" class="card-img-top" />
+        </a>
+        <div class="card-body">
+          <h6 class="fw-bold">{{ book.title }}</h6>
+          <p class="text-muted mb-1">{{ book.author }}</p>
+          <h4 class="text-primary">{{ book.price }} L.E</h4>
+          @if (book.quantity === 0) {
+          <span class="badge bg-danger position-absolute top-0 end-0 m-2">
+            Sold Out
+          </span>
+          }
+        </div>
+        <div class="card-footer bg-transparent border-0">
+          <div class="d-flex flex-column flex-sm-row gap-2">
+            <app-add-to-cart [productId]="book._id" class="flex-fill"></app-add-to-cart>
+            <app-add-to-wishlist [productId]="book._id" class="flex-fill"></app-add-to-wishlist>
           </div>
         </div>
-      </a>
-      <div class="d-flex justify-content-center gap-5">
-        <app-add-to-cart [productId]="book._id"></app-add-to-cart>
-        <app-add-to-wishlist [productId]="book._id"></app-add-to-wishlist>
       </div>
     </div>
     }
   </div>
-</div>
+  }
 
-<!-- Pagination -->
-@if (totalPages > 1) {
-<nav class="mt-4 d-flex justify-content-center">
-  <ul class="pagination pagination-rounded">
-    <li class="page-item" [class.disabled]="currentPage === 1">
-      <a class="page-link" (click)="changePage(currentPage - 1)">&laquo;</a>
-    </li>
-    @for (page of [].constructor(totalPages); track $index) {
-    <li class="page-item" [class.active]="currentPage === $index + 1">
-      <a class="page-link" (click)="changePage($index + 1)">{{ $index + 1 }}</a>
-    </li>
-    }
-    <li class="page-item" [class.disabled]="currentPage === totalPages">
-      <a class="page-link" (click)="changePage(currentPage + 1)">&raquo;</a>
-    </li>
-  </ul>
-</nav>
-}
+  <!-- Pagination -->
+  @if (totalPages > 1) {
+  <nav class="mt-4 d-flex justify-content-center">
+    <ul class="pagination pagination-sm">
+      <li class="page-item" [class.disabled]="currentPage === 1">
+        <a class="page-link" (click)="changePage(currentPage - 1)">&laquo;</a>
+      </li>
+      @for (page of [].constructor(totalPages); track $index) {
+      <li class="page-item" [class.active]="currentPage === $index + 1">
+        <a class="page-link" (click)="changePage($index + 1)">{{ $index+ 1 }}</a>
+      </li>
+      }
+      <li class="page-item" [class.disabled]="currentPage === totalPages">
+        <a class="page-link" (click)="changePage(currentPage + 1)">&raquo;</a>
+      </li>
+    </ul>
+  </nav>
+  }
+
+  <!-- Scroll to Top -->
+  @if (showScrollTop) {
+  <button class="btn btn-dark scroll-top-btn" (click)="scrollToTop()">
+    <i class="bi bi-arrow-up"></i>
+  </button>
+  }
+</div>
