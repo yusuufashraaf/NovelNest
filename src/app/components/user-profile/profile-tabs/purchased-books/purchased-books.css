@@ -1,0 +1,12 @@
+.bookTitle h5 {
+  overflow: hidden;
+}
+
+img {
+  max-height: 150px;
+  object-fit: contain;
+}
+
+.bookTitle{
+    overflow: hidden;
+}
