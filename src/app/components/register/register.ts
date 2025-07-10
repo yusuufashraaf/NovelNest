@@ -1,7 +1,7 @@
-import { Component, Inject, PLATFORM_ID } from '@angular/core';
+import { Component, Inject, PLATFORM_ID, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { isPlatformBrowser,CommonModule  } from '@angular/common';
+import { isPlatformBrowser, CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 @Component({
@@ -11,7 +11,7 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './register.html',
   styleUrl: './register.css',
 })
-export class Register {
+export class Register implements OnInit {
   name = '';
   email = '';
   password = '';
@@ -74,5 +74,14 @@ export class Register {
         localStorage.setItem('token', res.token);
         this.router.navigate(['/home']);
       });
+  }
+
+  registerWithGithub() {
+    const clientId = 'Ov23liEbl4JMupNSPBjD';
+    const redirectUri = 'http://localhost:4200/github-callback';
+
+    const githubAuthUrl = `https://github.com/login/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&scope=user:email`;
+
+    window.location.href = githubAuthUrl;
   }
 }
