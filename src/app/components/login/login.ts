@@ -35,7 +35,7 @@ export class Login implements OnInit {
   private initGoogleSignIn(): void {
     if (isPlatformBrowser(this.platformId) && (window as any).google) {
       (window as any).google.accounts.id.initialize({
-        client_id: 'YOUR_GOOGLE_CLIENT_ID',
+        client_id: '164201127750-so6g0tbctntsgqu5777aavd0kq3gv8l0.apps.googleusercontent.com',
         callback: (response: any) => this.handleGoogle(response.credential),
       });
 
@@ -86,7 +86,6 @@ export class Login implements OnInit {
   }
 
   loginWithGithub(): void {
-    // Redirect to backend GitHub login route (starts OAuth flow)
     window.location.href = 'http://localhost:5000/api/v1/auth/github';
   }
 
