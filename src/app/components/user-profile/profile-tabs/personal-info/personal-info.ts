@@ -62,7 +62,7 @@ export class PersonalInfo implements OnInit, OnDestroy {
       {
         name: [this.user.name, [Validators.required, Validators.minLength(2)]],
         email: [
-          this.user.email,
+          { value: this.user.email, disabled: true },
           [
             Validators.required,
             Validators.pattern(/^[^\s@]+@[^\s@]+\.[^\s@]+$/),
