@@ -23,15 +23,16 @@ import { ForgotPassword } from './components/forgot-password/forgot-password';
 import { VerifyCode } from './components/verify-code/verify-code';
 import { ResetPassword } from './components/reset-password/reset-password';
 import { AboutUs } from './components/about-us/about-us';
-import { AuthGuard } from './Guards/auth-guard';
+import { AllowedPagesGuard } from './Guards/allowed-guard';
 
 export const routes: Routes = [
+  { path: '', redirectTo: 'Browse', pathMatch: 'full' },
+
   // Auth layout: no navbar
   {
     path: '',
     component: AuthLayout,
     children: [
-      { path: '', redirectTo: 'login', pathMatch: 'full' },
       { path: 'login', component: Login },
       { path: 'register', component: Register },
       { path: 'verify-email/:otp', component: VerifyEmail },
@@ -41,24 +42,24 @@ export const routes: Routes = [
     ],
   },
 
-  // Special dashboard route with NO navbar
+
   { path: 'dashboard', component: Dashboard },
 
   // Main layout: with navbar
   {
     path: '',
     component: MainLayout,
+    canActivateChild: [AllowedPagesGuard],
     children: [
-      { path: '', redirectTo: 'home', pathMatch: 'full' },
       { path: 'home', component: Home },
       { path: 'Browse', component: BrowseBooks },
       { path: 'Browse/:id', component: BookDetails },
-      { path: 'Cart', component: Cart, canActivate: [AuthGuard] },
+      { path: 'Cart', component: Cart },
       { path: 'ContactUs', component: ContactUs },
       { path: 'checkout', component: CheckOut },
       { path: 'success', component: PaymentSuccess },
       { path: 'err', component: PaymentError },
-      { path: 'Wishlist', component: Wishlist, canActivate: [AuthGuard] },
+      { path: 'Wishlist', component: Wishlist },
       { path: 'about-us', component: AboutUs },
       { path: 'thank-you', component: ThankYou },
       {
@@ -75,5 +76,5 @@ export const routes: Routes = [
   },
 
   // Wildcard
-  { path: '**', redirectTo: 'login' },
+  { path: '**', redirectTo: 'Browse' },
 ];
