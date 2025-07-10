@@ -18,6 +18,8 @@ import { AddToCart } from '../add-to-cart/add-to-cart';
 import { AddToWishlist } from '../add-to-wishlist/add-to-wishlist';
 import { Product } from '../../services/product.service';
 import { Products } from '../models/product.model';
+import { ReviewResponse } from '../../interfaces/review';
+import { ReviewService } from '../../services/review-service';
 
 @Component({
   selector: 'app-browse-books',
@@ -68,8 +70,17 @@ export class BrowseBooks implements OnInit {
     private productService: Product,
     private route: ActivatedRoute,
     private router: Router,
+    private reviewserv:ReviewService,
     @Inject(PLATFORM_ID) private platformId: Object
   ) {}
+
+
+  getStarRating(rating: number): string {
+    const fullStars = '★'.repeat(Math.floor(rating));
+    const halfStar = rating % 1 >= 0.5 ? '☆' : '';
+    const emptyStars = '☆'.repeat(5 - Math.ceil(rating));
+    return fullStars + halfStar + emptyStars;
+  }
 
   ngOnInit() {
     if (isPlatformBrowser(this.platformId)) {

@@ -1,0 +1,125 @@
+/* ===== Contact Us Container ===== */
+.contact-container {
+  background-color: #fff9f2;
+  border-radius: 15px;
+  padding: 40px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+  border: 1px solid #f0e6d9;
+  font-family: 'Crimson Text', serif;
+}
+
+/* ===== Headings ===== */
+.contact-container h1 {
+  font-family: 'Playfair Display', serif;
+  color: #5c3a21;
+  font-size: 2.5rem;
+  margin-bottom: 30px;
+  position: relative;
+}
+
+.contact-container h1::after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 0;
+  width: 80px;
+  height: 3px;
+  background-color: #a78a6f;
+}
+
+.contact-container h2 {
+  font-family: 'Playfair Display', serif;
+  color: #5c3a21;
+  font-size: 1.5rem;
+}
+
+/* ===== Form Elements ===== */
+.contact-container .form-label {
+  color: #5c3a21;
+  font-weight: 600;
+}
+
+.contact-container .form-control {
+  background-color: #fffcf8;
+  border: 1px solid #d4b999;
+  color: #5c3a21;
+  padding: 12px 15px;
+  border-radius: 8px;
+  transition: all 0.3s;
+}
+
+.contact-container .form-control:focus {
+  background-color: white;
+  border-color: #a78a6f;
+  box-shadow: 0 0 0 0.25rem rgba(167, 138, 111, 0.25);
+}
+
+.contact-container textarea.form-control {
+  min-height: 150px;
+}
+
+.contact-container .form-control::placeholder {
+  color: #b8a99a;
+  font-style: italic;
+}
+
+/* ===== Buttons ===== */
+.contact-container .btn-primary {
+  background-color: #8c6e5d;
+  border: none;
+  color: white;
+  padding: 12px 25px;
+  font-weight: 600;
+  border-radius: 8px;
+  transition: all 0.3s;
+  border-bottom: 3px solid #5c3a21;
+}
+
+.contact-container .btn-primary:hover {
+  background-color: #5c3a21;
+  transform: translateY(-2px);
+}
+
+.contact-container .btn-primary:active {
+  transform: translateY(0);
+}
+
+.contact-container .btn-light {
+  background-color: #f8f1e7;
+  border: 1px solid #d4b999;
+  color: #5c3a21;
+  padding: 10px 20px;
+  border-radius: 8px;
+  transition: all 0.3s;
+}
+
+.contact-container .btn-light:hover {
+  background-color: #f0e6d9;
+  color: #5c3a21;
+}
+
+/* ===== Divider ===== */
+.contact-container .border-top {
+  border-color: #f0e6d9 !important;
+}
+
+/* ===== Responsive Styles ===== */
+@media (max-width: 768px) {
+  .contact-container {
+    padding: 30px;
+  }
+  
+  .contact-container h1 {
+    font-size: 2rem;
+  }
+  
+  .contact-container .btn-primary {
+    width: 100%;
+  }
+}
+
+@media (max-width: 576px) {
+  .contact-container {
+    padding: 20px;
+  }
+}

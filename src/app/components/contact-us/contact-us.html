@@ -1,41 +1,46 @@
 <div class="container py-5">
-    <div class="row ">
-        <div class="col-lg-6">
+  <div class="row justify-content-center">
+    <div class="col-lg-8 contact-container">
+      <h1 class="mb-4">Get in Touch</h1>
 
-                    <h1 class="mb-4">Contact Us</h1>
-
-                    <form (ngSubmit)="onSubmit()">
-                        <div class="mb-3">
-                            <label for="name" class="form-label fw-bold">Name</label>
-                            <input type="text" class="form-control" id="name" name="name" placeholder="Your Name"
-                                required value="{{formData.name}}">
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="email" class="form-label fw-bold">Email</label>
-                            <input type="email" class="form-control" id="email" name="email" placeholder="Your Email"
-                                required value="{{formData.email}}">
-                        </div>
-
-                        <div class="mb-4">
-                            <label for="message" class="form-label fw-bold">Message</label>
-                            <textarea class="form-control" id="message" name="message" rows="5"
-                                placeholder="Your Message" required>{{formData.message}}</textarea>
-                        </div>
-
-                        <div class="text-end">
-                            <button type="submit" class="btn btn-primary btn-lg col-lg-4 col-12">
-                                Send Message
-                            </button>
-                        </div>
-                    </form>
-
-                    <div class=" mt-5 pt-4 border-top ">
-                        <h2 class="h4 mb-3">Or chat with our AI assistant</h2>
-                        <button class="btn btn-light" (click)="startChat()">
-                            Start Chat
-                        </button>
-                    </div>
-                </div>
-            </div>
+      <form (ngSubmit)="onSubmit()" class="mt-4">
+        <div class="mb-4">
+          <label for="name" class="form-label fw-bold">Your Name</label>
+          <input type="text" class="form-control" id="name" name="name" 
+                 placeholder="Enter your full name" required value="{{formData.name}}">
         </div>
+
+        <div class="mb-4">
+          <label for="email" class="form-label fw-bold">Email Address</label>
+          <input type="email" class="form-control" id="email" name="email" 
+                 placeholder="your.email@example.com" required value="{{formData.email}}">
+        </div>
+
+        <div class="mb-4">
+          <label for="message" class="form-label fw-bold">Your Message</label>
+          <textarea class="form-control" id="message" name="message" rows="5"
+                    placeholder="What would you like to ask us?" required>{{formData.message}}</textarea>
+        </div>
+
+        <div class="text-center mt-5">
+          <button type="submit" class="btn btn-primary btn-lg px-5 py-3">
+            <i class="bi bi-send-fill me-2"></i> Send Message
+          </button>
+        </div>
+      </form>
+
+      <div class="mt-5 pt-5 border-top text-center">
+        <h2 class="h4 mb-4">Prefer to chat with our bookish assistant?</h2>
+        <button class="btn btn-light px-4 py-2" (click)="startChat()">
+          <i class="bi bi-chat-left-text me-2"></i> Start AI Chat
+        </button>
+      </div>
+
+      <div class="mt-5 pt-3 text-center">
+        <p class="text-muted">
+          <i class="bi bi-clock-history me-2"></i> We typically respond within 24 years
+        </p>
+      </div>
+    </div>
+  </div>
+</div>

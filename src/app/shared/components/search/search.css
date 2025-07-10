@@ -1,19 +1,75 @@
-.search-wrapper input {
-  background-color: #ebedf2;
-  border-radius: 0.5rem;
+/* ===== Search Component ===== */
+.search-wrapper {
+  width: 250px;
+  transition: all 0.3s ease;
 }
 
- .search-wrapper {
-    position: relative;
-    width: 300px;
+.search-wrapper:hover {
+  width: 280px;
+}
+
+.search-wrapper .bi-search {
+  color: #8c6e5d !important;
+  z-index: 3;
+  font-size: 1rem;
+  transition: all 0.3s;
+}
+
+.search-wrapper input {
+  background-color: #fffcf8;
+  border: 1px solid #d4b999;
+  border-radius: 20px;
+  padding-left: 32px;
+  color: #5c3a21;
+  font-family: 'Crimson Text', serif;
+  height: 38px;
+  transition: all 0.3s;
+  box-shadow: 0 2px 5px rgba(140, 110, 93, 0.05);
+}
+
+.search-wrapper input:focus {
+  background-color: white;
+  border-color: #a78a6f;
+  box-shadow: 0 0 0 0.25rem rgba(167, 138, 111, 0.25);
+  outline: none;
+}
+
+.search-wrapper input::placeholder {
+  color: #b8a99a;
+  font-style: italic;
+}
+
+/* Animation when focused */
+.search-wrapper input:focus {
+  width: 300px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1199.98px) {
+  .search-wrapper {
+    width: 200px;
   }
-  .search-wrapper input.form-control {
-    padding-left: 2.5rem; /* space for icon */
+  
+  .search-wrapper:hover {
+    width: 230px;
   }
-  .search-wrapper i.bi-search {
-    position: absolute;
-    top: 50%;
-    left: 0.75rem;
-    transform: translateY(-50%);
-    color: #6c757d; /* Bootstrap text-secondary color */
+  
+  .search-wrapper input:focus {
+    width: 250px;
   }
+}
+
+@media (max-width: 991.98px) {
+  .search-wrapper {
+    width: 100%;
+    margin-bottom: 15px;
+  }
+  
+  .search-wrapper:hover {
+    width: 100%;
+  }
+  
+  .search-wrapper input:focus {
+    width: 100%;
+  }
+}

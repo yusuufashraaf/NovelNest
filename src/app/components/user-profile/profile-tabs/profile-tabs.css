@@ -5,3 +5,29 @@
 .nav a:hover{
     color: black;
 }
+
+.nav-tabs {
+  border-bottom: 2px solid #f0e6d9;
+}
+
+.nav-tabs .nav-link {
+  color: #8c6e5d;
+  font-family: 'Playfair Display', serif;
+  border: none;
+  padding: 12px 20px;
+  margin-right: 5px;
+  border-radius: 8px 8px 0 0;
+  transition: all 0.3s;
+}
+
+.nav-tabs .nav-link:hover {
+  color: #5c3a21;
+  background-color: #f8f1e7;
+}
+
+.nav-tabs .nav-link.active {
+  color: #5c3a21;
+  background-color: #f8f1e7;
+  border-bottom: 3px solid #a78a6f;
+  font-weight: 600;
+}

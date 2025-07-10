@@ -1,11 +1,14 @@
-<div class="about-us-container py-5">
+<div class="about-us-container py-5" style="background-color: #fff9f2;">
     <div class="container">
         <!-- Hero Section -->
         <div class="row mb-5">
             <div class="col-lg-10 mx-auto text-center">
-                <h1 class="display-4 fw-bold text-primary mb-4">About Us</h1>
-                <p class="lead">
-                    Welcome to Novelty Reads, your ultimate destination for discovering and sharing the magic of books.
+                <h1 class="display-4 fw-bold mb-4" style="color: #5c3a21; font-family: 'Playfair Display', serif;">
+                    Our Bookish Journey
+                    <div class="divider mx-auto mt-3" style="width: 100px; height: 3px; background-color: #a78a6f;"></div>
+                </h1>
+                <p class="lead" style="color: #8c6e5d; font-family: 'Crimson Text', serif;">
+                    Welcome to Novelty Reads, where every page tells a story and every reader finds their home.
                 </p>
             </div>
         </div>
@@ -13,9 +16,12 @@
         <!-- Mission Section -->
         <div class="row mb-5">
             <div class="col-lg-8 mx-auto">
-                <div class="card border-0 shadow-sm">
+                <div class="card border-0" style="background-color: #f8f1e7; border-radius: 12px; box-shadow: 0 5px 15px rgba(92, 58, 33, 0.08);">
                     <div class="card-body p-4 p-md-5">
-                        <p class="fs-5">
+                        <div class="text-center mb-4">
+                            <i class="bi bi-book" style="font-size: 2.5rem; color: #a78a6f;"></i>
+                        </div>
+                        <p class="fs-5" style="color: #5c3a21; font-family: 'Crimson Text', serif; line-height: 1.8;">
                             Our mission is to connect readers with stories that inspire, challenge, and entertain. We
                             believe in the power of literature to broaden horizons, foster empathy, and create lasting
                             memories. Novelty Reads is more than just a platform; it's a community of passionate
@@ -29,15 +35,17 @@
         <!-- Our Story Section -->
         <div class="row mb-5">
             <div class="col-lg-10 mx-auto">
-                <h2 class="fw-bold mb-4 text-center">Our Story</h2>
-                <div class="bg-light p-4 rounded-3">
-                    <p>
+                <h2 class="fw-bold mb-4 text-center" style="color: #5c3a21; font-family: 'Playfair Display', serif;">
+                    The Story Behind the Pages
+                </h2>
+                <div class="p-4 rounded-3" style="background-color: #f8f1e7; border: 1px solid #f0e6d9;">
+                    <p style="color: #5c3a21; font-family: 'Crimson Text', serif;">
                         Founded in 2018 by a group of avid readers, Novelty Reads began as a small online forum for
                         discussing favorite books. Over the years, it has grown into a comprehensive platform offering a
                         vast library of titles, personalized recommendations, and interactive features that enhance the
                         reading experience.
                     </p>
-                    <p class="mb-0">
+                    <p class="mb-0" style="color: #5c3a21; font-family: 'Crimson Text', serif;">
                         We are committed to fostering a vibrant and inclusive community where every reader feels at
                         home.
                     </p>
@@ -48,18 +56,20 @@
         <!-- Team Section -->
         <div class="row mb-5">
             <div class="col-12">
-                <h2 class="fw-bold mb-5 text-center">Meet the Team</h2>
+                <h2 class="fw-bold mb-5 text-center" style="color: #5c3a21; font-family: 'Playfair Display', serif;">
+                    The Keepers of Stories
+                </h2>
                 <div class="row g-4 justify-content-center">
                     @for (member of teamMembers; track $index) {
                         <div class="col-md-4 col-lg-3">
-                            <div class="card h-100 border-0 shadow-sm">
+                            <div class="card h-100 border-0" style="background-color: #fffcf8; border-radius: 12px; box-shadow: 0 5px 15px rgba(92, 58, 33, 0.08); transition: transform 0.3s;">
                                 <div class="card-body text-center p-4">
                                     <img [src]="member.imageUrl" class="team-img mx-auto rounded-circle mb-3" 
-                                        style="width: 120px; height: 120px; object-fit: cover;" 
+                                        style="width: 120px; height: 120px; object-fit: cover; border: 3px solid #f0e6d9;" 
                                         [alt]="member.name + ' profile picture'">
-                                    <h5 class="fw-bold">{{member.name}}</h5>
-                                    <p class="text-muted">{{member.position}}</p>
-                                    <p class="text-muted small">{{member.bio}}</p>
+                                    <h5 class="fw-bold" style="color: #5c3a21; font-family: 'Playfair Display', serif;">{{member.name}}</h5>
+                                    <p class="mb-2" style="color: #a78a6f; font-style: italic;">{{member.position}}</p>
+                                    <p class="small" style="color: #8c6e5d; font-family: 'Crimson Text', serif;">{{member.bio}}</p>
                                 </div>
                             </div>
                         </div>
@@ -68,9 +78,10 @@
             </div>
         </div>
 
-        <div class="text-center mt-4">
-            <a class="btn btn-success btn-lg px-4" routerLink="/ContactUs">
-                <h4 class="mb-0"><b>Contact Us</b></h4>
+        <div class="text-center mt-5">
+            <a class="btn btn-lg px-5 py-3" routerLink="/ContactUs" 
+               style="background-color: #8c6e5d; color: white; border-radius: 8px; border-bottom: 3px solid #5c3a21; font-family: 'Playfair Display', serif;">
+                <i class="bi bi-envelope-open me-2"></i> Connect With Us
             </a>
         </div>
     </div>

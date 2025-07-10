@@ -7,7 +7,7 @@ export interface Products {
   quantity: number;
   sold: number;
   price: number;
-  priceAfterDiscount?: number;
+  priceAfterDiscount: number;
   imageCover: string;
   images: string[];
   pdfLink: string;
@@ -16,7 +16,7 @@ export interface Products {
     name: string;
   };
   subcategory: any[]; // Can be more specific if you know the structure
-  ratingAverage?: number;
+  ratingAverage: number;
   ratingQuantity: number;
   createdAt: string;
   updatedAt: string;

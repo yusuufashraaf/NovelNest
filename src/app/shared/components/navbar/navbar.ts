@@ -21,6 +21,8 @@ export class Navbar implements OnDestroy {
   private destroy$ = new Subject<void>();
 
   constructor(private authService: AuthService) {
+    this.wishlistService.refreshWishlist();
+    this.cartService.refreshCart();
   }
 
   ngOnDestroy() {
