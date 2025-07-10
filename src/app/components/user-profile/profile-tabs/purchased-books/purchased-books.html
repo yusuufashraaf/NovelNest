@@ -1,51 +1,39 @@
 <div class="container py-4">
-    <ng-container *ngFor="let order of orders;">
-        <ng-container *ngFor="let bookItem of order.books;">
-            <div class="row g-4 mb-3">
-                <div class="col-12">
-                    <div
-                        class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center bg-white p-3 rounded shadow-sm">
+    @for (book of orders; track $index) {
+    <ng-container>
+        <div class="row g-4 mb-3">
+            <div class="col-12">
+                <div
+                    class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center bg-white p-3 rounded shadow-sm">
 
-                        <!-- Book Exists -->
-                        <ng-container *ngIf="bookItem.book; else deletedBook">
-                            <!-- Left: Book Info -->
-                            <div class="mb-3 mb-md-0">
-                                <h5 class="fw-bold mb-1">{{ bookItem.book.title }}</h5>
-                                <h6 class="text-primary small">{{ bookItem.book.author }}</h6>
-                                <p class="mb-2 small">
-                                    Quantity: {{ bookItem.quantity }} |
-                                    Price: {{ bookItem.price }} L.E
-                                </p>
+                    <!-- Left: Book Info -->
+                    <div class="mb-3 mb-md-0 bookTitle">
+                        <h5 class="fw-bold mb-1 bookTitle">{{ book.title }}</h5>
+                        <h6 class="text-primary small">{{ book.author }}</h6>
+                        <p class="mb-2 small">
+                            Price: {{ book.price }} L.E
+                        </p>
 
-                                <!-- PDF Link or Fallback -->
-                                <ng-container *ngIf="bookItem.book.pdfLink; else noPdf">
-                                    <a [href]="bookItem.book.pdfLink" class="btn btn-sm btn-outline-secondary"
-                                        target="_blank">
-                                        <i class="bi bi-file-earmark-pdf me-1"></i> View PDF
-                                    </a>
-                                </ng-container>
-                                <ng-template #noPdf>
-                                    <span class="text-danger small">No PDF available for this book.</span>
-                                </ng-template>
-                            </div>
-
-                            <!-- Right: Book Image -->
-                            <div class="ms-md-3 mt-3 mt-md-0">
-                                <img [src]="bookItem.book.imageCover" [alt]="bookItem.book.title"
-                                    class="img-fluid rounded" style="max-height: 150px; object-fit: cover;" />
-                            </div>
+                        <!-- PDF Link or Fallback -->
+                        @if (book.pdfLink) {
+                        <ng-container>
+                            <a [href]="book.pdfLink" class="btn btn-sm btn-outline-secondary" target="_blank">
+                                <i class="bi bi-file-earmark-pdf me-1"></i> View PDF
+                            </a>
                         </ng-container>
+                        }
+                        @else {
+                        <span class="text-danger small">No PDF available for this book.</span>
+                        }
+                    </div>
 
-                        <!-- Deleted Book Fallback -->
-                        <ng-template #deletedBook>
-                            <div class="text-danger small">
-                                This book was removed from our catalog.
-                            </div>
-                        </ng-template>
-
+                    <!-- Right: Book Image -->
+                    <div class="ms-md-3 mt-3 mt-md-0">
+                        <img [src]="book.imageCover" [alt]="book.title" class="img-fluid rounded" />
                     </div>
                 </div>
             </div>
-        </ng-container>
+        </div>
     </ng-container>
+    }
 </div>
