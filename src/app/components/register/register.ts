@@ -19,6 +19,7 @@ export class Register implements OnInit {
   confirmPassword = '';
   errorMessage = '';
   successMessage = '';
+  validationErrors: string[] = [];
 
   constructor(
     private http: HttpClient,
@@ -47,6 +48,10 @@ export class Register implements OnInit {
   }
 
   onSubmit() {
+    this.errorMessage = '';
+    this.successMessage = '';
+    this.validationErrors = [];
+
     if (this.password !== this.confirmPassword) {
       this.errorMessage = 'Passwords do not match';
       return;
@@ -56,6 +61,7 @@ export class Register implements OnInit {
       name: this.name,
       email: this.email,
       password: this.password,
+      confirmPassword: this.confirmPassword,
     };
 
     this.http
@@ -64,12 +70,18 @@ export class Register implements OnInit {
         next: (res: any) => {
           this.successMessage = res.message;
           this.errorMessage = '';
+          this.validationErrors = [];
           this.name = this.email = this.password = this.confirmPassword = '';
         },
         error: (err) => {
+        if (err.error?.errors && Array.isArray(err.error.errors)) {
+          // Express-validator errors
+          this.validationErrors = err.error.errors;
+        } else {
           this.errorMessage = err.error?.message || 'Signup failed';
-          this.successMessage = '';
-        },
+        }
+        this.successMessage = '';
+      },
       });
   }
 
