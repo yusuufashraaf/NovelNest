@@ -15,10 +15,17 @@ export class Search {
 
   constructor(private router: Router) {}
 
-  onSearch() {
-    const trimmed = this.searchTerm.trim();
-    if (trimmed) {
-      this.router.navigate(['/Browse'], { queryParams: { keyword: trimmed } });
-    }
+onSearch() {
+  const trimmed = this.searchTerm.trim();
+
+  if (trimmed) {
+    this.router.navigate(['/Browse'], { queryParams: { keyword: trimmed } });
+  } else {
+    // If the search box is empty, remove 'keyword' from query params
+    this.router.navigate(['/Browse'], {
+      queryParams: { keyword: null },
+      queryParamsHandling: 'merge',
+    });
   }
+}
 }
