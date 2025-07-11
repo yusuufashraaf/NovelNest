@@ -28,7 +28,7 @@ export class BookDetails implements OnInit {
   bookId:string ='';
   userId:string='';
   isCurrentUserBoughtThisBook:boolean=false;
-  isCurrentUserReviewedBeforeThisBook:boolean=false;
+  isCurrentUserReviewedBeforeThisBook:boolean=true;
 
   newReview:NewReview ={
     userId:'',
@@ -78,7 +78,10 @@ export class BookDetails implements OnInit {
       this.fetchIsreviewedandIsBought(this.bookId);
 
     }
-    this.newReview.userId = this.userInfo.getUserId();
+    const userStr = localStorage.getItem('user');
+    const userId = this.userInfo.getUserId() || (userStr ? JSON.parse(userStr)._id : null);
+    this.newReview.userId = userId;
+
     this.userId =this.newReview.userId ;
 
 
@@ -112,6 +115,8 @@ export class BookDetails implements OnInit {
 
     this.reviewserv.getIsboughtandIsreviewed(bookId).subscribe({
       next:(res)=>{
+        console.log( this.isCurrentUserBoughtThisBook,"mahmod");
+
           this.isCurrentUserBoughtThisBook=res.isBought;
           this.isCurrentUserReviewedBeforeThisBook =res.isReviewed;
 
@@ -139,7 +144,8 @@ export class BookDetails implements OnInit {
 
     this.reviewserv.deleteReview(id).subscribe({
       next:(res)=>{
-        this.fetchBookReviews(this.bookId)
+        this.fetchBookReviews(this.bookId);
+        this.isCurrentUserReviewedBeforeThisBook=false;
       },
       error(err){
         console.log(err);
@@ -166,8 +172,8 @@ export class BookDetails implements OnInit {
           this.fetchBookReviews(reviewPayload.bookId);
           this.newReview.comment = '';
           this.newReview.rate = 0;
+          this.isCurrentUserReviewedBeforeThisBook=true;
           form.resetForm();
-
         },
         error:(err)=>{
           console.error('Error fetching reviews:', err);

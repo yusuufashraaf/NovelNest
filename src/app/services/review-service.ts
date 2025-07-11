@@ -17,10 +17,15 @@ export class ReviewService {
     private userInfo: UserInfo
   ) {}
 
+
   addReview(body: NewReview): Observable<Review> {
+    const token = this.userInfo.getToken() || localStorage.getItem('token')
+    const headers = new HttpHeaders({
+      Authorization: `${token}`,
+    });
     return this.http.post<Review>(
       'http://localhost:5000/api/v1/comment/create',
-      body
+      body,{headers}
     );
   }
   getReviews(Productid: String): Observable<ReviewResponse> {
@@ -29,8 +34,9 @@ export class ReviewService {
     );
   }
   deleteReview(reviewId: String): Observable<Review> {
+    const token = this.userInfo.getToken() || localStorage.getItem('token')
     const headers = new HttpHeaders({
-      Authorization: `${this.userInfo.getToken()}`,
+      Authorization: `${token}`,
     });
     return this.http.delete<Review>(
       `http://localhost:5000/api/v1/comment/${reviewId}`,
