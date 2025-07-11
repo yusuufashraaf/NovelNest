@@ -24,6 +24,7 @@ import { VerifyCode } from './components/verify-code/verify-code';
 import { ResetPassword } from './components/reset-password/reset-password';
 import { AboutUs } from './components/about-us/about-us';
 import { AllowedPagesGuard } from './Guards/allowed-guard';
+import { SuccessPopupComponent } from './components/success-popup/success-popup';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'Browse', pathMatch: 'full' },
@@ -57,6 +58,7 @@ export const routes: Routes = [
       { path: 'Cart', component: Cart },
       { path: 'ContactUs', component: ContactUs },
       { path: 'checkout', component: CheckOut },
+      {path:'checkout/success-popup',component:SuccessPopupComponent},
       { path: 'success', component: PaymentSuccess },
       { path: 'err', component: PaymentError },
       { path: 'Wishlist', component: Wishlist },

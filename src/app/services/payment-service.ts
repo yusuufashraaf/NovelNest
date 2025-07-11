@@ -8,13 +8,29 @@ import { UserInfo } from './user-info';
 })
 export class PaymentService {
 
+  tokenIdPaypal:string='';
+  payerId:string='';
+
+  setTokenPayerIdPaypal(tokenIdPaypal:string,payerId:string){
+    this.tokenIdPaypal=tokenIdPaypal;
+    this.payerId=payerId;
+  }
+
+  getTokenPayerIdPaypal(){
+    return {
+        tokenId:this.tokenIdPaypal,
+        payerId:this.payerId
+    }
+  }
   constructor(private router:Router,private http:HttpClient,private userInfo:UserInfo){};
 
 
   initiatePayment(body:any) {
-    
+    const token = this.userInfo.getToken() || localStorage.getItem('token');
+    console.log(token);
+
     const headers = new HttpHeaders({
-      Authorization: `${this.userInfo.getToken()}`,
+      Authorization: `${token}`,
     });
   return this.http.post<any>('http://localhost:5000/buy/create-test-order', body,{headers})
 
