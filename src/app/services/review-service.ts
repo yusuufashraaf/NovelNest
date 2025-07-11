@@ -45,8 +45,9 @@ export class ReviewService {
     );
   }
   getIsboughtandIsreviewed(bookId:string): Observable<IsBoughtisReviewd>{
+    const token = this.userInfo.getToken() || localStorage.getItem('token')
     const headers = new HttpHeaders({
-      Authorization: `${this.userInfo.getToken()}`,
+      Authorization: `${token}`,
     });
 
     return this.http.get<IsBoughtisReviewd>(
