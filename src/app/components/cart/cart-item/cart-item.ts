@@ -26,6 +26,16 @@ export class CartItem {
   @Output() remove = new EventEmitter<string>();
 
   increase() {
+    if (!this.item?.productId) {
+      Swal.fire({
+        title: 'Error',
+        text: 'Product information is missing. Please refresh the page.',
+        icon: 'error',
+        confirmButtonText: 'OK',
+      });
+      return;
+    }
+
     this.quantityChange.emit({
       productId: this.item.productId,
       quantity: this.item.quantity + 1,
@@ -33,31 +43,52 @@ export class CartItem {
   }
 
   decrease() {
+    if (!this.item?.productId) {
+      Swal.fire({
+        title: 'Error',
+        text: 'Product information is missing. Please refresh the page.',
+        icon: 'error',
+        confirmButtonText: 'OK',
+      });
+      return;
+    }
+
     if (this.item.quantity > 1) {
       this.quantityChange.emit({
         productId: this.item.productId,
         quantity: this.item.quantity - 1,
       });
+    } else {
+      // If quantity is 1, show confirmation to remove the item instead
+      this.removeItem();
     }
   }
 
   removeItem() {
+    if (!this.item?.productId) {
+      Swal.fire({
+        title: 'Error',
+        text: 'Product information is missing. Please refresh the page.',
+        icon: 'error',
+        confirmButtonText: 'OK',
+      });
+      return;
+    }
+
     Swal.fire({
-      title: 'Are you sure?',
-      text: 'This item will be removed from your cart.',
+      title: 'Remove item?',
+      text: `Are you sure you want to remove "${this.item.title}" from your cart?`,
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes, delete it!',
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Yes, remove it',
+      cancelButtonText: 'Cancel',
     }).then((result) => {
       if (result.isConfirmed) {
-        Swal.fire({
-          title: 'Deleted!',
-          text: 'Your item has been deleted.',
-          icon: 'success',
-        });
         this.remove.emit(this.item.productId);
+        // Success message will be handled by the parent component
+        // based on the API response
       }
     });
   }
