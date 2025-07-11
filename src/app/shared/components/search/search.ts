@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import nlp from 'compromise';
-const sw: any = require('stopword');
+import * as sw from 'stopword'; 
 
 @Component({
   selector: 'app-search',
