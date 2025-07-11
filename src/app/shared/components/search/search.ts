@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import nlp from 'compromise';
 const sw: any = require('stopword');
@@ -6,6 +7,7 @@ const sw: any = require('stopword');
 @Component({
   selector: 'app-search',
   templateUrl: './search.html',
+  imports: [FormsModule],
   styleUrl: './search.css',
   standalone: true,
 })
