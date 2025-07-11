@@ -167,7 +167,16 @@
               <span>${{totalPrice}}</span>
           </div>
 
-          <button class="confirm-btn" (click)="createOrder()">Confirm Purchase</button>
+          <button
+              class="confirm-btn"
+              (click)="createOrder()"
+              [disabled]="loading">
+              <ng-container *ngIf="!loading">Confirm Purchase</ng-container>
+              <ng-container *ngIf="loading">
+                <span class="spinner-border spinner-border-sm me-1" role="status"></span>
+                Processing...
+              </ng-container>
+        </button>
       </div>
   </div>
 </form>

@@ -4,6 +4,9 @@ import { HttpClient} from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CartService } from '../../services/cart.service';
+import { CommonModule } from '@angular/common';
+import Swal from 'sweetalert2';
+import { Router } from '@angular/router';
 
 export interface book {
   book:String,
@@ -13,26 +16,28 @@ export interface book {
 
 @Component({
   selector: 'app-check-out',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule,CommonModule],
   standalone:true,
   templateUrl: './check-out.html',
   styleUrl: './check-out.css'
 })
 export class CheckOut  implements OnInit {
-  router: any;
+
 
   constructor(private paymentServ:PaymentService,
     private cart:CartService,
-    private userInfo:UserInfo
-
+    private userInfo:UserInfo,
+    private router:Router
   ){}
 
   cartItems:any;
   totalPrice:number=0;
   books:book[] = [];
-  // userId = this.userInfo.;
+  loading:boolean = false;
+
 
   ngOnInit(): void {
+
     this.cartItems= this.cart.cart().cartItems;
     this.totalPrice =this.cart.cart().totalPrice;
     this.books = this.cartItems.map((item:any) => ({
@@ -40,6 +45,7 @@ export class CheckOut  implements OnInit {
       quantity: item.quantity,
       price: item.price
     }));
+       console.log(this.userInfo.getToken());
 
   }
 
@@ -158,16 +164,27 @@ checkoutForm= new FormGroup({
 
   createOrder(): void {
 
+      if (!this.books || this.books.length === 0) {
+        Swal.fire({
+          icon: 'warning',
+          title: 'Your cart is empty',
+          text: 'Please add books to your cart before proceeding to checkout.',
+          confirmButtonText: 'Okay'
+        });
+        return;
+      }
 
-    if (!this.isFormValid()) {
+    if (this.loading || this.checkoutForm.invalid){
       this.markAllFieldsAsTouched();
       return;
     }
+      this.loading = true;
+
 
     const formValues = this.checkoutForm.value;
 
     const finalOrder = {
-      // user: this.userId,
+
       books: this.books,
       totalPrice: this.totalPrice,
       shippingAddress: {
@@ -184,15 +201,53 @@ checkoutForm= new FormGroup({
     console.log('Final Order JSON:', finalOrder);
     this.paymentServ.initiatePayment(finalOrder).subscribe({
     next: (res) => {
+
       if (res?.success && res.data?.approvalUrl) {
-        window.location.href = res.data.approvalUrl;
+        this.loading = false;
+
+
+          const popup = window.open(res.data.approvalUrl, '_blank', 'width=600,height=800');
+
+          window.addEventListener('message', (event) => {
+            if (event.data?.paymentSuccess) {
+              const { token, payerId } = event.data;
+              this.paymentServ.setTokenPayerIdPaypal(token,payerId);
+              popup?.close();
+
+              this.router.navigate(['success']);
+            }
+          });
+
+          if (!popup) {
+            console.error('Popup was blocked by the browser.');
+            Swal.fire({
+              title: 'Popup Blocked!',
+              text: 'Your browser has blocked the payment window. Please allow popups or try again.',
+              icon: 'warning',
+              confirmButtonText: 'OK',
+              footer: '<a href="https://support.google.com/chrome/answer/95472" target="_blank">How to allow popups?</a>'
+            });
+          } else {
+            popup.focus();
+          }
       } else {
+        this.loading = false;
         console.error('Payment initiation failed or approvalUrl missing.');
       }
     },
     error: (err) => {
       console.error('Error during payment initiation:', err);
-      this.router.navigate(['/err']);
+            const errorMessage =
+          err?.error?.message || 'An unexpected error occurred. Please try again.';
+
+        Swal.fire({
+          title: 'Payment Failed',
+          text: errorMessage,
+          icon: 'error',
+          confirmButtonText: 'OK',
+        });
+
+        this.loading = false;
     }
   });
 

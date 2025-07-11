@@ -27,8 +27,8 @@ export class BookDetails implements OnInit {
   avgRate:number=0;
   bookId:string ='';
   userId:string='';
-  isCurrentUserBoughtThisBook=false;
-  isCurrentUserReviewedBeforeThisBook=false;
+  isCurrentUserBoughtThisBook:boolean=false;
+  isCurrentUserReviewedBeforeThisBook:boolean=false;
 
   newReview:NewReview ={
     userId:'',
@@ -112,8 +112,8 @@ export class BookDetails implements OnInit {
 
     this.reviewserv.getIsboughtandIsreviewed(bookId).subscribe({
       next:(res)=>{
-          this.isCurrentUserBoughtThisBook=res[0].isBought;
-          this.isCurrentUserReviewedBeforeThisBook =res[0].isReviewed;
+          this.isCurrentUserBoughtThisBook=res.isBought;
+          this.isCurrentUserReviewedBeforeThisBook =res.isReviewed;
 
       },error(err){
         console.log(err);

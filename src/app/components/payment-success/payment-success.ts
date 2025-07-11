@@ -1,15 +1,16 @@
+import { PaymentService } from './../../services/payment-service';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Component,  OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 
-interface PaymentConfirmationResponse {
-  success: boolean;
-  message?: string;
-  orderId?: string;
-  transactionId?: string;
-}
+// interface PaymentConfirmationResponse {
+//   success: boolean;
+//   message?: string;
+//   orderId?: string;
+//   transactionId?: string;
+// }
 @Component({
   selector: 'app-payment-success',
   imports: [CommonModule],
@@ -21,18 +22,24 @@ export class PaymentSuccess implements OnInit {
   paymentStatus: 'success' | 'error' | 'invalid' = 'invalid';
   successMessage = '';
   errorMessage = '';
-  orderDetails: any = null;
+  orderDetails: {
+    orderId: string;
+    transactionId: string;
+    status: string;
+  } | null = null;
   countdown = 5;
   private countdownInterval: any;
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private http: HttpClient
+    private http: HttpClient,
+    private paymentServ:PaymentService
   ) {}
 
   ngOnInit() {
     this.processPaymentConfirmation();
+
   }
 
   ngOnDestroy() {
@@ -42,34 +49,34 @@ export class PaymentSuccess implements OnInit {
   }
 
   private processPaymentConfirmation() {
-    // Extract token and PayerID from URL parameters
-    const token = this.route.snapshot.queryParamMap.get('token');
-    const payerId = this.route.snapshot.queryParamMap.get('PayerID');
 
-    // Validate required parameters
-    if (!token || !payerId) {
+    const {tokenId,payerId} = this.paymentServ.getTokenPayerIdPaypal();
+
+    if (!tokenId || !payerId) {
       this.paymentStatus = 'invalid';
       this.isLoading = false;
       return;
     }
 
-    // Make API call to confirm payment
-    this.confirmPayment(token, payerId);
+
+    this.confirmPayment(tokenId, payerId);
   }
 
-  private confirmPayment(token: string, payerId: string) {
+  private confirmPayment(tokenId: string, payerId: string) {
     this.http.get<PaymentConfirmationResponse>(
-      `http://localhost:5000/buy/confirm?token=${token}&PayerID=${payerId}`
+      `http://localhost:5000/buy/confirm?token=${tokenId}&PayerID=${payerId}`
     ).subscribe({
       next: (response) => {
         this.isLoading = false;
+        console.log("heeeeeeeeeeeeeeeeeey",response);
 
-        if (response.success) {
+        if (response.success  && response.data) {
           this.paymentStatus = 'success';
           this.successMessage = response.message || 'Your payment has been processed successfully!';
           this.orderDetails = {
-            orderId: response.orderId,
-            transactionId: response.transactionId
+            orderId: response.data.orderId,
+            transactionId: response.data.captureId,
+            status: response.data.status
           };
           this.startCountdown();
         } else {
@@ -101,7 +108,7 @@ export class PaymentSuccess implements OnInit {
     this.countdownInterval = setInterval(() => {
       this.countdown--;
       if (this.countdown <= 0) {
-        this.redirectToThankYou();
+        this.goHome();
       }
     }, 1000);
   }
@@ -118,7 +125,6 @@ export class PaymentSuccess implements OnInit {
   }
 
   retryPayment() {
-    // Reset state and retry
     this.isLoading = true;
     this.paymentStatus = 'invalid';
     this.processPaymentConfirmation();

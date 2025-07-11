@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import { Review, ReviewResponse } from '../interfaces/review';
 import { Observable } from 'rxjs';
 import { NewReview } from '../interfaces/new-review';
+import { IsBoughtisReviewd } from '../interfaces/is-boughtis-reviewd';
 @Injectable({
   providedIn: 'root',
 })
@@ -43,12 +44,12 @@ export class ReviewService {
       `http://localhost:5000/api/v1/comment/user/${userId}`
     );
   }
-  getIsboughtandIsreviewed(bookId:string): Observable<any[]>{
+  getIsboughtandIsreviewed(bookId:string): Observable<IsBoughtisReviewd>{
     const headers = new HttpHeaders({
       Authorization: `${this.userInfo.getToken()}`,
     });
 
-    return this.http.get<any[]>(
+    return this.http.get<IsBoughtisReviewd>(
       `http://localhost:5000/api/v1/comment/check/${bookId}`
     ,{headers}
     );
