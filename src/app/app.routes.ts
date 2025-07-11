@@ -43,9 +43,6 @@ export const routes: Routes = [
     ],
   },
 
-
-  { path: 'dashboard', component: Dashboard },
-
   // Main layout: with navbar
   {
     path: '',
@@ -58,12 +55,13 @@ export const routes: Routes = [
       { path: 'Cart', component: Cart },
       { path: 'ContactUs', component: ContactUs },
       { path: 'checkout', component: CheckOut },
-      {path:'checkout/success-popup',component:SuccessPopupComponent},
+      { path: 'checkout/success-popup', component: SuccessPopupComponent },
       { path: 'success', component: PaymentSuccess },
       { path: 'err', component: PaymentError },
       { path: 'Wishlist', component: Wishlist },
       { path: 'about-us', component: AboutUs },
       { path: 'thank-you', component: ThankYou },
+      { path: 'dashboard', component: Dashboard },
       {
         path: 'profile',
         component: UserProfile,

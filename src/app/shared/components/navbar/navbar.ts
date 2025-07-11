@@ -1,10 +1,10 @@
-import { Component, inject, OnDestroy } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { RouterLink, RouterOutlet } from '@angular/router';
 import { CartService } from '../../../services/cart.service';
 import { WishlistService } from '../../../services/wishlist.service';
 import { AuthService } from '../../../services/auth.service';
 import { Subject, takeUntil } from 'rxjs';
-import { Search } from "../search/search";
+import { Search } from '../search/search';
 
 @Component({
   selector: 'app-navbar',
@@ -12,10 +12,9 @@ import { Search } from "../search/search";
   templateUrl: './navbar.html',
   styleUrl: './navbar.css',
 })
-
-export class Navbar implements OnDestroy {
+export class Navbar implements OnDestroy, OnInit {
   isLoggedIn = false;
-
+  userRole: string = '';
   cartService = inject(CartService);
   wishlistService = inject(WishlistService);
   private destroy$ = new Subject<void>();
@@ -24,7 +23,16 @@ export class Navbar implements OnDestroy {
     this.wishlistService.refreshWishlist();
     this.cartService.refreshCart();
   }
-
+  ngOnInit(): void {
+    this.authService.fetchLoggedInUser().subscribe({
+      next: (res) => {
+        this.userRole = res?.data?.user?.role;
+      },
+      error: () => {
+        this.userRole = '';
+      },
+    });
+  }
   ngOnDestroy() {
     this.destroy$.next();
     this.destroy$.complete();
