@@ -27,9 +27,11 @@
     "bootstrap": "^5.3.7",
     "bootstrap-icons": "^1.13.1",
     "chart.js": "^4.5.0",
+    "compromise": "^14.14.4",
     "express": "^5.1.0",
     "jwt-decode": "^4.0.0",
     "rxjs": "~7.8.0",
+    "stopword": "^3.1.5",
     "sweetalert2": "^11.6.13",
     "tslib": "^2.3.0",
     "zone.js": "~0.15.0"
