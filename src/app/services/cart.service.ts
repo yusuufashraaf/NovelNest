@@ -2,6 +2,7 @@ import { inject, Injectable, signal } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, catchError, throwError } from 'rxjs';
 import Swal from 'sweetalert2';
+import { environment } from '../../environment';
 
 interface CartItemEntry {
   productId: string;
@@ -28,7 +29,8 @@ interface cartData {
   providedIn: 'root',
 })
 export class CartService {
-  private baseUrl = 'http://localhost:5000/api/v1/cart';
+      private rootUrl = `${environment.apiUrl}`;
+  private baseUrl = `${this.rootUrl}/api/v1/cart`;
   private http = inject(HttpClient);
 
   // cart signal

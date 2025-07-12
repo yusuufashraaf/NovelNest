@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Component,  OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-
+import { environment } from '../../../environment';
 
 // interface PaymentConfirmationResponse {
 //   success: boolean;
@@ -18,6 +18,8 @@ import { ActivatedRoute, Router } from '@angular/router';
   styleUrl: './payment-success.css'
 })
 export class PaymentSuccess implements OnInit {
+      private rootUrl = `${environment.apiUrl}`;
+  
  isLoading = true;
   paymentStatus: 'success' | 'error' | 'invalid' = 'invalid';
   successMessage = '';
@@ -64,7 +66,7 @@ export class PaymentSuccess implements OnInit {
 
   private confirmPayment(tokenId: string, payerId: string) {
     this.http.get<PaymentConfirmationResponse>(
-      `http://localhost:5000/buy/confirm?token=${tokenId}&PayerID=${payerId}`
+      `${this.rootUrl}/buy/confirm?token=${tokenId}&PayerID=${payerId}`
     ).subscribe({
       next: (response) => {
         this.isLoading = false;

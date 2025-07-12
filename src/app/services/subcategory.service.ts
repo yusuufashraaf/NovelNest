@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
-
+import { environment } from '../../environment';
 export interface Subcategory {
   _id: string;
   name: string;
@@ -16,7 +16,9 @@ export interface Subcategory {
   providedIn: 'root',
 })
 export class SubcategoryService {
-  private apiUrl = 'http://localhost:5000/api/v1/subcategories';
+    private rootUrl = `${environment.apiUrl}`;
+  
+  private apiUrl = `${this.rootUrl}/api/v1/subcategories`;
 
   constructor(private http: HttpClient) {}
 

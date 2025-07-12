@@ -6,7 +6,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { UserInfo } from '../../services/user-info';
-
+import { environment } from '../../../environment';
 @Component({
   selector: 'app-login',
   standalone: true,
@@ -15,6 +15,8 @@ import { UserInfo } from '../../services/user-info';
   styleUrls: ['./login.css'],
 })
 export class Login implements OnInit {
+      private rootUrl = `${environment.apiUrl}`;
+  
   email = '';
   password = '';
   errorMessage = '';
@@ -64,7 +66,7 @@ export class Login implements OnInit {
 
   private handleGoogle(credential: string): void {
     this.http
-      .post('http://localhost:5000/api/v1/auth/google', { token: credential })
+      .post(`${this.rootUrl}/api/v1/auth/google`, { token: credential })
       .subscribe({
         next: (res: any) => {
           if (res.token && res.data?.user) {
@@ -86,12 +88,12 @@ export class Login implements OnInit {
   }
 
   loginWithGithub(): void {
-    window.location.href = 'http://localhost:5000/api/v1/auth/github';
+    window.location.href = `${this.rootUrl}/api/v1/auth/github`;
   }
 
   onSubmit(): void {
     this.http
-      .post('http://localhost:5000/api/v1/auth/login', {
+      .post(`${this.rootUrl}/api/v1/auth/login`, {
         email: this.email,
         password: this.password,
       })

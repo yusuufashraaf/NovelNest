@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
-
+import { environment } from '../../../environment';
 @Component({
   selector: 'app-verify-email',
   standalone: true,
@@ -23,6 +23,8 @@ import { CommonModule } from '@angular/common';
   `,
 })
 export class VerifyEmail implements OnInit {
+      private rootUrl = `${environment.apiUrl}`;
+  
   successMessage = '';
   errorMessage = '';
 
@@ -36,7 +38,7 @@ export class VerifyEmail implements OnInit {
     const otp = this.route.snapshot.paramMap.get('otp');
 
     this.http
-      .get(`http://localhost:5000/api/v1/auth/verifyEmail/${otp}`)
+      .get(`${this.rootUrl}/api/v1/auth/verifyEmail/${otp}`)
       .subscribe({
         next: (res: any) => {
           this.successMessage = res.message;

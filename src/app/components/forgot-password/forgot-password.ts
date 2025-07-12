@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-
+import { environment } from '../../../environment';
 @Component({
   selector: 'app-forgot-password',
   standalone: true,
@@ -12,6 +12,8 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './forgot-password.css'
 })
 export class ForgotPassword {
+      private rootUrl = `${environment.apiUrl}`;
+  
 email = '';
   message = '';
   error = '';
@@ -19,7 +21,7 @@ email = '';
   constructor(private http: HttpClient, private router: Router) {}
 
   onSubmit() {
-    this.http.post('http://localhost:5000/api/v1/auth/forgotPassword', { email: this.email }).subscribe({
+    this.http.post(`${this.rootUrl}/api/v1/auth/forgotPassword`, { email: this.email }).subscribe({
       next: (res: any) => {
         this.message = res.message;
         this.error = '';

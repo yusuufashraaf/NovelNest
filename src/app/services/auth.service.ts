@@ -3,23 +3,25 @@ import { Injectable } from '@angular/core';
 import { map, tap } from 'rxjs/operators';
 import { Observable, of } from 'rxjs';
 import { Router } from '@angular/router';
-import {jwtDecode} from 'jwt-decode';
+import { jwtDecode } from 'jwt-decode';
+import { environment } from '../../environment';
 
 export interface User {
-  pic:string;
+  pic: string;
   _id: string;
   name: string;
   email: string;
   role: string;
   token?: string;
-  createdAt:string
+  createdAt: string;
 }
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  private baseUrl = 'http://localhost:5000/api/v1/users';
+  private rootUrl = `${environment.apiUrl}`;
+  private baseUrl = `${this.rootUrl}/api/v1/users`;
 
   constructor(private http: HttpClient, private router: Router) {}
 
