@@ -5,7 +5,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { UserInfo } from '../../services/user-info';
 import { Users } from '../../services/users';
 import { AuthService } from '../../services/auth.service';
-
+import { environment } from '../../../environment';
 // interface Order {
 //   _id: string;
 //   userId: string;
@@ -40,6 +40,8 @@ import { AuthService } from '../../services/auth.service';
   styleUrl: './dashboard-orders.css'
 })
 export class DashboardOrders {
+        private rootUrl = `${environment.apiUrl}`;
+  
   allOrders: Order[] = [//list of all books in the store
 
   ];
@@ -62,7 +64,7 @@ getAllOrdersAPI() {
 
     console.log("Before request");
 
-    this.http.get<any>('http://localhost:5000/api/v1/orders/all-orders', { headers })
+    this.http.get<any>(`${this.rootUrl}/api/v1/orders/all-orders`, { headers })
       .subscribe({
         next: (response) => {
           this.allOrders= response.data;

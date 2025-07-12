@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
-
+import { environment } from '../../environment';
 export interface User {
   isVerified: boolean;
   _id: string;
@@ -23,7 +23,9 @@ interface ApiResponse {
   providedIn: 'root'
 })
 export class Users {
-  private readonly baseUrl = 'http://localhost:5000/api/v1/users';
+    private rootUrl = `${environment.apiUrl}`;
+  
+  private readonly baseUrl = `${this.rootUrl}/api/v1/users`;
 
  constructor(private http: HttpClient) {}
 

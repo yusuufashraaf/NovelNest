@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-
+import { environment } from '../../../environment';
 @Component({
   selector: 'app-reset-password',
   standalone: true,
@@ -12,6 +12,8 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './reset-password.css',
 })
 export class ResetPassword {
+      private rootUrl = `${environment.apiUrl}`;
+  
   password = '';
   message = '';
   error = '';
@@ -20,7 +22,7 @@ export class ResetPassword {
 
   onSubmit() {
     this.http
-      .patch('http://localhost:5000/api/v1/auth/resetPassword', {
+      .patch(`${this.rootUrl}/api/v1/auth/resetPassword`, {
         password: this.password,
       })
       .subscribe({

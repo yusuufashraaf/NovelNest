@@ -43,7 +43,7 @@
                 {
                   "type": "initial",
                   "maximumWarning": "500kB",
-                  "maximumError": "1MB"
+                  "maximumError": "5MB"
                 },
                 {
                   "type": "anyComponentStyle",
@@ -89,6 +89,29 @@
           "builder": "@angular-eslint/builder:lint",
           "options": {
             "lintFilePatterns": ["src/**/*.ts", "src/**/*.html"]
+          }
+        },
+        "prerender": {
+          "builder": "@angular-devkit/build-angular:prerender",
+          "options": {
+            "browserTarget": "NovelNest:build:production",
+            "serverTarget": "NovelNest:build:production",
+            "discoverRoutes": false,
+
+            "routes": [
+              "/",
+              "/home",
+              "/Browse",
+              "/about-us",
+              "/thank-you",
+              "/contactUs",
+              "/Cart",
+              "/Wishlist",
+              "/dashboard",
+              "/checkout",
+              "/success",
+              "/err"
+            ]
           }
         }
       }

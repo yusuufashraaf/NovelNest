@@ -36,7 +36,11 @@ export const routes: Routes = [
     children: [
       { path: 'login', component: Login },
       { path: 'register', component: Register },
-      { path: 'verify-email/:otp', component: VerifyEmail },
+      {
+        path: 'verify-email/:otp',
+        component: VerifyEmail,
+        data: { renderMode: 'server' },
+      },
       { path: 'forgot-password', component: ForgotPassword },
       { path: 'verify-code', component: VerifyCode },
       { path: 'reset-password', component: ResetPassword },
@@ -51,7 +55,7 @@ export const routes: Routes = [
     children: [
       { path: 'home', component: Home },
       { path: 'Browse', component: BrowseBooks },
-      { path: 'Browse/:id', component: BookDetails },
+      { path: 'Browse/:id', component: BookDetails , data: { renderMode: 'server' }},
       { path: 'Cart', component: Cart },
       { path: 'ContactUs', component: ContactUs },
       { path: 'checkout', component: CheckOut },

@@ -4,6 +4,7 @@ import { User, Users } from '../../services/users';
 import { userInfo } from 'os';
 import { UserInfo } from '../../services/user-info';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { environment } from '../../../environment';
 
 // interface User{
 //   _id:string
@@ -19,6 +20,8 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
   styleUrl: './dashboard-users.css'
 })
 export class DashboardUsers {
+      private rootUrl = `${environment.apiUrl}`;
+  
   UsersData: User[] = [];
 
   constructor(
@@ -39,7 +42,7 @@ export class DashboardUsers {
 
     console.log("Before request");
 
-    this.http.delete<any>('http://localhost:5000/api/v1/users/' + id, { headers })
+    this.http.delete<any>(`${this.rootUrl}/api/v1/users/` + id, { headers })
       .subscribe({
         next: (response) => {
           console.log("User Deleted data:", response);  // This will log the actual data
@@ -60,7 +63,7 @@ export class DashboardUsers {
 
     console.log("Before request");
 
-    this.http.post<any>('http://localhost:5000/api/v1/users/changerole/' + id, { headers })
+    this.http.post<any>(`${this.rootUrl}/api/v1/users/changerole/` + id, { headers })
       .subscribe({
         next: (response) => {
           console.log("Response data:", response);  // This will log the actual data

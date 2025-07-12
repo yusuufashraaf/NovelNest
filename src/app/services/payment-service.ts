@@ -2,11 +2,12 @@ import { HttpClient, HttpHeaders} from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { UserInfo } from './user-info';
-
+import { environment } from '../../environment';
 @Injectable({
   providedIn: 'root'
 })
 export class PaymentService {
+      private rootUrl = `${environment.apiUrl}`;
 
   tokenIdPaypal:string='';
   payerId:string='';
@@ -32,7 +33,7 @@ export class PaymentService {
     const headers = new HttpHeaders({
       Authorization: `${token}`,
     });
-  return this.http.post<any>('http://localhost:5000/buy/create-test-order', body,{headers})
+  return this.http.post<any>(`${this.rootUrl}/buy/create-test-order`, body,{headers})
 
 }
 }

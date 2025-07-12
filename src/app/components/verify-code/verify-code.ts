@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Router, ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-
+import { environment } from '../../../environment';
 @Component({
   selector: 'app-verify-code',
   standalone: true,
@@ -12,6 +12,8 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './verify-code.css',
 })
 export class VerifyCode {
+      private rootUrl = `${environment.apiUrl}`;
+  
   email = '';
   resetCode = '';
   message = '';
@@ -29,7 +31,7 @@ export class VerifyCode {
 
   onSubmit() {
     this.http
-      .post('http://localhost:5000/api/v1/auth/verifyPasswordResetCode', {
+      .post(`${this.rootUrl}/api/v1/auth/verifyPasswordResetCode`, {
         email: this.email,
         resetCode: this.resetCode,
       })

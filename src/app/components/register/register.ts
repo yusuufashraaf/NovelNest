@@ -4,7 +4,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { isPlatformBrowser, CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { jwtDecode } from 'jwt-decode';
-
+import { environment } from '../../../environment';
 @Component({
   selector: 'app-register',
   standalone: true,
@@ -13,6 +13,8 @@ import { jwtDecode } from 'jwt-decode';
   styleUrl: './register.css',
 })
 export class Register implements OnInit {
+      private rootUrl = `${environment.apiUrl}`;
+  
   name = '';
   email = '';
   password = '';
@@ -65,7 +67,7 @@ export class Register implements OnInit {
     };
 
     this.http
-      .post('http://localhost:5000/api/v1/auth/signup', userData)
+      .post(`${this.rootUrl}/api/v1/auth/signup`, userData)
       .subscribe({
         next: (res: any) => {
           this.successMessage = res.message;
@@ -87,7 +89,7 @@ export class Register implements OnInit {
 
   handleGoogle(credential: string) {
     this.http
-      .post('http://localhost:5000/api/v1/auth/google', { token: credential })
+      .post(`${this.rootUrl}/api/v1/auth/google`, { token: credential })
       .subscribe((res: any) => {
         localStorage.setItem('token', res.token);
         this.router.navigate(['/home']);
@@ -95,7 +97,7 @@ export class Register implements OnInit {
   }
 
   registerWithGithub(): void {
-    window.location.href = 'http://localhost:5000/api/v1/auth/github';
+    window.location.href = `${this.rootUrl}/api/v1/auth/github`;
   }
 
   handleOAuthTokenRedirect(): void {

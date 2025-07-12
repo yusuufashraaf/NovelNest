@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, forkJoin, of } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
-
+import { environment } from '../../environment';
 export interface ChartData {
   labels: string[];
   data: number[];
@@ -20,7 +20,8 @@ export interface DashboardChartData {
 
 @Injectable({ providedIn: 'root' })
 export class ChartService {
-  private baseUrl = 'http://localhost:5000/api/v1';
+      private rootUrl = `${environment.apiUrl}`;
+  private baseUrl = `${this.rootUrl}/api/v1`;
 
   constructor(private http: HttpClient) {}
 

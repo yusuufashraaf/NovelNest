@@ -1,7 +1,7 @@
 import { inject, Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-
+import { environment } from '../../environment';
 interface wishlistData {
   wishlistItems: {
     productId: string;
@@ -16,7 +16,9 @@ interface wishlistData {
   providedIn: 'root',
 })
 export class WishlistService {
-  private baseUrl = 'http://localhost:5000/api/v1/wishlist';
+    private rootUrl = `${environment.apiUrl}`;
+  
+  private baseUrl = `${this.rootUrl}/api/v1/wishlist`;
   private http = inject(HttpClient);
 
   // wishlist signal

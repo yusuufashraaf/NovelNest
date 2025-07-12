@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
-
+import { environment } from '../../environment';
 export interface Order {
   _id: string;
   user: string;
@@ -34,7 +34,9 @@ export interface Order {
   providedIn: 'root',
 })
 export class OrderService {
-  private apiUrl = 'http://localhost:5000/api/v1/orders';
+        private rootUrl = `${environment.apiUrl}`;
+  
+  private apiUrl = `${this.rootUrl}/api/v1/orders`;
 
   constructor(private http: HttpClient) {}
 
