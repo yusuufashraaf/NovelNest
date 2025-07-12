@@ -20,19 +20,58 @@ export class Navbar implements OnDestroy, OnInit {
   private destroy$ = new Subject<void>();
 
   constructor(private authService: AuthService) {
-    this.wishlistService.refreshWishlist();
-    this.cartService.refreshCart();
+    // Don't call refresh methods in constructor
+    // Wait for authentication check first
   }
+
   ngOnInit(): void {
-    this.authService.fetchLoggedInUser().subscribe({
-      next: (res) => {
-        this.userRole = res?.data?.user?.role;
-      },
-      error: () => {
-        this.userRole = '';
-      },
-    });
+    // Check authentication status first
+    this.authService
+      .fetchLoggedInUser()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (res) => {
+          if (res?.data?.user) {
+            this.isLoggedIn = true;
+            this.userRole = res.data.user.role;
+
+            // Only refresh cart and wishlist when user is authenticated
+            this.cartService.refreshCart();
+            this.wishlistService.refreshWishlist();
+          } else {
+            this.isLoggedIn = false;
+            this.userRole = '';
+
+            // Clear cart and wishlist when not authenticated
+            this.cartService.cart.set({
+              cartItems: [],
+              totalPrice: 0,
+              totalQuantity: 0,
+            });
+            this.wishlistService.wishlist.set({
+              wishlistItems: [],
+              totalQuantity: 0,
+            });
+          }
+        },
+        error: () => {
+          this.isLoggedIn = false;
+          this.userRole = '';
+
+          // Clear cart and wishlist on error
+          this.cartService.cart.set({
+            cartItems: [],
+            totalPrice: 0,
+            totalQuantity: 0,
+          });
+          this.wishlistService.wishlist.set({
+            wishlistItems: [],
+            totalQuantity: 0,
+          });
+        },
+      });
   }
+
   ngOnDestroy() {
     this.destroy$.next();
     this.destroy$.complete();
