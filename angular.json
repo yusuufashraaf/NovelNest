@@ -30,12 +30,7 @@
             ],
             "scripts": [
               "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"
-            ],
-            "server": "src/main.server.ts",
-            "outputMode": "server",
-            "ssr": {
-              "entry": "src/server.ts"
-            }
+            ]
           },
           "configurations": {
             "production": {
@@ -73,6 +68,27 @@
           },
           "defaultConfiguration": "development"
         },
+        "server": {
+          "builder": "@angular-devkit/build-angular:server",
+          "options": {
+            "outputPath": "dist/NovelNest/server",
+            "main": "src/main.server.ts",
+            "tsConfig": "tsconfig.server.json"
+          },
+          "configurations": {
+            "production": {
+              "outputPath": "dist/NovelNest/server",
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.prod.ts"
+                }
+              ],
+              "sourceMap": false,
+              "optimization": true
+            }
+          }
+        },
         "extract-i18n": {
           "builder": "@angular/build:extract-i18n"
         },
@@ -90,35 +106,8 @@
           "options": {
             "lintFilePatterns": ["src/**/*.ts", "src/**/*.html"]
           }
-        },
-        "prerender": {
-          "builder": "@angular-devkit/build-angular:prerender",
-          "options": {
-            "browserTarget": "NovelNest:build:production",
-            "serverTarget": "NovelNest:build:production",
-            "discoverRoutes": false,
-
-            "routes": [
-              "/",
-              "/home",
-              "/Browse",
-              "/about-us",
-              "/thank-you",
-              "/contactUs",
-              "/Cart",
-              "/Wishlist",
-              "/dashboard",
-              "/checkout",
-              "/success",
-              "/err"
-            ]
-          }
         }
       }
     }
-  },
-  "cli": {
-    "analytics": false,
-    "schematicCollections": ["angular-eslint"]
   }
 }

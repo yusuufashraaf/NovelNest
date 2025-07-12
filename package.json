@@ -7,8 +7,8 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "serve:ssr:NovelNest": "node dist/NovelNest/server/server.mjs",
-    "lint": "ng lint"
+    "lint": "ng lint",
+    "prerender": "ng run NovelNest:prerender"
   },
   "private": true,
   "dependencies": {
@@ -18,9 +18,7 @@
     "@angular/forms": "^20.0.0",
     "@angular/localize": "^20.0.5",
     "@angular/platform-browser": "^20.0.5",
-    "@angular/platform-server": "^20.0.0",
     "@angular/router": "^20.0.0",
-    "@angular/ssr": "^20.0.0",
     "@fortawesome/fontawesome-free": "^6.7.2",
     "@ng-bootstrap/ng-bootstrap": "^19.0.1",
     "@popperjs/core": "^2.11.8",
@@ -28,7 +26,6 @@
     "bootstrap-icons": "^1.13.1",
     "chart.js": "^4.5.0",
     "compromise": "^14.14.4",
-    "express": "^5.1.0",
     "jwt-decode": "^4.0.0",
     "rxjs": "~7.8.0",
     "stopword": "^3.1.5",
@@ -37,8 +34,9 @@
     "zone.js": "~0.15.0"
   },
   "devDependencies": {
-    "@angular/build": "^20.0.0",
-    "@angular/cli": "^20.0.0",
+    "@angular-devkit/build-angular": "^20.1.0",
+    "@angular/build": "^20.1.0",
+    "@angular/cli": "^20.1.0",
     "@angular/compiler-cli": "^20.0.0",
     "@types/express": "^5.0.1",
     "@types/jasmine": "~5.1.0",
