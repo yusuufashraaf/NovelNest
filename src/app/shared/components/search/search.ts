@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import nlp from 'compromise';
-import * as sw from 'stopword'; 
+import * as sw from 'stopword';
 
 @Component({
   selector: 'app-search',
@@ -31,9 +31,13 @@ export class Search {
     const filteredWords = sw.removeStopwords(rawWords);
 
     const doc = nlp(filteredWords.join(' '));
-    const lemmatizedWords = doc
-      .terms()
-      .map((term: any) => term.lemma || term.text);
+    const termsArray = doc.terms().json();
+    const lemmatizedWords = termsArray.map((term: any) => {
+      const text = term.text || '';
+      const lemma = term.terms?.[0]?.lemma;
+      return lemma || text;
+    });
+
     const lemmatized = lemmatizedWords.join(' ');
 
     this.router.navigate(['/Browse'], {
