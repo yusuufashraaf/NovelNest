@@ -3,7 +3,7 @@
   max-width: 1400px;
   margin: 0 auto;
   padding: 30px;
-  font-family: 'Crimson Text', 'Georgia', serif;
+  font-family: "Crimson Text", "Georgia", serif;
   background-color: #fff9f2;
   border-radius: 15px;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
@@ -25,8 +25,8 @@
   color: #5c3a21;
   font-size: 2.8rem;
   margin-bottom: 10px;
-  font-family: 'Playfair Display', serif;
-  text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+  font-family: "Playfair Display", serif;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 .bookstore-subtitle {
@@ -153,6 +153,16 @@
   cursor: not-allowed;
 }
 
+.authorsDropdownList {
+  max-height: 300px;
+  overflow: auto;
+}
+
+.genresDropdownList {
+  max-height: 300px;
+  overflow: auto;
+}
+
 /* ===== Active Filter Styles ===== */
 .bookstore-active-filters {
   background: #f8f1e7;
@@ -257,7 +267,7 @@
 .badge {
   font-weight: 500;
   padding: 5px 10px;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .bg-sold-out {
@@ -307,7 +317,7 @@
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  font-family: 'Playfair Display', serif;
+  font-family: "Playfair Display", serif;
 }
 
 .book-author {
@@ -392,7 +402,7 @@ app-add-to-cart .btn-add-to-cart {
   gap: 8px;
   cursor: pointer;
   box-shadow: 0 2px 5px rgba(140, 110, 93, 0.2);
-  font-family: 'Crimson Text', serif;
+  font-family: "Crimson Text", serif;
   letter-spacing: 0.5px;
 }
 
@@ -427,7 +437,7 @@ app-add-to-wishlist .btn-add-to-wishlist {
   gap: 8px;
   cursor: pointer;
   box-shadow: 0 2px 5px rgba(196, 92, 64, 0.1);
-  font-family: 'Crimson Text', serif;
+  font-family: "Crimson Text", serif;
   letter-spacing: 0.5px;
 }
 
@@ -523,29 +533,29 @@ app-add-to-wishlist .btn-add-to-wishlist:focus {
   .bookstore-container {
     padding: 20px;
   }
-  
+
   .bookstore-grid {
     grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
     gap: 15px;
   }
-  
+
   .book-title {
     font-size: 1rem;
   }
-  
+
   .bookstore-filters {
     flex-direction: column;
   }
-  
+
   .btn-filter {
     width: 100%;
     justify-content: center;
   }
-  
+
   .book-actions {
     grid-template-columns: 1fr;
   }
-  
+
   app-add-to-cart .btn-add-to-cart,
   app-add-to-wishlist .btn-add-to-wishlist {
     padding: 10px;
@@ -556,11 +566,11 @@ app-add-to-wishlist .btn-add-to-wishlist:focus {
   .bookstore-title {
     font-size: 2rem;
   }
-  
+
   .bookstore-subtitle {
     font-size: 1rem;
   }
-  
+
   .bookstore-price-range {
     width: 100%;
   }
