@@ -5,14 +5,16 @@ import { WishlistService } from '../../../services/wishlist.service';
 import { AuthService } from '../../../services/auth.service';
 import { Subject, takeUntil } from 'rxjs';
 import { Search } from '../search/search';
-
+declare var bootstrap: any;
 @Component({
   selector: 'app-navbar',
   imports: [RouterLink, Search],
   templateUrl: './navbar.html',
   styleUrl: './navbar.css',
 })
+
 export class Navbar implements OnDestroy, OnInit {
+
   isLoggedIn = false;
   userRole: string = '';
   cartService = inject(CartService);
@@ -84,4 +86,11 @@ export class Navbar implements OnDestroy, OnInit {
   onLogin() {
     window.location.href = '/login';
   }
+  closeMenu() {
+  const navbar = document.querySelector('.navbar-collapse') as HTMLElement;
+  if (navbar.classList.contains('show')) {
+    new bootstrap.Collapse(navbar).hide();
+  }
+}
+
 }

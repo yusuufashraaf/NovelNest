@@ -1,54 +1,73 @@
 <nav class="navbar navbar-expand-lg navbar-light px-3">
-  <a class="navbar-brand d-flex align-items-center me-4" href="#">
-    <img src="assets/Logo/NovelListLogo.png" alt="Logo" width="24" class="me-2" />
+  <!-- Logo -->
+  <a class="navbar-brand d-flex align-items-center me-4 " routerLink="/">
+<img src="assets/Logo/NovelList.png" alt="Logo" width="140" class="me-2" />
   </a>
 
+  <!-- Navbar toggler -->
   <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
     <span class="navbar-toggler-icon"></span>
   </button>
 
-  <div class="collapse navbar-collapse text-center" id="navbarContent">
+  <!-- Mobile-only wishlist & cart icons outside collapse, centered -->
+  <div class="d-flex d-lg-none justify-content-center align-items-center gap-4 w-100 my-2">
+    <a routerLink="/Wishlist" class="position-relative" (click)="closeMenu()">
+      <i class="bi bi-heart fs-5"></i>
+      <span class="position-absolute top-0 start-100 translate-middle badge rounded-circle bg-secondary">
+        {{ wishlistService.wishlist().totalQuantity }}
+      </span>
+    </a>
+    <a routerLink="/Cart" class="position-relative" (click)="closeMenu()">
+      <i class="bi bi-cart fs-5"></i>
+      <span class="position-absolute top-0 start-100 translate-middle badge rounded-circle bg-danger">
+        {{ cartService.cart().totalQuantity }}
+      </span>
+    </a>
+  </div>
 
-    <!-- Profile avatar only visible on mobile (inside the collapse) -->
-    <div class="d-lg-none mb-2">
-      <a href="#" class="" routerLink="/profile">
+  <!-- Collapse menu -->
+  <div class="collapse navbar-collapse text-start" id="navbarContent">
+
+    <!-- Avatar on top, full width, mobile only -->
+    <div class="d-lg-none align-items-center  pt-3 mb-3 ps-3">
+      <a routerLink="/profile" (click)="closeMenu()" class="d-inline-flex align-items-center gap-2">
         <img src="https://cdn.pixabay.com/photo/2020/07/01/12/58/icon-5359553_1280.png" alt="Avatar"
-          class="rounded-circle" width="32" height="32" />
+          class="rounded-circle" width="40" height="40" style="object-fit: cover;" />
       </a>
     </div>
 
-    <ul class="navbar-nav me-auto mb-2 mb-lg-0 gap-lg-3">
-      <li class="nav-item"><a class="nav-link" routerLink="/Browse">Browse</a></li>
-      <li class="nav-item"><a class="nav-link" routerLink="/ContactUs">Contact Us</a></li>
-      <li class="nav-item"><a class="nav-link" routerLink="/about-us">About Us</a></li>
+    <!-- Nav items aligned left -->
+    <ul class="navbar-nav me-auto mb-2 mb-lg-0 gap-2">
+      <li class="nav-item"><a class="nav-link" routerLink="/Browse" (click)="closeMenu()">Browse</a></li>
+      <li class="nav-item"><a class="nav-link" routerLink="/ContactUs" (click)="closeMenu()">Contact Us</a></li>
+      <li class="nav-item"><a class="nav-link" routerLink="/about-us" (click)="closeMenu()">About Us</a></li>
       @if (userRole === 'admin') {
-      <li class="nav-item"><a class="nav-link" routerLink="/dashboard">Dashboard</a></li>
+      <li class="nav-item"><a class="nav-link" routerLink="/dashboard" (click)="closeMenu()">Dashboard</a></li>
       }
-      <li class="nav-item"><a class="nav-link" (click)="onLogout()">Logout</a></li>
+      <li class="nav-item"><a class="nav-link" (click)="onLogout(); closeMenu()">Logout</a></li>
     </ul>
-
   </div>
 
-  <!-- Profile avatar only visible on desktop (outside collapse) -->
+  <!-- Desktop icons -->
   <div class="d-none d-lg-flex align-items-center gap-3">
     <ng-content></ng-content>
     <app-search></app-search>
 
-    <!-- wishlist icon with quantity -->
     <a class="position-relative me-3 mt-2 wishlist-icon" routerLink="/Wishlist">
       <i class="bi bi-heart fs-4"></i>
       <span class="position-absolute top-0 start-100 translate-middle badge rounded-circle bg-secondary">
         {{ wishlistService.wishlist().totalQuantity }}
       </span>
     </a>
-    <!-- cart icon with quantity -->
+
     <a class="position-relative me-3 mt-2 cart-icon" routerLink="/Cart">
       <i class="bi bi-cart fs-4"></i>
       <span class="position-absolute top-0 start-100 translate-middle badge rounded-circle bg-danger">
         {{ cartService.cart().totalQuantity }}
       </span>
     </a>
-    <a href="#" class="" routerLink="/profile">
+
+    <a routerLink="/profile">
       <img src="https://cdn.pixabay.com/photo/2020/07/01/12/58/icon-5359553_1280.png" alt="Avatar"
         class="rounded-circle" width="32" height="32" />
     </a>
