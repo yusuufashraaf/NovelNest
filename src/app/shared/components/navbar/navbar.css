@@ -136,3 +136,8 @@ li a{
     padding: 10px 15px !important;
   }
 }
+@media (min-width: 992px) {
+  #navbarContent {
+    display: none !important;
+  }
+}
