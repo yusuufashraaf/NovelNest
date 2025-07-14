@@ -1,0 +1,252 @@
+/* Books Management Container */
+.books-management-container {
+  background-color: #fff9f2;
+  border-radius: 15px;
+  padding: 30px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+  border: 1px solid #f0e6d9;
+  font-family: 'Crimson Text', serif;
+  color: #5c3a21;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+/* Headings */
+.books-management-container h1,
+.books-management-container h5,
+.books-management-container h6 {
+  font-family: 'Playfair Display', serif;
+  color: #5c3a21;
+}
+
+.books-management-container h1 {
+  font-size: 2rem;
+  margin-bottom: 20px;
+  position: relative;
+  text-align: center;
+}
+
+.books-management-container h1::after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 3px;
+  background-color: #a78a6f;
+}
+
+/* Form Elements */
+.books-management-container .form-control {
+  background-color: #fffcf8;
+  border: 1px solid #d4b999;
+  color: #5c3a21;
+  padding: 12px 15px;
+  border-radius: 8px;
+  transition: all 0.3s;
+  margin-bottom: 15px;
+}
+
+.books-management-container select.form-control {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%235c3a21' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 16px 12px;
+}
+
+.books-management-container .form-control:focus {
+  background-color: white;
+  border-color: #a78a6f;
+  box-shadow: 0 0 0 0.25rem rgba(167, 138, 111, 0.25);
+}
+
+.books-management-container .form-label {
+  color: #5c3a21;
+  font-weight: 600;
+  margin-top: 15px;
+  display: block;
+}
+
+/* Alerts */
+.books-management-container .alert {
+  border-radius: 8px;
+  padding: 12px 15px;
+}
+
+.books-management-container .alert-danger {
+  background-color: #f8e9e7;
+  border-color: #e8b9b3;
+  color: #8c4a3e;
+}
+
+.books-management-container .alert-success {
+  background-color: #eaf6ed;
+  border-color: #c3e8ce;
+  color: #2d6b3d;
+}
+
+.books-management-container .alert-info {
+  background-color: #e9f3f8;
+  border-color: #c3e0e8;
+  color: #3a5c66;
+}
+
+/* Buttons */
+.books-management-container .btn-primary {
+  background-color: #8c6e5d;
+  border: none;
+  color: white;
+  font-weight: 600;
+  border-radius: 8px;
+  transition: all 0.3s;
+  border-bottom: 3px solid #5c3a21;
+}
+
+.books-management-container .btn-primary:hover {
+  background-color: #5c3a21;
+  transform: translateY(-2px);
+}
+
+.books-management-container .btn-warning {
+  background-color: #e0a800;
+  border: none;
+  color: white;
+  font-weight: 600;
+  border-radius: 8px;
+  transition: all 0.3s;
+  border-bottom: 3px solid #a67c00;
+}
+
+.books-management-container .btn-warning:hover {
+  background-color: #a67c00;
+  transform: translateY(-2px);
+}
+
+.books-management-container .btn-sm {
+  padding: 8px 12px;
+}
+
+.books-management-container .btn-outline-success {
+  color: #5c3a21;
+  border-color: #a78a6f;
+}
+
+.books-management-container .btn-outline-success:hover {
+  background-color: #a78a6f;
+  color: white;
+}
+
+.books-management-container .btn-outline-danger {
+  color: #8c4a3e;
+  border-color: #8c4a3e;
+}
+
+.books-management-container .btn-outline-danger:hover {
+  background-color: #8c4a3e;
+  color: white;
+}
+
+/* Card */
+.books-management-container .card {
+  background-color: #fffcf8;
+  border: 1px solid #d4b999;
+  border-radius: 12px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.03);
+  margin-top: 20px;
+}
+
+.books-management-container .card-header {
+  background-color: #f8f1e7;
+  border-bottom: 1px solid #f0e6d9;
+  color: #5c3a21;
+  font-weight: 600;
+  border-radius: 12px 12px 0 0 !important;
+}
+
+.books-management-container .card-footer {
+  background-color: #f8f1e7;
+  border-top: 1px solid #f0e6d9;
+  color: #5c3a21;
+}
+
+/* Table */
+.books-management-container .table {
+  color: #5c3a21;
+}
+
+.books-management-container .table th {
+  border-bottom: 2px solid #d4b999;
+  background-color: #f8f1e7;
+}
+
+.books-management-container .table-hover tbody tr:hover {
+  background-color: rgba(240, 230, 217, 0.5);
+}
+
+.books-management-container .table-striped tbody tr:nth-of-type(odd) {
+  background-color: rgba(240, 230, 217, 0.3);
+}
+
+/* Badges */
+.books-management-container .badge {
+  font-weight: 500;
+  padding: 5px 10px;
+  border-radius: 6px;
+}
+
+.books-management-container .badge.bg-secondary {
+  background-color: #8c6e5d !important;
+}
+
+.books-management-container .badge.bg-info {
+  background-color: #a78a6f !important;
+}
+
+/* Image Previews */
+.books-management-container .img-thumbnail {
+  border: 1px solid #d4b999;
+  border-radius: 8px;
+  background-color: #fffcf8;
+}
+
+/* Text */
+.books-management-container .text-muted {
+  color: #b8a99a !important;
+}
+
+/* Spinner */
+.books-management-container .spinner-border {
+  color: #8c6e5d;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .books-management-container {
+    padding: 20px;
+  }
+  
+  .btn-group {
+    flex-direction: column;
+    gap: 5px;
+  }
+  
+  .table-responsive {
+    border: none;
+  }
+}
+
+@media (max-width: 576px) {
+  .books-management-container {
+    padding: 15px;
+  }
+  
+  .table td, .table th {
+    padding: 0.5rem;
+  }
+  
+  /* Stack form columns on mobile */
+  .row > [class*="col-"] {
+    width: 100%;
+  }
+}

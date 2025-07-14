@@ -1,58 +1,66 @@
-<!-- Shopping Cart Page - Combined Design -->
-<div class="container py-5">
-  <h1 class="fw-bold mb-5 cart-title">Shopping Cart</h1>
-  <div class="card">
-    <div class="card-body p-0">
-      <!-- Header Row -->
-      <div class="row g-0 text-center align-items-center cart-header-row rounded-1">
-        <div class="col-6 text-start ps-4 py-3 fs-5">Book</div>
-        <div class="col-3 py-3 fs-5">Quantity</div>
-        <div class="col-3 py-3 fs-5">Subtotal</div>
-      </div>
-
-      <!-- Cart Items -->
-      <div>
-        @for (item of cartService.cart().cartItems; track item.productId) {
-        <ng-container>
-          @if (item) {
-          <app-cart-item [item]="item" (quantityChange)="updateQuantity($event.productId, $event.quantity)"
-            (remove)="deleteItem($event)">
-          </app-cart-item>
-          }
-          @if (item.cartItemEntry.length > 0) {
-          <div class="row">
-            <div class="col-12 text-center">
-              <div class="d-flex justify-content-center align-items-center gap-2">
-                <span class="fs-5">Expires in</span>
-                <span class="fs-5">{{ item.cartItemEntry[0].expiresAt |
-                  date:'dd/MM/yyyy HH:mm:ss'}}</span>
-              </div>
-            </div>
+<div class="container py-5 shopping-cart-container">
+  <div class="row justify-content-center">
+    <div class="col-lg-10 contact-container">
+      <h1 class="mb-4">Shopping Cart</h1>
+      
+      <div class="card">
+        <div class="card-body p-0">
+          <!-- Header Row -->
+          <div class="row g-0 text-center align-items-center cart-header">
+            <div class="col-6 text-start ps-4 py-3">Book</div>
+            <div class="col-3 py-3">Quantity</div>
+            <div class="col-3 py-3">Subtotal</div>
           </div>
-          }
-        </ng-container>
-        }
-      </div>
 
-      <!-- Summary -->
-      <div class="row justify-content-end px-4 cart-summary-row">
-        @if (cartService.cart().cartItems.length > 0) {
-        <div class="col-md-6 col-lg-4 total-row">
-          <ul class="list-unstyled mb-5">
-            <li class="d-flex justify-content-between fw-bold py-1 fs-4">
-              <span>Total</span>
-              <span>${{ cartService.cart().totalPrice }}</span>
-            </li>
-          </ul>
-          <a routerLink="/checkout" class="btn w-100 cart-checkout-btn">
-            Proceed to Checkout &rarr;
-          </a>
+          <!-- Cart Items -->
+          <div>
+            @for (item of cartService.cart().cartItems; track item.productId) {
+            <ng-container>
+              @if (item) {
+              <app-cart-item [item]="item" 
+                (quantityChange)="updateQuantity($event.productId, $event.quantity)"
+                (remove)="deleteItem($event)">
+              </app-cart-item>
+              }
+              @if (item.cartItemEntry.length > 0) {
+              <div class="row expiration-notice">
+                <div class="col-12 text-center">
+                  <div class="d-flex justify-content-center align-items-center gap-2">
+                    <i class="bi bi-clock"></i>
+                    <span>Expires in {{ item.cartItemEntry[0].expiresAt | date:'dd/MM/yyyy HH:mm'}}</span>
+                  </div>
+                </div>
+              </div>
+              }
+            </ng-container>
+            }
+          </div>
+
+          <!-- Summary -->
+          <div class="row justify-content-end px-4 cart-summary">
+            @if (cartService.cart().cartItems.length > 0) {
+            <div class="col-md-6 col-lg-4">
+              <ul class="list-unstyled mb-4">
+                <li class="d-flex justify-content-between py-3 border-top">
+                  <span class="fw-bold">Total</span>
+                  <span class="fw-bold">${{ cartService.cart().totalPrice }}</span>
+                </li>
+              </ul>
+              <a routerLink="/checkout" class="btn btn-primary w-100 py-3">
+                <i class="bi bi-cart-check me-2"></i> Proceed to Checkout
+              </a>
+            </div>
+            } @else {
+            <div class="col-12 text-center py-5">
+              <i class="bi bi-cart-x text-muted mb-3" style="font-size: 3rem;"></i>
+              <p class="text-muted">Your cart is empty</p>
+              <a routerLink="/browse" class="btn btn-light mt-3">
+                <i class="bi bi-book me-2"></i> Browse Books
+              </a>
+            </div>
+            }
+          </div>
         </div>
-        } @else {
-        <div class="col-12 text-center">
-          <p class="fs-5 fw-bold text-muted mx-5">Your cart is empty</p>
-        </div>
-        }
       </div>
     </div>
   </div>

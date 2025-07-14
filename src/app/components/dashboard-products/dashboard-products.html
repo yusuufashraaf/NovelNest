@@ -1,4 +1,5 @@
-@if(state == 1){
+<div class="container py-5 books-management-container">
+  @if(state == 1){
   <div class="form-control mt-5">
     <h1 class="text-center">Add Book</h1>
 
@@ -262,9 +263,9 @@
         <div class="card-header d-flex justify-content-between align-items-center">
           <h5 class="mb-0">Book Inventory</h5>
           <div>
-            <button (click)="testAddBook()" class="btn btn-sm btn-warning me-2">
+            <!-- <button (click)="testAddBook()" class="btn btn-sm btn-warning me-2">
               <i class="bi bi-bug"></i> Test API
-            </button>
+            </button> -->
             <button (click)="canAddBook()" class="btn btn-sm btn-primary">
               <i class="bi bi-plus-circle"></i> Add New Book
             </button>
@@ -349,4 +350,7 @@
       </div>
     </div>
   </div>
+
+  
+</div>
 

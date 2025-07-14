@@ -5,43 +5,122 @@
 }
 
 /* Headings */
-.about-us-container h1, 
+.about-us-container h1,
 .about-us-container h2 {
   font-family: 'Playfair Display', serif;
   color: #5c3a21;
+  position: relative;
 }
 
-/* Divider */
-.divider {
-  width: 100px;
+.about-us-container h1 {
+  font-size: 2.5rem;
+  margin-bottom: 30px;
+}
+
+.about-us-container h1::after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 0;
+  width: 80px;
   height: 3px;
   background-color: #a78a6f;
 }
 
+.about-us-container h2 {
+  font-size: 1.8rem;
+  margin-bottom: 25px;
+}
+
+.about-us-container h2::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 0;
+  width: 60px;
+  height: 2px;
+  background-color: #a78a6f;
+}
+
+/* Text */
+.about-us-container p {
+  color: #5c3a21;
+  line-height: 1.8;
+}
+
+.about-us-container .text-muted {
+  color: #b8a99a !important;
+}
+
 /* Cards */
-.about-card {
-  background-color: #f8f1e7;
+.about-us-container .card {
+  background-color: #fffcf8;
+  border: 1px solid #d4b999;
   border-radius: 12px;
-  box-shadow: 0 5px 15px rgba(92, 58, 33, 0.08);
-  transition: transform 0.3s;
-}
-
-/* Team Images */
-.team-img {
-  border: 3px solid #f0e6d9;
-}
-
-/* Contact Button */
-.contact-btn {
-  background-color: #8c6e5d;
-  color: white;
-  border-radius: 8px;
-  border-bottom: 3px solid #5c3a21;
-  font-family: 'Playfair Display', serif;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
   transition: all 0.3s;
 }
 
-.contact-btn:hover {
+.about-us-container .card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Buttons */
+.about-us-container .btn-primary {
+  background-color: #8c6e5d;
+  border: none;
+  color: white;
+  font-weight: 600;
+  border-radius: 8px;
+  transition: all 0.3s;
+  border-bottom: 3px solid #5c3a21;
+}
+
+.about-us-container .btn-primary:hover {
   background-color: #5c3a21;
   transform: translateY(-2px);
+}
+
+.about-us-container .btn-primary:active {
+  transform: translateY(0);
+}
+
+/* Team Images */
+.about-us-container .rounded-circle {
+  border: 3px solid #f0e6d9;
+}
+
+/* Icons */
+.about-us-container .bi {
+  color: #a78a6f;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+  .about-us-container h1 {
+    font-size: 2rem;
+  }
+  
+  .about-us-container h2 {
+    font-size: 1.5rem;
+  }
+  
+  .about-us-container .card-body {
+    padding: 20px;
+  }
+}
+
+@media (max-width: 576px) {
+  .about-us-container {
+    padding: 30px 0;
+  }
+  
+  .about-us-container h1 {
+    font-size: 1.8rem;
+  }
+  
+  .about-us-container .btn-primary {
+    width: 100%;
+  }
 }
