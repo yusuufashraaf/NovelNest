@@ -6,20 +6,18 @@
       <form (ngSubmit)="onSubmit()" class="mt-4">
         <div class="mb-4">
           <label for="name" class="form-label fw-bold">Your Name</label>
-          <input type="text" class="form-control" id="name" name="name" 
-                 placeholder="Enter your full name" required value="{{formData.name}}">
+          <input type="text" class="form-control" id="name" name="name" [(ngModel)]="formData.name" disabled readonly />
         </div>
 
         <div class="mb-4">
           <label for="email" class="form-label fw-bold">Email Address</label>
-          <input type="email" class="form-control" id="email" name="email" 
-                 placeholder="your.email@example.com" required value="{{formData.email}}">
+          <input type="email" class="form-control" id="email" name="email" [(ngModel)]="formData.email" disabled readonly />
         </div>
 
         <div class="mb-4">
           <label for="message" class="form-label fw-bold">Your Message</label>
-          <textarea class="form-control" id="message" name="message" rows="5"
-                    placeholder="What would you like to ask us?" required>{{formData.message}}</textarea>
+          <textarea class="form-control" id="message" name="message" rows="5" [(ngModel)]="formData.message"
+            placeholder="What would you like to ask us?" required></textarea>
         </div>
 
         <div class="text-center mt-5">
