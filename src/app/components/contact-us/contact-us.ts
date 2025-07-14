@@ -4,6 +4,7 @@ import { jwtDecode } from 'jwt-decode';
 import { environment } from '../../../environment';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-contact-us',
@@ -12,7 +13,7 @@ import { CommonModule } from '@angular/common';
   styleUrl: './contact-us.css',
 })
 export class ContactUs implements OnInit {
-      private rootUrl = `${environment.apiUrl}`;
+  private rootUrl = `${environment.apiUrl}`;
   formData = {
     name: '',
     email: '',
@@ -37,7 +38,11 @@ export class ContactUs implements OnInit {
   onSubmit() {
     const token = localStorage.getItem('token');
     if (!token) {
-      alert('You must be logged in to send a message.');
+      Swal.fire({
+        icon: 'warning',
+        title: 'Unauthorized',
+        text: 'You must be logged in to send a message.',
+      });
       return;
     }
 
@@ -51,14 +56,19 @@ export class ContactUs implements OnInit {
       )
       .subscribe({
         next: (res: any) => {
-          alert(res.message);
+          Swal.fire({
+            icon: 'success',
+            title: 'Message Sent',
+            text: res.message,
+          });
           this.formData.message = '';
         },
         error: (err) => {
-          console.error('Contact form submission error:', err);
-          alert(
-            err.error?.message || 'Something went wrong. Please try again.'
-          );
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: err.error?.message || 'Something went wrong. Please try again.',
+          });
         },
       });
   }
