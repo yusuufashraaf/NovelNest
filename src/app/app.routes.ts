@@ -25,6 +25,7 @@ import { ResetPassword } from './components/reset-password/reset-password';
 import { AboutUs } from './components/about-us/about-us';
 import { AllowedPagesGuard } from './Guards/allowed-guard';
 import { SuccessPopupComponent } from './components/success-popup/success-popup';
+import { OrdersHistory } from './components/user-profile/profile-tabs/orders-history/orders-history';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'Browse', pathMatch: 'full' },
@@ -73,6 +74,7 @@ export const routes: Routes = [
           { path: 'purchased', component: PurchasedBooks },
           { path: 'reviews', component: PersonalReviews },
           { path: 'info', component: PersonalInfo },
+          {path: 'orders', component: OrdersHistory},
           { path: '', redirectTo: 'purchased', pathMatch: 'full' },
         ],
       },
