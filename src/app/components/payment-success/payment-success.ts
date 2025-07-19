@@ -1,3 +1,4 @@
+import { SocketService } from './../../services/socket-service';
 import { PaymentService } from './../../services/payment-service';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
@@ -19,7 +20,7 @@ import { environment } from '../../../environment';
 })
 export class PaymentSuccess implements OnInit {
       private rootUrl = `${environment.apiUrl}`;
-  
+
  isLoading = true;
   paymentStatus: 'success' | 'error' | 'invalid' = 'invalid';
   successMessage = '';
@@ -36,7 +37,8 @@ export class PaymentSuccess implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private http: HttpClient,
-    private paymentServ:PaymentService
+    private paymentServ:PaymentService,
+    private socketServ:SocketService
   ) {}
 
   ngOnInit() {
@@ -48,6 +50,7 @@ export class PaymentSuccess implements OnInit {
     if (this.countdownInterval) {
       clearInterval(this.countdownInterval);
     }
+    this.socketServ.disconnect();
   }
 
   private processPaymentConfirmation() {
@@ -80,6 +83,16 @@ export class PaymentSuccess implements OnInit {
             transactionId: response.data.captureId,
             status: response.data.status
           };
+
+          const token = localStorage.getItem('token')!;
+          const nameOfCustomer = JSON.parse(localStorage.getItem('user')!).name;
+          this.socketServ.connectToServer(token,{
+
+              orderId:this.orderDetails.orderId,
+              customerName:nameOfCustomer
+
+          });
+
           this.startCountdown();
         } else {
           this.paymentStatus = 'error';
