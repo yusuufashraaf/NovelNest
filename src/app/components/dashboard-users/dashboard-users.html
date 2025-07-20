@@ -29,7 +29,7 @@
                         <span class="badge badge-role-{{user.role.toLowerCase()}}">{{user.role}}</span>
                       </td>
                       <td>{{ user.active? "Active" : "InActive" }}</td>
-                      <td>{{ user.createdAt }}</td>
+                      <td>{{ user.createdAt | date:'dd/MM/yyyy'}}</td>
                       <td>
                         <div class="btn-group btn-group-sm" role="group">
 

@@ -1,6 +1,6 @@
 import { Component, OnInit, AfterViewInit, ViewChild, ElementRef, OnDestroy, Inject, PLATFORM_ID } from '@angular/core';
 import { Chart } from 'chart.js/auto';
-import { isPlatformBrowser } from '@angular/common';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { CustomerActivity, StoreInitiative, StoreMetric } from '../dashboard/dashboard';
 import { Users, User } from '../../services/users';
@@ -13,7 +13,7 @@ import { map, catchError } from 'rxjs/operators';
 
 @Component({
   selector: 'app-dashboard-main',
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './dashboard-main.html',
   styleUrl: './dashboard-main.css'
 })

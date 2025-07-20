@@ -5,6 +5,7 @@ import { userInfo } from 'os';
 import { UserInfo } from '../../services/user-info';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from '../../../environment';
+import { CommonModule } from '@angular/common';
 
 // interface User{
 //   _id:string
@@ -16,6 +17,9 @@ import { environment } from '../../../environment';
 
 @Component({
   selector: 'app-dashboard-users',
+  imports: [
+    CommonModule
+  ],
   templateUrl: './dashboard-users.html',
   styleUrl: './dashboard-users.css'
 })
