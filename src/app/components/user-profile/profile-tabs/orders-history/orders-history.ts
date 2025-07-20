@@ -27,7 +27,6 @@ export class OrdersHistory implements OnInit {
   ngOnInit() {
     this.ordersService.getAllMyOrders().subscribe({
       next: (res) => {
-        console.log(res);
 
         this.orders = res.data?.orders || [];
         this.booksSummary = res.data?.booksSummary || [];
@@ -36,7 +35,6 @@ export class OrdersHistory implements OnInit {
       error: (err) => {
         this.error = 'Failed to load orders';
         this.loading = false;
-        console.error(err);
       },
     });
   }

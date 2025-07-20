@@ -85,7 +85,6 @@ export class DashboardProducts {
     this.categoryService.getAllWithoutPagination().subscribe({
       next: (res) => {
         this.categories = res || [];
-        console.log('Categories loaded:', this.categories);
         if (this.state === 2 && this.currentBook) {
           // Category
           if (typeof this.currentBook.category === 'object' && this.currentBook.category !== null) {
@@ -93,11 +92,9 @@ export class DashboardProducts {
           } else {
             this.editCategoryId = String(this.currentBook.category || '');
           }
-          console.log('editCategoryId after categories loaded:', this.editCategoryId, typeof this.editCategoryId);
         }
       },
       error: (err) => {
-        console.error('Failed to load categories:', err);
         this.formError = 'Failed to load categories.';
       }
     });
@@ -105,7 +102,6 @@ export class DashboardProducts {
     this.subcategoryService.getAll().subscribe({
       next: (data) => {
         this.subcategories = data || [];
-        console.log('Subcategories loaded:', this.subcategories);
         if (this.state === 2 && this.currentBook) {
           // Subcategory
           if (Array.isArray(this.currentBook.subcategory) && this.currentBook.subcategory.length > 0) {
@@ -119,11 +115,9 @@ export class DashboardProducts {
           } else {
             this.editSubcategoryId = String(this.currentBook.subcategory || '');
           }
-          console.log('editSubcategoryId after subcategories loaded:', this.editSubcategoryId, typeof this.editSubcategoryId);
         }
       },
       error: (err) => {
-        console.error('Failed to load subcategories:', err);
         this.formError = 'Failed to load subcategories.';
       }
     });
@@ -150,7 +144,6 @@ export class DashboardProducts {
     const originalSrc = img.src;
 
     // Log the failed image URL for debugging
-    console.warn('⚠️ Image failed to load:', originalSrc);
 
     // Use a simple placeholder data URL instead of a file path
     img.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNzAiIGhlaWdodD0iNzAiIHZpZXdCb3g9IjAgMCA3MCA3MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjcwIiBoZWlnaHQ9IjcwIiBmaWxsPSIjRjVGNUY1Ii8+CjxwYXRoIGQ9Ik0yMCAyMEg1MFY1MEgyMFYyMFoiIGZpbGw9IiNEN0Q3RDciLz4KPHN2ZyB4PSIyNSIgeT0iMjUiIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCIgdmlld0JveD0iMCAwIDI4IDI4IiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgo8cGF0aCBkPSJNMTIgMkM2LjQ4IDIgMiA2LjQ4IDIgMTJzNC40OCAxMCAxMCAxMCAxMC00LjQ4IDEwLTEwUzE3LjUyIDIgMTIgMnptLTIgMTV2LTJoMTJ2MkgyMHptMC00di0yaDEydjJIMjB6IiBmaWxsPSIjOTk5Ii8+Cjwvc3ZnPgo8L3N2Zz4K';
@@ -302,10 +295,8 @@ export class DashboardProducts {
       next: (res) => {
         this.booksInventory = res.data || [];
         this.isLoading = false;
-        console.log('✅ Books loaded successfully:', this.booksInventory.length);
       },
       error: (err) => {
-        console.error('❌ Error loading books:', err);
         if (err.status === 404) {
           this.booksInventory = [];
         }
@@ -315,12 +306,11 @@ export class DashboardProducts {
   }
 
   viewBook(bookId: string): void {
-    console.log('👁️ View book:', bookId);
     Swal.fire('Book Details', 'View functionality will be implemented here', 'info');
   }
 
   editBook(bookId: string): void {
-    console.log('✏️ Edit book:', bookId);
+
     this.currentBook = this.booksInventory.find(book => book._id === bookId) || null;
 
     if (this.currentBook) {
@@ -380,7 +370,6 @@ export class DashboardProducts {
 
         this.productService.deleteProduct(bookId).subscribe({
           next: (response: any) => {
-            console.log('Book deleted successfully from database:', response);
 
             // Remove from local inventory
             this.booksInventory = this.booksInventory.filter(book => book._id !== bookId);
@@ -388,7 +377,6 @@ export class DashboardProducts {
             this.isLoading = false;
           },
           error: (error: any) => {
-            console.error('Failed to delete book:', error);
             Swal.fire('Error', 'Failed to delete book. Please try again.', 'error');
             this.isLoading = false;
           }
@@ -572,7 +560,6 @@ export class DashboardProducts {
 
   // Test method to debug API requirements
   async testAddBook() {
-    console.log('🧪 Testing minimal product creation...');
 
     try {
         // Create FormData - matching exactly what your backend expects
@@ -606,28 +593,24 @@ export class DashboardProducts {
         //     formData.append('subcategory', JSON.stringify([this.subcategories[1]._id]));
         // }
 
-        console.log('🧪 Sending FormData with entries:');
-        for (let [key, value] of formData.entries()) {
-            console.log(`🧪 ${key}:`, value instanceof File ? 
-                `File(${value.name}, ${value.size} bytes)` : 
-                value);
-        }
+        // for (let [key, value] of formData.entries()) {
+        //     console.log(`🧪 ${key}:`, value instanceof File ? 
+        //         `File(${value.name}, ${value.size} bytes)` : 
+        //         value);
+        // }
 
         // Send to backend
         const response = await lastValueFrom(
             this.productService.createProduct(formData)
         );
 
-        console.log('✅ Test successful:', response);
         Swal.fire('Test Success', 'Minimal product creation works!', 'success');
     } catch (error: any) {
-        console.error('❌ Test failed:', error);
         Swal.fire('Test Failed', error.message || 'Product creation failed', 'error');
     }
 }
 
   async addBook() {
-  console.log('=== Starting Add Book Process ===');
 
   // Frontend validation
   if (!this.addTitle || !this.addDescription || !this.addAuthor || 
@@ -686,22 +669,15 @@ export class DashboardProducts {
       });
     }
 
-    console.log('FormData contents:');
-    formData.forEach((value, key) => {
-      console.log(key, value);
-    });
-
     // Send to backend
     const response = await lastValueFrom(
       this.productService.createProduct(formData));
 
-    console.log('Success:', response);
     Swal.fire('Success', 'Book added successfully!', 'success');
     this.resetAddForm();
     this.loadBooks(1);
 
   } catch (error: any) {
-    console.error('Error:', error);
     this.formError = error.message || 'Failed to add book';
     Swal.fire('Error', this.formError, 'error');
   } finally {
@@ -710,16 +686,12 @@ export class DashboardProducts {
 }
 
   async updateBook() {
-    console.log('=== Starting Update Book Process ===');
 
     this.validateUpdateForm();
     if (this.formError) {
-      console.log('❌ Form validation failed:', this.formError);
       Swal.fire('Error', this.formError, 'error');
       return;
     }
-
-    console.log('✅ Form validation passed');
     this.isUploading = true;
     this.formError = '';
 
@@ -770,27 +742,23 @@ export class DashboardProducts {
         });
       }
 
-      console.log('=== Sending to Backend ===');
-      console.log('📤 FormData entries:');
-      for (let [key, value] of formData.entries()) {
-        if (value instanceof File) {
-          console.log(`📤 ${key}: File(${value.name}, ${value.size} bytes, ${value.type})`);
-        } else {
-          console.log(`📤 ${key}: ${value}`);
-        }
-      }
+      // for (let [key, value] of formData.entries()) {
+      //   if (value instanceof File) {
+      //     console.log(`📤 ${key}: File(${value.name}, ${value.size} bytes, ${value.type})`);
+      //   } else {
+      //     console.log(`📤 ${key}: ${value}`);
+      //   }
+      // }
 
       // Send to backend
       const response = await this.productService.updateProduct(this.selectedBookId, formData).toPromise();
 
-      console.log('✅ Backend response:', response);
       Swal.fire('Success', 'Book updated successfully!', 'success');
       this.resetUpdateForm();
       this.loadBooks(1);
       this.state = 0;
 
     } catch (error: any) {
-      console.error('❌ Update book error:', error);
 
       let errorMessage = 'Failed to update book';
       if (error.message) {
@@ -801,7 +769,6 @@ export class DashboardProducts {
       Swal.fire('Error', errorMessage, 'error');
     } finally {
       this.isUploading = false;
-      console.log('=== Update Book Process Complete ===');
     }
   }
 
@@ -820,7 +787,6 @@ export class DashboardProducts {
     this.subcategoryService.getByCategory(categoryId).subscribe({
       next: (subcategories) => {
         this.filteredSubcategories = subcategories;
-        console.log('Filtered subcategories for category', categoryId, ':', subcategories);
 
         // Clear subcategory selection if current selection is not in filtered list
         if (isEditForm) {
@@ -836,10 +802,8 @@ export class DashboardProducts {
         }
       },
       error: (err) => {
-        console.error('Failed to load subcategories for category:', categoryId, err);
         // Fallback: filter subcategories locally if backend endpoint doesn't exist
         this.filteredSubcategories = this.subcategories.filter(sub => sub.category === categoryId);
-        console.log('Using local filtering for subcategories:', this.filteredSubcategories);
 
         // Clear subcategory selection if current selection is not in filtered list
         if (isEditForm) {
