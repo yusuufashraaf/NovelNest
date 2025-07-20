@@ -1,4 +1,18 @@
 <div class="container py-4">
+
+    <!--  Loader -->
+    @if (loading) {
+    <div class="d-flex flex-column justify-content-center align-items-center" style="height: 200px;">
+        <div class="spinner-border text-primary mb-2" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+        <div class="text-primary fw-semibold">Loading books...</div>
+    </div>
+    }
+
+
+    <!--  Book List -->
+    @if (!loading && orders.length > 0) {
     @for (book of orders; track $index) {
     <ng-container>
         <div class="row g-4 mb-3">
@@ -10,17 +24,12 @@
                     <div class="mb-3 mb-md-0 bookTitle">
                         <h5 class="fw-bold mb-1 bookTitle">{{ book.title }}</h5>
                         <h6 class="text-primary small">{{ book.author }}</h6>
-                        <p class="mb-2 small">
-                            Price: {{ book.price }} L.E
-                        </p>
+                        <p class="mb-2 small">Price: {{ book.price }} L.E</p>
 
-                        <!-- PDF Link or Fallback -->
                         @if (book.pdfLink) {
-                        <ng-container>
-                            <a [href]="book.pdfLink" class="btn btn-sm btn-outline-secondary" target="_blank">
-                                <i class="bi bi-file-earmark-pdf me-1"></i> View PDF
-                            </a>
-                        </ng-container>
+                        <a [href]="book.pdfLink" class="btn btn-sm btn-outline-secondary" target="_blank">
+                            <i class="bi bi-file-earmark-pdf me-1"></i> View PDF
+                        </a>
                         }
                         @else {
                         <span class="text-danger small">No PDF available for this book.</span>
@@ -36,4 +45,13 @@
         </div>
     </ng-container>
     }
+    }
+    @else {
+    @if (!loading) {
+    <div class="text-center text-muted mt-4">
+        No books found.
+    </div>
+    }
+    }
+
 </div>
