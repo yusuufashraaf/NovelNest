@@ -1,141 +1,136 @@
-<div class="container py-4">
-  <nav aria-label="breadcrumb">
+<div class="container py-5 book-details-container">
+  <nav aria-label="breadcrumb" class="book-breadcrumb">
     <ol class="breadcrumb">
-      <a class="breadcrumb-item" [routerLink]="['/Browse']" >Books</a>
+      <a class="breadcrumb-item" [routerLink]="['/Browse']">Books</a>
       <li class="breadcrumb-item active">{{book.title}}</li>
     </ol>
   </nav>
 
-  <div class="row">
-    <div class="col-md-4 mb-4 mb-md-0">
+  <div class="row g-4">
+    <!-- Book Cover Column -->
+    <div class="col-md-4">
       <div class="card h-100 border-0 shadow-sm">
-        <img [src]="book.imageCover || 'https://via.placeholder.com/300x450?text=No+Cover'"
-             class="card-img-top img-fluid"
-             alt="{{book.title}} cover">
-     <div class="card-body text-center">
-      <div class="d-flex justify-content-center gap-2">
-        <div style="flex: 1;">
-          <app-add-to-cart [productId]="book._id"></app-add-to-cart>
+        <img [src]="book.imageCover || 'https://via.placeholder.com/300x450?text=No+Cover'" class="card-img-top"
+          alt="{{book.title}} cover">
+        <div class="card-body text-center">
+          <div class="d-flex justify-content-center gap-3">
+            <div class="flex-grow-1">
+              <app-add-to-cart [productId]="book._id"></app-add-to-cart>
+            </div>
+            <div class="flex-grow-1">
+              <app-add-to-wishlist [productId]="book._id"></app-add-to-wishlist>
+            </div>
+          </div>
         </div>
-        <div style="flex: 1;">
-          <app-add-to-wishlist [productId]="book._id"></app-add-to-wishlist>
-        </div>
-      </div>
-    </div>
       </div>
     </div>
 
+    <!-- Book Details Column -->
     <div class="col-md-8">
       <div class="card h-100 border-0 shadow-sm">
         <div class="card-body">
-          <!-- <span class="badge bg-primary mb-2">{{book.subcategory}}</span> -->
-          <h1 class="display-5 fw-bold">{{book.title}}</h1>
-          <h3 class="text-muted">By {{book.author}}</h3>
+          <h1 class="book-title">{{book.title}}</h1>
+          <h3 class="book-author">By {{book.author}}</h3>
 
-          <div class="d-flex align-items-center my-4">
-            <div class="me-4 text-center">
-              <div class="display-4 fw-bold">{{ avgRate | number:'1.2-2' }}</div>
-              <div class="text-warning fs-3 mb-1">
+          <div class="book-rating my-4">
+            <div class="rating-value">
+              <div class="display-4">{{ avgRate | number:'1.2-2' }}</div>
+              <div class="stars">
                 {{getStarRating(avgRate || 0)}}
               </div>
-              <small class="text-muted">{{noOfReviews}} reviews</small>
+              <small>{{noOfReviews}} reviews</small>
+
             </div>
           </div>
 
-          <div class="d-flex align-items-center mb-4">
-            <h4 class="text-danger me-3 mb-0">{{book.priceAfterDiscount}}LE</h4>
-            @if(book.priceAfterDiscount != book.price){
-            <span  class="text-muted text-decoration-line-through">
-              {{book.price }}LE
-            </span>
+          <div class="book-price">
+            @if(book.price == book.priceAfterDiscount || book.priceAfterDiscount == null){
+            <div class="current-price">{{ book.price }} L.E</div>
             }
-
+            @else{
+            <div class="original-price">{{ book.price }} L.E</div>
+            <div class="current-price">{{ book.priceAfterDiscount }} L.E</div>
+            }
           </div>
+          <span class="current-price">{{book.quantity}} Available copies</span>
 
-          <div class="mt-4">
-            <h4 class="mb-3">Description</h4>
-            <p class="lead">{{book.description}}</p>
+          <div class="book-description mt-4">
+            <h4>Description</h4>
+            <p>{{book.description}}</p>
           </div>
         </div>
       </div>
     </div>
   </div>
 
+  <!-- Reviews Section -->
   <div class="card mt-4 border-0 shadow-sm">
-  <div class="card-header bg-white">
-    <h3 class="mb-0">Reviews</h3>
-  </div>
-  <div class="card-body">
-    @for (review of reviews; track review.userId._id) {
-      <div class="border-bottom pb-3 mb-3">
-        <div class="d-flex justify-content-between mb-2">
+    <div class="card-header bg-white">
+      <h3 class="mb-0">Reviews</h3>
+    </div>
+    <div class="card-body">
+      @for (review of reviews; track review.userId._id) {
+      <div class="review-item border-bottom pb-3 mb-3">
+        <div class="review-header d-flex justify-content-between mb-2">
           <strong class="fs-5">{{review.userId.name}}</strong>
-          <div class="d-flex align-items-center gap-2">
+          <div class="review-meta d-flex align-items-center gap-2">
             <span class="text-muted">{{review.postedAt | date:'medium'}}</span>
             @if(review.userId._id === userId){
-            <button
-              class="btn btn-outline-danger btn-sm"
-              (click)="deleteReview(review._id)"
-              title="Delete review">
-              <i class="fas fa-trash"></i>
+            <button class="btn btn-outline-danger btn-sm" (click)="deleteReview(review._id)" title="Delete review">
+              <i class="bi bi-trash"></i>
             </button>
             }
           </div>
         </div>
-        <div class="text-warning mb-2">
+        <div class="review-stars text-warning mb-2">
           {{getStarRating(review.rate)}}
         </div>
         <p class="mb-0">{{review.comment}}</p>
       </div>
-    }
+      }
+    </div>
   </div>
-</div>
-@if(isCurrentUserBoughtThisBook && !isCurrentUserReviewedBeforeThisBook){
+
+  <!-- Add Review Form -->
+  @if(isCurrentUserBoughtThisBook && !isCurrentUserReviewedBeforeThisBook){
   <div class="card mt-4 border-0 shadow-sm">
     <div class="card-header bg-white">
       <h3 class="mb-0">Write a Review</h3>
     </div>
-      <div class="card-body">
-        <form #reviewForm="ngForm" (submit)="submitReview(reviewForm)">
-          <div class="mb-3">
-            <label class="form-label">Your Rating</label>
-            <div class="star-rating">
-              @for (star of [1,2,3,4,5]; track star) {
-                <button type="button"
-                        (click)="setRating(star)"
-                        [class.text-warning]="star <= newReview.rate"
-                        class="btn p-0 me-1 fs-2 ">
-                  {{ star <= newReview.rate ? '★' : '☆' }}
-                </button>
-              }
-              <span class="ms-2">{{newReview.rate}} of 5 stars</span>
-            </div>
+    <div class="card-body">
+      <form #reviewForm="ngForm" (submit)="submitReview(reviewForm)">
+        <div class="mb-3">
+          <label class="form-label fw-bold">Your Rating</label>
+          <div class="star-rating">
+            @for (star of [1,2,3,4,5]; track star) {
+            <button type="button" (click)="setRating(star)" [class.text-warning]="star <= newReview.rate"
+              class="btn p-0 me-1 fs-2">
+              {{ star <= newReview.rate ? '★' : '☆' }} </button>
+                }
+                <span class="ms-2">{{newReview.rate}} of 5 stars</span>
           </div>
+        </div>
 
-          <div class="mb-3">
-            <label for="reviewComment" class="form-label">Your Review</label>
-            <textarea class="form-control"
-                      id="reviewComment"
-                      rows="4"
-                      name="comment"
-                      required
-                      minlength="2"
-                      [(ngModel)]="newReview.comment"
-                      #commentInput="ngModel"
-                      ></textarea>
-            </div>
-            <div *ngIf="commentInput.invalid && (commentInput.dirty || commentInput.touched)" class="text-danger mt-1">
-              <div *ngIf="commentInput.errors?.['required']">Comment is required.</div>
-              <div *ngIf="commentInput.errors?.['minlength']">Comment must be at least 2 characters.</div>
-            </div>
-          <button type="submit"
-                  class="btn btn-primary"
-                  [disabled]="reviewForm.invalid"
-                  >
-            Submit Review
-          </button>
-        </form>
-      </div>
+        <div class="mb-3">
+          <label for="reviewComment" class="form-label fw-bold">Your Review</label>
+          <textarea class="form-control" id="reviewComment" rows="4" name="comment" required minlength="2"
+            [(ngModel)]="newReview.comment" #commentInput="ngModel"></textarea>
+          @if(commentInput.invalid && (commentInput.dirty || commentInput.touched)){
+          <div class="text-danger mt-1">
+            @if(commentInput.errors?.['required']){
+            <div>Comment is required.</div>
+            }
+            @if(commentInput.errors?.['minlength']){
+            <div>Comment must be at least 2 characters.</div>
+            }
+          </div>
+          }
+        </div>
+        <button type="submit" class="btn btn-primary" [disabled]="reviewForm.invalid">
+          Submit Review
+        </button>
+      </form>
     </div>
+  </div>
   }
 </div>

@@ -60,7 +60,7 @@ export class Login implements OnInit {
 
       this.userdata.setuserId(decoded.id);
       this.userdata.setToken(token);
-      this.router.navigate(['/home']);
+      this.router.navigate(['/Browse']);
     });
   }
 
@@ -76,7 +76,7 @@ export class Login implements OnInit {
             }
             this.userdata.setuserId(res.data.user._id);
             this.userdata.setToken(res.token);
-            this.router.navigate(['/home']);
+            this.router.navigate(['/Browse']);
           } else {
             this.errorMessage = 'Unexpected server response';
           }

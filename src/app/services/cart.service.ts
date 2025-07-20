@@ -45,7 +45,6 @@ export class CartService {
   refreshCart(): void {
     this.getCart().subscribe({
       next: (res) => {
-        console.log(res);
         if (res && res.data && res.data.cartItems) {
           const transformedData: cartData = {
             cartItems: res.data.cartItems.map((item: any) => ({
@@ -68,7 +67,6 @@ export class CartService {
           };
           this.cart.set(transformedData);
         } else {
-          console.log('no cart items');
           this.cart.set({
             cartItems: [],
             totalPrice: 0,

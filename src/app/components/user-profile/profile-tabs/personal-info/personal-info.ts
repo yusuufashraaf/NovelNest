@@ -11,11 +11,12 @@ import { AuthService, User } from '../../../../services/auth.service';
 import { Subject, forkJoin } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import Swal from 'sweetalert2';
+import { NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-personal-info',
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule,NgIf],
   templateUrl: './personal-info.html',
   styleUrls: ['./personal-info.css'],
 })
@@ -23,6 +24,9 @@ export class PersonalInfo implements OnInit, OnDestroy {
   user!: User;
   form!: FormGroup;
   private destroy$ = new Subject<void>();
+
+  isLoadingUser = true;
+  isSubmitting = false;
 
   constructor(private fb: FormBuilder, private authService: AuthService) {}
 
@@ -36,6 +40,7 @@ export class PersonalInfo implements OnInit, OnDestroy {
   }
 
   private loadUser() {
+    this.isLoadingUser = true;
     this.authService
       .fetchLoggedInUser()
       .pipe(takeUntil(this.destroy$))
@@ -43,6 +48,7 @@ export class PersonalInfo implements OnInit, OnDestroy {
         next: (res) => {
           this.user = res.data.user;
           this.initializeForm();
+          this.isLoadingUser = false;
         },
         error: () => {
           this.authService.logout();
@@ -53,6 +59,7 @@ export class PersonalInfo implements OnInit, OnDestroy {
           });
           this.user = null as any;
           this.form = null as any;
+          this.isLoadingUser = false;
         },
       });
   }
@@ -133,10 +140,8 @@ export class PersonalInfo implements OnInit, OnDestroy {
       return;
     }
 
-    // Prepare tasks
     const tasks = [];
 
-    // 1. Update name and/or email
     if (nameChanged || emailChanged) {
       const updateData: any = {};
       if (nameChanged) updateData.name = this.name?.value;
@@ -145,7 +150,6 @@ export class PersonalInfo implements OnInit, OnDestroy {
       tasks.push(this.authService.updateUser(this.user._id, updateData));
     }
 
-    // 2. Change password
     if (passwordChanged) {
       const currentPasswordValue = this.currentPassword?.value;
       if (!currentPasswordValue) {
@@ -162,7 +166,8 @@ export class PersonalInfo implements OnInit, OnDestroy {
       );
     }
 
-    // Run all tasks in parallel
+    this.isSubmitting = true;
+
     forkJoin(tasks)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
@@ -172,14 +177,17 @@ export class PersonalInfo implements OnInit, OnDestroy {
             title: 'Success!',
             text: 'Your information has been updated successfully.',
           });
-          this.loadUser(); // Refresh user
+          this.loadUser();
+          this.isSubmitting = false;
         },
-        error: (err) => this.handleServerError(err),
+        error: (err) => {
+          this.handleServerError(err);
+          this.isSubmitting = false;
+        },
       });
   }
 
   private handleServerError(err: any) {
-    console.error('Server error:', err);
 
     const pathMap: Record<string, string> = {
       newPassword: 'password',

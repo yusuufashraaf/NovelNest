@@ -1,6 +1,6 @@
 import { Component, OnInit, AfterViewInit, ViewChild, ElementRef, OnDestroy, Inject, PLATFORM_ID } from '@angular/core';
 import { Chart } from 'chart.js/auto';
-import { isPlatformBrowser } from '@angular/common';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { CustomerActivity, StoreInitiative, StoreMetric } from '../dashboard/dashboard';
 import { Users, User } from '../../services/users';
@@ -13,7 +13,7 @@ import { map, catchError } from 'rxjs/operators';
 
 @Component({
   selector: 'app-dashboard-main',
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './dashboard-main.html',
   styleUrl: './dashboard-main.css'
 })
@@ -76,14 +76,12 @@ export class DashboardMain implements OnInit, AfterViewInit, OnDestroy {
     chartService.getUsers().subscribe({
       next: (res: any) => {
         this.allUsers = res;
-        console.log(this.allUsers);
       }
     })
 
     chartService.getOrders().subscribe({
       next: (res: any) => {
         this.allOrders = res.data;
-        console.log(this.allOrders);
         this.calculateReveniew();
       }
     })
@@ -91,7 +89,6 @@ export class DashboardMain implements OnInit, AfterViewInit, OnDestroy {
     chartService.getChart1().subscribe({
       next: (res: any) => {
         this.chart1Data = res.data;
-        console.log(this.chart1Data);
         this.createCharts(this.allOrders,this.chart1Data);
       }
     })
@@ -99,7 +96,6 @@ export class DashboardMain implements OnInit, AfterViewInit, OnDestroy {
     chartService.getProducts().subscribe({
       next: (res: any) => {
         this.allProducts = res.data;
-        console.log(this.allProducts);
         this.LoadstoreMetrics();
       }
     })
@@ -121,14 +117,10 @@ export class DashboardMain implements OnInit, AfterViewInit, OnDestroy {
     this.allOrders.forEach(element => {
       this.totalReveniew += element.totalPrice;
     });
-    console.log(this.totalReveniew);
   }
 
 
   LoadstoreMetrics() {
-    console.log(this.totalReveniew);
-    console.log(this.allUsers[0]);
-    console.log(this.allOrders);
 
     this.storeMetrics = [
       {
@@ -274,7 +266,6 @@ export class DashboardMain implements OnInit, AfterViewInit, OnDestroy {
 
   // Legacy method - keeping for backward compatibility
   async FetchData() {
-    console.log('⚠️ Using legacy FetchData method - consider using loadDashboardData instead');
     this.loadDashboardData();
   }
 

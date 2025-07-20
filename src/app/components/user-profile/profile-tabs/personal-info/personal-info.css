@@ -52,3 +52,6 @@ input.form-control[readonly] {
 .text-danger {
   color: #c45c40 !important;
 }
+.text-brown {
+  color: #8c6e5d !important;
+}

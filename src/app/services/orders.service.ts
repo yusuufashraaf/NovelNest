@@ -14,4 +14,8 @@ export class OrdersService {
   getMyOrders(): Observable<any> {
     return this.http.get(`${this.baseUrl}/orders/my-orders`);
   }
+
+    getAllMyOrders(): Observable<any> {
+    return this.http.get(`${this.baseUrl}/orders/user-orders`);
+  }
 }

@@ -1,5 +1,4 @@
 import { Routes } from '@angular/router';
-import { Home } from './components/home/home';
 import { BrowseBooks } from './components/browse-books/browse-books';
 import { Cart } from './components/cart/cart';
 import { ContactUs } from './components/contact-us/contact-us';
@@ -25,6 +24,7 @@ import { ResetPassword } from './components/reset-password/reset-password';
 import { AboutUs } from './components/about-us/about-us';
 import { AllowedPagesGuard } from './Guards/allowed-guard';
 import { SuccessPopupComponent } from './components/success-popup/success-popup';
+import { OrdersHistory } from './components/user-profile/profile-tabs/orders-history/orders-history';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'Browse', pathMatch: 'full' },
@@ -53,7 +53,6 @@ export const routes: Routes = [
     component: MainLayout,
     canActivateChild: [AllowedPagesGuard],
     children: [
-      { path: 'home', component: Home },
       { path: 'Browse', component: BrowseBooks },
       { path: 'Browse/:id', component: BookDetails , data: { renderMode: 'server' }},
       { path: 'Cart', component: Cart },
@@ -73,6 +72,7 @@ export const routes: Routes = [
           { path: 'purchased', component: PurchasedBooks },
           { path: 'reviews', component: PersonalReviews },
           { path: 'info', component: PersonalInfo },
+          {path: 'orders', component: OrdersHistory},
           { path: '', redirectTo: 'purchased', pathMatch: 'full' },
         ],
       },

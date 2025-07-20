@@ -1,15 +1,43 @@
-<div class="row">
-  <div class="col-2 text-center p-3">
-    <h3>Dashboard Control</h3>
-    <button (click)="changeState(0)" class="btn btn-primary mb-3 form-control">Main Dashboard</button>
-    <button (click)="changeState(1)" class="btn btn-primary mb-3 form-control">Categories</button>
-    <button (click)="changeState(2)" class="btn btn-primary mb-3 form-control">Subcategories</button>
-    <button (click)="changeState(3)" class="btn btn-primary mb-3 form-control">Products</button>
-    <!-- <button (click)="changeState(4)" class="btn btn-primary mb-3 form-control">Brands</button> -->
-    <button (click)="changeState(5)" class="btn btn-primary mb-3 form-control">Orders</button>
-    <button (click)="changeState(6)" class="btn btn-primary mb-3 form-control">Users</button>
-  </div>
-  <div class="col-10">
+<div class="dashboard-tabs-container ">
+  <ul class="nav nav-tabs dashboard-tabs">
+    <li class="nav-item">
+      <button (click)="changeState(0)" class="nav-link" [class.active]="state === 0">
+        <i class="bi bi-speedometer2 me-2"></i>Dashboard
+      </button>
+    </li>
+    <li class="nav-item">
+      <button (click)="changeState(1)" class="nav-link" [class.active]="state === 1">
+        <i class="bi bi-tags me-2"></i>Categories
+      </button>
+    </li>
+    <li class="nav-item">
+      <button (click)="changeState(2)" class="nav-link" [class.active]="state === 2">
+        <i class="bi bi-diagram-2 me-2"></i>Subcategories
+      </button>
+    </li>
+    <li class="nav-item">
+      <button (click)="changeState(3)" class="nav-link" [class.active]="state === 3">
+        <i class="bi bi-book me-2"></i>Products
+      </button>
+    </li>
+    <li class="nav-item">
+      <button (click)="changeState(5)" class="nav-link" [class.active]="state === 5">
+        <i class="bi bi-receipt me-2"></i>Orders
+      </button>
+    </li>
+    <li class="nav-item">
+      <button (click)="changeState(6)" class="nav-link" [class.active]="state === 6">
+        <i class="bi bi-people me-2"></i>Users
+      </button>
+    </li>
+    <li class="nav-item">
+      <button (click)="changeState(7)" class="nav-link" [class.active]="state === 7">
+        <i class="bi bi-chat-left-dots me-2"></i>Messages
+      </button>
+    </li>
+  </ul>
+
+  <div class="tab-content p-4">
     @if(state == 0){
       <app-dashboard-main></app-dashboard-main>
     }
@@ -22,14 +50,14 @@
     @if(state == 3){
       <app-dashboard-products></app-dashboard-products>
     }
-    @if(state == 4){
-      <app-dashboard-brands></app-dashboard-brands>
-    }
     @if(state == 5){
       <app-dashboard-orders></app-dashboard-orders>
     }
     @if(state == 6){
       <app-dashboard-users></app-dashboard-users>
+    }
+    @if(state == 7){
+      <app-dashboard-messages></app-dashboard-messages>
     }
   </div>
 </div>

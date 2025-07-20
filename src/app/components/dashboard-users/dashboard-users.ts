@@ -5,6 +5,7 @@ import { userInfo } from 'os';
 import { UserInfo } from '../../services/user-info';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from '../../../environment';
+import { CommonModule } from '@angular/common';
 
 // interface User{
 //   _id:string
@@ -16,6 +17,9 @@ import { environment } from '../../../environment';
 
 @Component({
   selector: 'app-dashboard-users',
+  imports: [
+    CommonModule
+  ],
   templateUrl: './dashboard-users.html',
   styleUrl: './dashboard-users.css'
 })
@@ -35,25 +39,35 @@ export class DashboardUsers {
 
   
 
-  deleteUser(id:string) {
+  ToggleUserState(id:string,state:boolean) {
     const headers = new HttpHeaders({
       Authorization: `${this.userinfo.getToken()}`
     });
+    console.log(id,state);
+    
 
-    console.log("Before request");
-
-    this.http.delete<any>(`${this.rootUrl}/api/v1/users/` + id, { headers })
+    if(state){
+      console.log("deactivate");
+      this.http.patch<any>(`${this.rootUrl}/api/v1/users/deactivate/` + id, { headers })
       .subscribe({
         next: (response) => {
-          console.log("User Deleted data:", response);  // This will log the actual data
           this.loadUsers(1);
         },
         error: (err) => {
-          console.error("Error fetching data:", err);
         }
       });
-
-    console.log("After request");
+    }
+    else{
+      console.log("reactivate");
+      this.http.patch<any>(`${this.rootUrl}/api/v1/users/reactivate/` + id, { headers })
+      .subscribe({
+        next: (response) => {
+          this.loadUsers(1);
+        },
+        error: (err) => {
+        }
+      });
+    }
   }
 
   editRole(id:string) {
@@ -61,20 +75,14 @@ export class DashboardUsers {
       Authorization: `${this.userinfo.getToken()}`
     });
 
-    console.log("Before request");
-
     this.http.post<any>(`${this.rootUrl}/api/v1/users/changerole/` + id, { headers })
       .subscribe({
         next: (response) => {
-          console.log("Response data:", response);  // This will log the actual data
           this.loadUsers(1);
         },
         error: (err) => {
-          console.error("Error fetching data:", err);
         }
       });
-
-    console.log("After request");
   }
 
 
@@ -97,7 +105,6 @@ export class DashboardUsers {
 
       },
       error: (err) => {
-        console.error('Error loading users:', err);
         // Show error to user
       }
     });

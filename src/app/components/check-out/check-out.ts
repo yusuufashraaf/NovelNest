@@ -45,8 +45,6 @@ export class CheckOut  implements OnInit {
       quantity: item.quantity,
       price: item.price
     }));
-       console.log(this.userInfo.getToken());
-
   }
 
 
@@ -148,7 +146,6 @@ checkoutForm= new FormGroup({
 
   selectPayment(method: string): void {
     this.checkoutForm.patchValue({ payment: method });
-    console.log('Payment method selected:', method);
   }
 
 
@@ -156,7 +153,6 @@ checkoutForm= new FormGroup({
     if (this.isFormValid()) {
       this.createOrder();
     } else {
-      console.log('Please fill all required fields correctly');
       this.markAllFieldsAsTouched();
     }
   }
@@ -198,7 +194,6 @@ checkoutForm= new FormGroup({
       orderNumber: this.generateOrderNumber(),
     };
 
-    console.log('Final Order JSON:', finalOrder);
     this.paymentServ.initiatePayment(finalOrder).subscribe({
     next: (res) => {
 
@@ -219,7 +214,6 @@ checkoutForm= new FormGroup({
           });
 
           if (!popup) {
-            console.error('Popup was blocked by the browser.');
             Swal.fire({
               title: 'Popup Blocked!',
               text: 'Your browser has blocked the payment window. Please allow popups or try again.',
@@ -232,11 +226,9 @@ checkoutForm= new FormGroup({
           }
       } else {
         this.loading = false;
-        console.error('Payment initiation failed or approvalUrl missing.');
       }
     },
     error: (err) => {
-      console.error('Error during payment initiation:', err);
             const errorMessage =
           err?.error?.message || 'An unexpected error occurred. Please try again.';
 

@@ -12,7 +12,8 @@ import Swal from 'sweetalert2';
     FormsModule,
     CommonModule
   ],
-  templateUrl: './dashboard-subcategories.html'
+  templateUrl: './dashboard-subcategories.html',
+  styleUrls: ['./dashboard-subcategories.css']
 })
 export class DashboardSubcategories {
   allSubcategories: Subcategory[] = [];

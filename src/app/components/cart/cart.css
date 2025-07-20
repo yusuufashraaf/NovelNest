@@ -1,125 +1,135 @@
-/* src/app/components/cart/cart.css */
+/* Shopping Cart Container */
+.shopping-cart-container {
+  background-color: #fff9f2;
+  font-family: 'Crimson Text', serif;
+}
 
-.cart-title {
-  color: #1976d2;
+.shopping-cart-container h1 {
+  font-family: 'Playfair Display', serif;
+  color: #5c3a21;
   font-size: 2.5rem;
-  letter-spacing: 1px;
+  margin-bottom: 30px;
+  position: relative;
 }
 
-.card {
-  border: none;
-  box-shadow: 0 4px 24px rgba(25, 118, 210, 0.08),
-    0 1.5px 4px rgba(0, 0, 0, 0.04);
-  border-radius: 18px;
-  overflow: hidden;
+.shopping-cart-container h1::after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 0;
+  width: 80px;
+  height: 3px;
+  background-color: #a78a6f;
 }
 
-.cart-header-row {
-  background: linear-gradient(90deg, #1976d2 80%, #42a5f5 100%);
-  color: #fff;
+/* Card Styling */
+.shopping-cart-container .card {
+  background-color: #fffcf8;
+  border: 1px solid #d4b999;
+  border-radius: 12px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+}
+
+/* Header Row */
+.cart-header {
+  background-color: #f8f1e7;
+  border-bottom: 1px solid #f0e6d9;
+  color: #5c3a21;
   font-weight: 600;
-  border-radius: 18px 18px 0 0;
+  border-radius: 12px 12px 0 0;
 }
 
-.app-cart-item-card {
-  background: #fff;
-  border-radius: 14px;
-  box-shadow: 0 2px 8px rgba(25, 118, 210, 0.06);
-  margin: 18px 0;
-  padding: 18px 0;
-  transition: box-shadow 0.2s;
+.cart-header div {
+  padding: 15px;
 }
 
-.app-cart-item-card:hover {
-  box-shadow: 0 6px 24px rgba(25, 118, 210, 0.12);
+/* Expiration Notice */
+.expiration-notice {
+  background-color: #f8f1e7;
+  padding: 10px 0;
+  color: #8c6e5d;
+  border-top: 1px solid #f0e6d9;
+  border-bottom: 1px solid #f0e6d9;
 }
 
-.cart-img {
-  border-radius: 10px;
-  box-shadow: 0 2px 8px rgba(25, 118, 210, 0.1);
-  margin-right: 18px;
+.expiration-notice i {
+  color: #a78a6f;
 }
 
-.cart-qty-btn {
+/* Summary Section */
+.cart-summary {
+  padding: 30px;
+}
+
+.cart-summary ul {
+  border-top: 1px solid #f0e6d9;
+}
+
+.cart-summary li {
+  color: #5c3a21;
   font-size: 1.2rem;
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  border: 1px solid #1976d2;
-  color: #1976d2;
-  background: #f5faff;
-  transition: background 0.2s, color 0.2s;
 }
 
-.cart-qty-btn:hover {
-  background: #1976d2;
-  color: #fff;
-}
-
-.btn-danger {
-  background: #e53935;
+/* Buttons */
+.shopping-cart-container .btn-primary {
+  background-color: #8c6e5d;
   border: none;
+  color: white;
+  font-weight: 600;
   border-radius: 8px;
-  padding: 6px 18px;
-  font-weight: 500;
-  transition: background 0.2s;
+  transition: all 0.3s;
+  border-bottom: 3px solid #5c3a21;
 }
 
-.btn-danger:hover {
-  background: #b71c1c;
+.shopping-cart-container .btn-primary:hover {
+  background-color: #5c3a21;
+  transform: translateY(-2px);
 }
 
-.cart-summary-row {
-  border-top: 2px solid #e3e8ee;
-  margin-top: 32px;
-  padding-top: 24px;
+.shopping-cart-container .btn-light {
+  background-color: #f8f1e7;
+  border: 1px solid #d4b999;
+  color: #5c3a21;
+  border-radius: 8px;
+  transition: all 0.3s;
 }
 
-.total-row {
-  font-size: 1.3rem;
+.shopping-cart-container .btn-light:hover {
+  background-color: #f0e6d9;
 }
 
-.cart-checkout-btn {
-  background: linear-gradient(90deg, #1976d2 60%, #42a5f5 100%);
-  color: #fff;
-  font-size: 1.2rem;
-  font-weight: 600;
-  border-radius: 24px;
-  padding: 12px 0;
-  margin-top: 12px;
-  transition: background 0.2s;
-  border: none;
+/* Empty Cart */
+.shopping-cart-container .text-muted {
+  color: #b8a99a !important;
 }
 
-.cart-checkout-btn:hover {
-  background: linear-gradient(90deg, #1565c0 60%, #1976d2 100%);
-  color: #fff;
-}
-
+/* Responsive Styles */
 @media (max-width: 768px) {
-  .cart-title {
+  .shopping-cart-container h1 {
     font-size: 2rem;
   }
-  .cart-header-row,
-  .total-row {
-    font-size: 1rem;
+  
+  .cart-header div {
+    padding: 10px;
+    font-size: 0.9rem;
   }
-  .cart-img {
-    width: 50px;
-    height: 70px;
+  
+  .cart-summary {
+    padding: 20px;
   }
 }
 
-.app-cart-item-card {
-  animation: fadeInCartItem 0.5s;
-}
-@keyframes fadeInCartItem {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
+@media (max-width: 576px) {
+  .shopping-cart-container {
+    padding: 30px 0;
   }
-  to {
-    opacity: 1;
-    transform: translateY(0);
+  
+  .cart-header div {
+    font-size: 0.8rem;
+    padding: 8px;
+  }
+  
+  .expiration-notice span {
+    font-size: 0.9rem;
   }
 }

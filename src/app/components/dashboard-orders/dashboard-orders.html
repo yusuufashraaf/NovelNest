@@ -1,51 +1,57 @@
-<div class="row mt-4">
-    <div class="col-12">
-        <div class="card">
-            <div class="card-header d-flex justify-content-between align-items-center">
-                <h5 class="mb-0">Orders</h5>
-            </div>
-            <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table table-hover table-striped">
-                        <thead class="table-light">
-                            <tr>
-                                <th>Order #</th>
-                                <th>Customer</th>
-                                <th>Items</th>
-                                <th>Total</th>
-                                <th>Status</th>
-                                <th>Payment</th>
-                                <th>Date</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @for (order of allOrders; track order._id) {
-                            <tr>
-                                <td>{{ order.orderNumber }}</td>
-                                <td>{{ order.user }}</td>
-                                <td>
-                                    @for (b of order.books; track b.book) {
-                                    <span class="badge bg-primary">
-                                        {{ b.book }}
-                                    </span>}
-                                    <span class="badge bg-primary">
-                                        {{ order.books.length }} items
-                                    </span>
-                                </td>
-                                <td>{{ order.totalPrice }}</td>
-                                <td>
-                                    {{ order.status }}
-                                </td>
-                                <td>{{ order.paymentMethod }}</td>
-                                <td>{{ order.createdAt }}</td>
-                            </tr>
-                            }
-                        </tbody>
-                    </table>
+<div class="container py-5 orders-container">
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Orders</h5>
                 </div>
-            </div>
-            <div class="card-footer">
-                <small class="text-muted">Showing {{ allOrders.length }} orders</small>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover table-striped">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Order #</th>
+                                    <th>Customer</th>
+                                    <th>Items</th>
+                                    <th>Total</th>
+                                    <th>Status</th>
+                                    <th>Payment</th>
+                                    <th>Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @for (order of allOrders; track order._id) {
+                                <tr>
+                                    <td>{{ order.orderNumber }}</td>
+                                    <td>{{ order.userId + " s " }}</td>
+                                    <td>
+                                        @for (b of order.books; track b.book) {
+                                        <span class="badge bg-primary">
+                                            {{ b.book }}
+                                        </span>}
+                                        <span class="badge bg-primary">
+                                            {{ order.books.length }} items
+                                        </span>
+                                    </td>
+                                    <td>{{ order.totalPrice }}</td>
+                                    <td>
+                                        <span class="status-{{order.status.toLowerCase()}}">
+                                            {{ order.status }}
+                                        </span>
+                                    </td>
+                                    <td class="payment-{{order.paymentMethod.toLowerCase()}}">
+                                        {{ order.paymentMethod }}
+                                    </td>
+                                    <td>{{ order.createdAt | date:'dd/MM/yyyy'}}</td>
+                                </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <small class="text-muted">Showing {{ allOrders.length }} orders</small>
+                </div>
             </div>
         </div>
     </div>

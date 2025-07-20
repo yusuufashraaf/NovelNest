@@ -1,4 +1,5 @@
-<div *ngIf="errorMsg" class="alert alert-danger mt-3">{{ errorMsg }}</div>
+<div class="container py-5 subcategories-container">
+  <div *ngIf="errorMsg" class="alert alert-danger mt-3">{{ errorMsg }}</div>
 <div *ngIf="successMsg" class="alert alert-success mt-3">{{ successMsg }}</div>
 <div *ngIf="isLoading" class="alert alert-info mt-3">Loading...</div>
 
@@ -59,9 +60,9 @@
                     <button class="btn btn-outline-success" (click)="editSubcategory(sub._id)" [disabled]="isLoading">
                       <i class="bi bi-pencil"></i>
                     </button>
-                    <button class="btn btn-outline-danger" (click)="deleteSubcategory(sub._id)" [disabled]="isLoading">
+                    <!-- <button class="btn btn-outline-danger" (click)="deleteSubcategory(sub._id)" [disabled]="isLoading">
                       <i class="bi bi-trash"></i>
-                    </button>
+                    </button> -->
                   </div>
                 </td>
               </tr>
@@ -75,3 +76,7 @@
     </div>
   </div>
 </div>
+
+</div>
+
+

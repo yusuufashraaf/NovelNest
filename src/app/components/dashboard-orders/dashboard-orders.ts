@@ -6,6 +6,7 @@ import { UserInfo } from '../../services/user-info';
 import { Users } from '../../services/users';
 import { AuthService } from '../../services/auth.service';
 import { environment } from '../../../environment';
+import { CommonModule } from '@angular/common';
 // interface Order {
 //   _id: string;
 //   userId: string;
@@ -35,7 +36,9 @@ import { environment } from '../../../environment';
 
 @Component({
   selector: 'app-dashboard-orders',
-  imports: [],
+  imports: [
+    CommonModule
+  ],
   templateUrl: './dashboard-orders.html',
   styleUrl: './dashboard-orders.css'
 })
@@ -62,20 +65,16 @@ getAllOrdersAPI() {
       Authorization: `${this.userinfo.getToken()}`
     });
 
-    console.log("Before request");
-
     this.http.get<any>(`${this.rootUrl}/api/v1/orders/all-orders`, { headers })
       .subscribe({
         next: (response) => {
+          //console.log(response.data);
+          
           this.allOrders= response.data;
-          console.log("Response data:", response);  // This will log the actual data
         },
         error: (err) => {
-          console.error("Error fetching data:", err);
         }
       });
-
-    console.log("After request");
   }
 
 }

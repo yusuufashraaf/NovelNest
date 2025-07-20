@@ -5,7 +5,7 @@ import { catchError, map } from 'rxjs/operators';
 import { environment } from '../../environment';
 export interface Order {
   _id: string;
-  user: string;
+  userId: string;
   books: {
     book: string;
     quantity: number;

@@ -6,6 +6,7 @@ import {
   PLATFORM_ID,
 } from '@angular/core';
 import {
+  CommonModule,
   isPlatformBrowser,
   NgFor,
   NgIf,
@@ -30,6 +31,7 @@ import { ReviewService } from '../../services/review-service';
     AddToWishlist,
     FormsModule,
     NgTemplateOutlet,
+    CommonModule
   ],
   templateUrl: './browse-books.html',
   styleUrl: './browse-books.css',

@@ -1,3 +1,4 @@
+<div class="container py-5 categories-container">
 <div *ngIf="isLoading" class="alert alert-info mt-3">Loading...</div>
 
 
@@ -51,9 +52,9 @@
                     <button class="btn btn-outline-success" (click)="editCategory(cat._id)" [disabled]="isLoading">
                       <i class="bi bi-pencil"></i>
                     </button>
-                    <button class="btn btn-outline-danger" (click)="deleteCategory(cat._id)" [disabled]="isLoading">
+                    <!-- <button class="btn btn-outline-danger" (click)="deleteCategory(cat._id)" [disabled]="isLoading">
                       <i class="bi bi-trash"></i>
-                    </button>
+                    </button> -->
                   </div>
                 </td>
               </tr>
@@ -83,3 +84,6 @@
     </div>
   </div>
 </div>
+
+</div>
+
