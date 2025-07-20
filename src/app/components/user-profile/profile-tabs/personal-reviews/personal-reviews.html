@@ -1,52 +1,75 @@
 <div class="container py-4">
-    <h2 class=" text-muted mb-4 fw-bold text-center text-md-start">My Reviews</h2>
+    @if (loading) {
+    <div class="d-flex flex-column justify-content-center align-items-center" style="height: 200px;">
+        <div class="spinner-border text-brown mb-2" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+        <div class="text-brown fw-semibold">Loading reviews...</div>
+    </div>
+    }
 
+    @if (!loading && reviews.length > 0) {
     @for (review of reviews; track $index) {
     <div class="card mb-4 shadow-sm border-0">
         <div class="row g-0 align-items-stretch">
-            <!-- Book Cover -->
             <div class="col-auto p-3">
                 <img [src]="review.bookImage" class="img-fluid rounded" alt="Book cover"
                     style="width: 80px; height: 100px; object-fit: cover;" />
             </div>
 
-            <!-- Review Content -->
             <div class="col p-3 d-flex flex-column justify-content-between">
                 <div>
                     <h5 class="card-title mb-1">{{ review.bookTitle }}</h5>
                     <p class="text-muted mb-2 small">Author: {{ review.author }}</p>
 
-                    <!-- Review Text -->
                     @if (!review.editing) {
                     <p class="card-text">{{ review.reviewText }}</p>
                     }
+
                     @if (review.editing) {
                     <textarea [(ngModel)]="review.reviewText" class="form-control mb-2" rows="3"></textarea>
                     }
 
-                    <!-- Star Rating -->
                     <div class="mb-3">
                         @for (star of [1, 2, 3, 4, 5]; track $index) {
                         <i class="bi" [class.bi-star-fill]="star <= review.rating"
                             [class.bi-star]="star > review.rating" [class.editable-star]="review.editing"
-                            (click)="review.editing && setRating(review, star)"></i>
+                            [style.color]="star <= review.rating ? 'gold' : ''"
+                            (click)="review.editing && setRating(review, star)">
+                        </i>
                         }
                     </div>
+
                 </div>
 
-                <!-- Buttons Bottom-Right -->
                 <div class="d-flex justify-content-end gap-2 mt-3">
-                    <button class="btn btn-sm btn-outline-secondary" (click)="toggleEdit(review)">
+                    <button class="btn btn-sm btn-outline-secondary d-flex align-items-center"
+                        [disabled]="review.saving || review.deleting" (click)="toggleEdit(review)">
+                        @if (review.saving) {
+                        <span class="spinner-border spinner-border-sm me-1 text-brown" role="status"></span>
+                        }
                         <i class="bi" [class.bi-pencil]="!review.editing" [class.bi-save]="review.editing"></i>
-                        {{ review.editing ? 'Save' : 'Edit' }}
+                        <span class="ms-1">{{ review.editing ? 'Save' : 'Edit' }}</span>
                     </button>
 
-                    <button class="btn btn-sm btn-outline-secondary" (click)="deleteReview(review)">
-                        <i class="bi bi-trash"></i> Delete
+                    <button class="btn btn-sm btn-outline-secondary d-flex align-items-center"
+                        [disabled]="review.saving || review.deleting" (click)="deleteReview(review)">
+                        @if (review.deleting) {
+                        <span class="spinner-border spinner-border-sm me-1 text-brown" role="status"></span>
+                        }
+                        <i class="bi bi-trash"></i>
+                        <span class="ms-1">Delete</span>
                     </button>
                 </div>
             </div>
         </div>
+    </div>
+    }
+    }
+
+    @if (!loading && reviews.length === 0) {
+    <div class="text-center text-muted mt-4">
+        You haven't written any reviews yet.
     </div>
     }
 </div>
