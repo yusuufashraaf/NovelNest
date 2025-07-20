@@ -1,0 +1,212 @@
+<!-- Floating Action Button -->
+<button class="ai-chat-fab" (click)="toggleChat()" [class.active]="isOpen()"
+  [attr.aria-label]="isOpen() ? 'Close AI Assistant' : 'Open AI Assistant'">
+  <i class="bi" [class.bi-robot]="!isOpen()" [class.bi-x-lg]="isOpen()"></i>
+</button>
+
+<!-- Chat Panel -->
+<div class="ai-chat-panel" [class.open]="isOpen()">
+  <!-- Header -->
+  <div class="chat-header">
+    <div class="header-content">
+      <i class="bi bi-robot me-2"></i>
+      <h5 class="mb-0">NovelNest AI Assistant</h5>
+    </div>
+    <div class="header-actions">
+      <button class="icon-btn" (click)="clearChat()" title="Clear chat" [disabled]="messages().length === 0">
+        <i class="bi bi-trash"></i>
+      </button>
+      <button class="icon-btn" (click)="toggleChat()" title="Close">
+        <i class="bi bi-x-lg"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- Authentication Notice -->
+  <div class="auth-notice" *ngIf="!isAuthenticated()">
+    <i class="bi bi-info-circle"></i>
+    <span>Sign in for unlimited access and personalized features</span>
+  </div>
+
+  <!-- Tabs -->
+  <div class="chat-tabs">
+    <button class="tab-btn" [class.active]="activeTab() === 'chat'" (click)="activeTab.set('chat')">
+      <i class="bi bi-chat-dots me-1"></i>
+      Chat
+    </button>
+    <button class="tab-btn" [class.active]="activeTab() === 'recommendations'"
+      (click)="activeTab.set('recommendations')">
+      <i class="bi bi-stars me-1"></i>
+      Recommendations
+    </button>
+    <button class="tab-btn" [class.active]="activeTab() === 'pdf'" (click)="activeTab.set('pdf')">
+      <i class="bi bi-file-pdf me-1"></i>
+      PDF Summary
+    </button>
+  </div>
+
+  <!-- Error Message -->
+  <div class="error-message" *ngIf="error()">
+    <i class="bi bi-exclamation-triangle"></i>
+    {{ error() }}
+    <button class="close-error" (click)="error.set(null)">×</button>
+  </div>
+
+  <!-- Chat Tab -->
+  <div class="tab-content chat-tab" *ngIf="activeTab() === 'chat'">
+    <div class="messages-container" #messagesContainer>
+      <!-- Messages -->
+      <div *ngFor="let message of messages()" class="message" [class.user-message]="message.role === 'user'"
+        [class.assistant-message]="message.role === 'assistant' || message.role === 'system'">
+        <div class="message-avatar">
+          <i class="bi" [class.bi-person-circle]="message.role === 'user'"
+            [class.bi-robot]="message.role !== 'user'"></i>
+        </div>
+        <div class="message-bubble">
+          <div class="message-content" [innerHTML]="message.content | safe:'html'"></div>
+          <div class="message-time">{{ formatTimestamp(message.timestamp) }}</div>
+        </div>
+      </div>
+
+      <!-- Loading Indicator -->
+      <div *ngIf="isLoading()" class="message assistant-message">
+        <div class="message-avatar">
+          <i class="bi bi-robot"></i>
+        </div>
+        <div class="message-bubble">
+          <div class="typing-indicator">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Actions (show when no messages) -->
+      <div class="quick-actions" *ngIf="messages().length <= 1">
+        <p class="text-center mb-3">Try asking:</p>
+        <div class="action-chips">
+          <button *ngFor="let action of quickActions" class="action-chip" (click)="sendQuickAction(action)">
+            {{ action }}
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Chat Input -->
+    <div class="chat-input-container">
+      <div class="chat-input">
+        <input type="text" class="form-control" placeholder="Ask about books, genres, or recommendations..."
+          [(ngModel)]="inputMessage" (keyup.enter)="sendMessage()" [disabled]="isLoading()">
+        <button class="send-btn" (click)="sendMessage()" [disabled]="!canSendMessage()">
+          <i class="bi bi-send-fill"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Recommendations Tab -->
+  <div class="tab-content recommendations-tab" *ngIf="activeTab() === 'recommendations'">
+    <div class="recommendation-form">
+      <div class="form-section">
+        <label class="form-label">
+          <i class="bi bi-heart me-2"></i>
+          What kind of books do you enjoy?
+        </label>
+        <textarea class="form-control" rows="3"
+          placeholder="e.g., I love fast-paced stories with strong female characters, plot twists, and happy endings..."
+          [(ngModel)]="preferences">
+        </textarea>
+      </div>
+
+      <div class="form-section">
+        <label class="form-label">
+          <i class="bi bi-tags me-2"></i>
+          Select your favorite genres:
+        </label>
+        <div class="genre-grid">
+          <button *ngFor="let genre of genres" class="genre-chip" [class.selected]="selectedGenres().includes(genre)"
+            (click)="toggleGenre(genre)">
+            <i class="bi bi-check-circle-fill me-1" *ngIf="selectedGenres().includes(genre)"></i>
+            {{ genre }}
+          </button>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <label class="form-label">
+          <i class="bi bi-book me-2"></i>
+          Books you've enjoyed recently (optional):
+        </label>
+        <input type="text" class="form-control" placeholder="Enter book titles separated by commas"
+          [(ngModel)]="previousBooksInput">
+        <small class="text-muted">e.g., The Great Gatsby, 1984, Pride and Prejudice</small>
+      </div>
+
+      <button class="btn btn-primary w-100 mt-3" (click)="getRecommendations()"
+        [disabled]="isLoading() || !isAuthenticated()">
+        <i class="bi bi-magic me-2"></i>
+        Get Personalized Recommendations
+      </button>
+    </div>
+  </div>
+
+  <!-- PDF Summary Tab -->
+  <div class="tab-content pdf-tab" *ngIf="activeTab() === 'pdf'">
+    <div class="pdf-upload-section">
+      <div class="upload-area" (click)="fileInput.click()" [class.has-file]="selectedFile()">
+        <input #fileInput type="file" accept=".pdf" style="display: none" (change)="onFileSelected($event)">
+
+        <div class="upload-content" *ngIf="!selectedFile()">
+          <i class="bi bi-cloud-upload fs-1"></i>
+          <h6>Upload a PDF Book</h6>
+          <p class="text-muted mb-0">Click to browse or drag and drop</p>
+          <p class="text-muted small">Maximum file size: 10MB</p>
+        </div>
+
+        <div class="file-preview" *ngIf="selectedFile()">
+          <i class="bi bi-file-pdf text-danger fs-1"></i>
+          <h6>{{ selectedFile()!.name }}</h6>
+          <p class="text-muted">{{ (selectedFile()!.size / 1024 / 1024).toFixed(2) }} MB</p>
+          <button class="btn btn-sm btn-outline-danger"
+            (click)="selectedFile.set(null); fileInput.value = ''; $event.stopPropagation()">
+            Remove
+          </button>
+        </div>
+      </div>
+
+      <!-- Upload Progress -->
+      <div class="upload-progress" *ngIf="uploadProgress() > 0 && uploadProgress() < 100">
+        <div class="progress">
+          <div class="progress-bar progress-bar-striped progress-bar-animated" [style.width.%]="uploadProgress()">
+          </div>
+        </div>
+        <p class="text-center mt-2">Processing PDF... {{ uploadProgress() }}%</p>
+      </div>
+
+      <button class="btn btn-primary w-100 mt-3" (click)="uploadAndSummarize()"
+        [disabled]="!selectedFile() || isLoading() || !isAuthenticated()">
+        <i class="bi bi-file-earmark-text me-2"></i>
+        Generate Summary
+      </button>
+
+      <div class="feature-info mt-3">
+        <p class="small text-muted mb-2">
+          <i class="bi bi-info-circle me-1"></i>
+          This feature will:
+        </p>
+        <ul class="small text-muted">
+          <li>Extract text from your PDF</li>
+          <li>Generate a comprehensive summary</li>
+          <li>Identify main themes and key points</li>
+          <li>Provide reading insights</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Safe HTML Pipe for rendering formatted messages -->
+<ng-template #safeHtmlPipe>
+  <!-- This would be implemented as a separate pipe -->
+</ng-template>
