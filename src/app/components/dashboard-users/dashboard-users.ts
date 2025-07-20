@@ -44,7 +44,7 @@ export class DashboardUsers {
 
     if(state){
       console.log("deactivate");
-      this.http.post<any>(`${this.rootUrl}/api/v1/users/deactivate/` + id, { headers })
+      this.http.patch<any>(`${this.rootUrl}/api/v1/users/deactivate/` + id, { headers })
       .subscribe({
         next: (response) => {
           this.loadUsers(1);
@@ -55,7 +55,7 @@ export class DashboardUsers {
     }
     else{
       console.log("reactivate");
-      this.http.post<any>(`${this.rootUrl}/api/v1/users/reactivate/` + id, { headers })
+      this.http.patch<any>(`${this.rootUrl}/api/v1/users/reactivate/` + id, { headers })
       .subscribe({
         next: (response) => {
           this.loadUsers(1);
