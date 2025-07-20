@@ -18,8 +18,7 @@
 
   <!-- Mobile Filter Toggle -->
   <div class="d-md-none mb-3">
-    <button class="btn btn-filter-toggle w-100" type="button" data-bs-toggle="collapse"
-      data-bs-target="#mobileFilters">
+    <button class="btn btn-filter-toggle w-100" type="button" data-bs-toggle="collapse" data-bs-target="#mobileFilters">
       <i class="bi bi-funnel-fill me-2"></i> Filters & Sort
     </button>
     <div id="mobileFilters" class="collapse mt-2">
@@ -205,17 +204,17 @@
           </span>
           }
         </div>
-        
+
         <!-- Book Cover -->
         <a [routerLink]="['/Browse', book._id]" class="book-cover-link">
           <img [src]="book.imageCover" [alt]="book.title" class="book-cover" />
         </a>
-        
+
         <!-- Book Details -->
         <div class="book-details">
           <h3 class="book-title">{{ book.title }}</h3>
           <p class="book-author">{{ book.author }}</p>
-          
+          <p class="book-author">Category: {{book.category.name}}</p>
           <!-- Price -->
           <div class="book-price">
             @if(book.price == book.priceAfterDiscount || book.priceAfterDiscount == null){
@@ -226,23 +225,14 @@
             <div class="current-price">{{ book.priceAfterDiscount }} L.E</div>
             }
           </div>
-          
-          <!-- Rating -->
-          <div class="book-rating">
-            <div class="stars">
-              @for (star of [1,2,3,4,5]; track $index) {
-              <i class="bi bi-star-fill" [class.filled]="star <= book.ratingAverage"></i>
-              }
-            </div>
-            <small class="review-count">({{book.ratingQuantity}} reviews)</small>
-          </div>
-          
+
+
           <!-- Updated Date -->
           <div class="book-update">
             <i class="bi bi-clock-history"></i> Updated: {{book.updatedAt  | date:'dd/MM/yyyy' }}
           </div>
         </div>
-        
+
         <!-- Actions -->
         <div class="book-actions d-flex flex-column">
           <app-add-to-cart [productId]="book._id"></app-add-to-cart>
