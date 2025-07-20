@@ -188,7 +188,6 @@ export class PersonalInfo implements OnInit, OnDestroy {
   }
 
   private handleServerError(err: any) {
-    console.error('Server error:', err);
 
     const pathMap: Record<string, string> = {
       newPassword: 'password',

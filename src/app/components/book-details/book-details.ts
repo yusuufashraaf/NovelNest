@@ -92,7 +92,6 @@ export class BookDetails implements OnInit {
         this.book=res.data;
       },
       error:(err)=>{
-        console.log(err);
       }
 
     })
@@ -106,7 +105,6 @@ export class BookDetails implements OnInit {
         this.avgRate = reviews.avgRate;
       },
       error: (err) => {
-        console.error('Error fetching reviews:', err);
       }
     });
   }
@@ -115,14 +113,10 @@ export class BookDetails implements OnInit {
 
     this.reviewserv.getIsboughtandIsreviewed(bookId).subscribe({
       next:(res)=>{
-        console.log( this.isCurrentUserBoughtThisBook,"mahmod");
-
           this.isCurrentUserBoughtThisBook=res.isBought;
           this.isCurrentUserReviewedBeforeThisBook =res.isReviewed;
 
       },error(err){
-        console.log(err);
-
       }
 
     })
@@ -148,8 +142,6 @@ export class BookDetails implements OnInit {
         this.isCurrentUserReviewedBeforeThisBook=false;
       },
       error(err){
-        console.log(err);
-
       }
     })
 
@@ -165,8 +157,6 @@ export class BookDetails implements OnInit {
 
     if (reviewPayload.rate && reviewPayload.comment) {
 
-      console.log(reviewPayload);
-
       this.reviewserv.addReview(reviewPayload).subscribe({
         next:(res)=>{
           this.fetchBookReviews(reviewPayload.bookId);
@@ -176,7 +166,6 @@ export class BookDetails implements OnInit {
           form.resetForm();
         },
         error:(err)=>{
-          console.error('Error fetching reviews:', err);
         }
       })
     }

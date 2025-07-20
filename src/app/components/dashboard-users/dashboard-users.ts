@@ -40,20 +40,15 @@ export class DashboardUsers {
       Authorization: `${this.userinfo.getToken()}`
     });
 
-    console.log("Before request");
 
     this.http.delete<any>(`${this.rootUrl}/api/v1/users/` + id, { headers })
       .subscribe({
         next: (response) => {
-          console.log("User Deleted data:", response);  // This will log the actual data
           this.loadUsers(1);
         },
         error: (err) => {
-          console.error("Error fetching data:", err);
         }
       });
-
-    console.log("After request");
   }
 
   editRole(id:string) {
@@ -61,20 +56,14 @@ export class DashboardUsers {
       Authorization: `${this.userinfo.getToken()}`
     });
 
-    console.log("Before request");
-
     this.http.post<any>(`${this.rootUrl}/api/v1/users/changerole/` + id, { headers })
       .subscribe({
         next: (response) => {
-          console.log("Response data:", response);  // This will log the actual data
           this.loadUsers(1);
         },
         error: (err) => {
-          console.error("Error fetching data:", err);
         }
       });
-
-    console.log("After request");
   }
 
 
@@ -97,7 +86,6 @@ export class DashboardUsers {
 
       },
       error: (err) => {
-        console.error('Error loading users:', err);
         // Show error to user
       }
     });

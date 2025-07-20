@@ -40,7 +40,6 @@ export class PersonalReviews implements OnInit {
         const userId = user?._id;
 
         if (!userId) {
-          console.error('User not logged in or no ID found');
           this.loading = false;
           return;
         }
@@ -60,13 +59,11 @@ export class PersonalReviews implements OnInit {
             this.loading = false;
           },
           error: (err) => {
-            console.error('Failed to load user comments:', err);
             this.loading = false;
           },
         });
       },
       error: (err) => {
-        console.error('Failed to get user from auth service:', err);
         this.loading = false;
       },
     });
@@ -100,7 +97,6 @@ export class PersonalReviews implements OnInit {
             Swal.fire('Deleted!', 'The review has been deleted.', 'success');
           },
           error: (err) => {
-            console.error('Failed to delete review:', err);
             Swal.fire('Error', 'Failed to delete the review.', 'error');
           },
           complete: () => {
@@ -126,7 +122,6 @@ export class PersonalReviews implements OnInit {
           review.saving = false;
         },
         error: (err) => {
-          console.error('Failed to update review:', err);
           review.saving = false;
         },
       });

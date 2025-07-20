@@ -62,20 +62,14 @@ getAllOrdersAPI() {
       Authorization: `${this.userinfo.getToken()}`
     });
 
-    console.log("Before request");
-
     this.http.get<any>(`${this.rootUrl}/api/v1/orders/all-orders`, { headers })
       .subscribe({
         next: (response) => {
           this.allOrders= response.data;
-          console.log("Response data:", response);  // This will log the actual data
         },
         error: (err) => {
-          console.error("Error fetching data:", err);
         }
       });
-
-    console.log("After request");
   }
 
 }

@@ -45,7 +45,6 @@ export class DashboardCategories {
   }
 
   loadAllCategories() {
-    console.log('Loading all categories to get total count');
     this.categoryService.getAllWithoutPagination().subscribe({
       next: (res: any) => {
         if (Array.isArray(res)) {
@@ -65,7 +64,6 @@ export class DashboardCategories {
   }
 
   loadCategories(page = 1) {
-    console.log('Loading categories for page:', page);
     this.isLoading = true;
     this.categoryService.getAll(page, this.pageSize).subscribe({
       next: (res: any) => {

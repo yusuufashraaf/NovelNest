@@ -13,7 +13,6 @@ export class SocketService {
     });
 
     this.socket.on('connect', () => {
-      console.log(' Connected to server with socket ID:', this.socket.id);
       if(data){
         this.socket.emit('connectToserver', token,data);
       }else{

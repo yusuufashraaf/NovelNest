@@ -30,7 +30,6 @@ export class ContactUs implements OnInit {
         this.formData.name = decoded.name || '';
         this.formData.email = decoded.email || '';
       } catch (err) {
-        console.error('Invalid token:', err);
       }
     }
   }
@@ -74,6 +73,6 @@ export class ContactUs implements OnInit {
   }
 
   startChat() {
-    console.log('Chat Started');
+
   }
 }
