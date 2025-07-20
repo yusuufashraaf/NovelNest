@@ -145,9 +145,7 @@ export class BrowseBooks implements OnInit {
     if (keyword) params.keyword = keyword;
 
     this.productService.getAllProducts(params).subscribe({
-      next: (res) => {
-        console.log(res.data);
-        
+      next: (res) => {        
         this.books = res.data || [];
         this.totalPages = res.totalPages || 1;
         this.isLoading = false;
