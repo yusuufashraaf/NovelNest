@@ -27,6 +27,7 @@
     "chart.js": "^4.5.0",
     "compromise": "^14.14.4",
     "jwt-decode": "^4.0.0",
+    "ngx-extended-pdf-viewer": "^24.2.4",
     "rxjs": "~7.8.0",
     "socket.io-client": "^4.8.1",
     "stopword": "^3.1.5",
