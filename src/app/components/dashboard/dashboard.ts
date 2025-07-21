@@ -1,11 +1,11 @@
-import { Component } from "@angular/core";
-import { DashboardMain } from "../dashboard-main/dashboard-main";
-import { DashboardProducts } from "../dashboard-products/dashboard-products";
-import { DashboardUsers } from "../dashboard-users/dashboard-users";
-import { DashboardCategories } from "../dashboard-categories/dashboard-categories";
-import { DashboardOrders } from "../dashboard-orders/dashboard-orders";
-import { DashboardSubcategories } from "../dashboard-subcategories/dashboard-subcategories";
-import { DashboardBrands } from "../dashboard-brands/dashboard-brands";
+import { Component } from '@angular/core';
+import { DashboardMain } from '../dashboard-main/dashboard-main';
+import { DashboardProducts } from '../dashboard-products/dashboard-products';
+import { DashboardUsers } from '../dashboard-users/dashboard-users';
+import { DashboardCategories } from '../dashboard-categories/dashboard-categories';
+import { DashboardOrders } from '../dashboard-orders/dashboard-orders';
+import { DashboardSubcategories } from '../dashboard-subcategories/dashboard-subcategories';
+import { DashboardBrands } from '../dashboard-brands/dashboard-brands';
 
 export interface StoreMetric {
   title: string;
@@ -34,12 +34,19 @@ export interface StoreInitiative {
   selector: 'app-dashboard',
   templateUrl: './dashboard.html',
   styleUrls: ['./dashboard.css'],
-  imports: [DashboardMain, DashboardProducts, DashboardUsers, DashboardCategories, DashboardOrders, DashboardSubcategories, DashboardBrands]
+  imports: [
+    DashboardMain,
+    DashboardProducts,
+    DashboardUsers,
+    DashboardCategories,
+    DashboardOrders,
+    DashboardSubcategories,
+  ],
 })
 export class Dashboard {
-  state:number = 0;
+  state: number = 0;
 
-  changeState(newState:number){
+  changeState(newState: number) {
     this.state = newState;
   }
 }
