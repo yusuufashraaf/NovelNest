@@ -6,6 +6,7 @@ import { DashboardCategories } from "../dashboard-categories/dashboard-categorie
 import { DashboardOrders } from "../dashboard-orders/dashboard-orders";
 import { DashboardSubcategories } from "../dashboard-subcategories/dashboard-subcategories";
 import { DashboardBrands } from "../dashboard-brands/dashboard-brands";
+import { DashboardMessages } from "../dashboard-messages/dashboard-messages";
 
 export interface StoreMetric {
   title: string;
@@ -34,7 +35,7 @@ export interface StoreInitiative {
   selector: 'app-dashboard',
   templateUrl: './dashboard.html',
   styleUrls: ['./dashboard.css'],
-  imports: [DashboardMain, DashboardProducts, DashboardUsers, DashboardCategories, DashboardOrders, DashboardSubcategories, DashboardBrands]
+  imports: [DashboardMain, DashboardProducts, DashboardUsers, DashboardCategories, DashboardOrders, DashboardSubcategories, DashboardMessages]
 })
 export class Dashboard {
   state:number = 0;

@@ -54,7 +54,7 @@ export const routes: Routes = [
     component: MainLayout,
     canActivateChild: [AllowedPagesGuard],
     children: [
-      { path: 'home', component: Home },
+      // { path: 'home', component: BrowseBooks },
       { path: 'Browse', component: BrowseBooks },
       { path: 'Browse/:id', component: BookDetails , data: { renderMode: 'server' }},
       { path: 'Cart', component: Cart },
