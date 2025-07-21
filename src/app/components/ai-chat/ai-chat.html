@@ -1,0 +1,213 @@
+<!-- AI Chat Widget -->
+<div class="ai-chat-widget">
+  <!-- Overlay for blur effect -->
+  <div class="ai-chat-overlay" *ngIf="isOpen()"></div>
+  <!-- Chat Button -->
+  <button class="chat-button" (click)="toggleChat()" [class.active]="isOpen()" aria-label="Toggle AI Assistant">
+    <i *ngIf="!isOpen()" class="bi bi-chat-text-fill"></i>
+    <i *ngIf="isOpen()" class="bi bi-x-lg"></i>
+    <span class="notification-dot" *ngIf="!isOpen() && messages().length > 1"></span>
+  </button>
+
+  <!-- Chat Window -->
+  <div class="chat-window" [class.open]="isOpen()">
+    <!-- Header -->
+    <div class="chat-header">
+      <div class="header-content">
+        <div class="header-title">
+          <h3>NovelNest AI Assistant</h3>
+          <p>Your book discovery companion</p>
+        </div>
+        <div class="header-actions">
+          <button *ngIf="activeTab() === 'chat' && messages().length > 0" (click)="clearChat()" class="header-btn"
+            title="Clear chat" aria-label="Clear chat history">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              stroke-width="2">
+              <polyline points="3,6 5,6 21,6" />
+              <path d="m19,6v14a2,2 0 0,1 -2,2H7a2,2 0 0,1 -2,-2V6m3,0V4a2,2 0 0,1 2,-2h4a2,2 0 0,1 2,2v2" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Error Message -->
+    <div class="error-message" *ngIf="chatError() || recError()">
+      <div class="error-content">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="m21,14-9-5-9,5v10a2,2 0 0,0 2,2h14a2,2 0 0,0 2,-2Z" />
+          <polyline points="9,22 9,12 15,12 15,22" />
+        </svg>
+        <span>{{ chatError() || recError() }}</span>
+        <button (click)="clearErrors()" class="error-close" aria-label="Close error">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18" />
+            <line x1="6" y1="6" x2="18" y2="18" />
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Tab Navigation -->
+    <div class="tab-nav">
+      <button class="tab-btn" [class.active]="activeTab() === 'chat'" (click)="switchTab('chat')"
+        [disabled]="chatLoading() || recLoading()">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+        </svg>
+        <span>Chat</span>
+      </button>
+      <button class="tab-btn" [class.active]="activeTab() === 'recommendations'" (click)="switchTab('recommendations')"
+        [disabled]="chatLoading() || recLoading()">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" />
+        </svg>
+        <span>Recommendations</span>
+      </button>
+    </div>
+
+    <!-- Tab Content -->
+    <div class="tab-content">
+      <!-- Chat Tab -->
+      <div class="chat-tab" *ngIf="activeTab() === 'chat'">
+        <!-- Quick Actions -->
+        <div class="quick-actions" *ngIf="messages().length === 0">
+          <p class="quick-actions-title">Quick suggestions:</p>
+          <div class="quick-actions-grid">
+            <button *ngFor="let action of quickActions" class="quick-action" (click)="selectQuickAction(action)"
+              [disabled]="chatLoading()">
+              {{ action }}
+            </button>
+          </div>
+        </div>
+
+        <!-- Messages -->
+        <div #messagesContainer class="messages-container" *ngIf="messages().length > 0">
+          <div *ngFor="let message of messages()" class="message" [class.user]="message.role === 'user'"
+            [class.assistant]="message.role === 'assistant'">
+            <div class="message-avatar">
+              <svg *ngIf="message.role === 'user'" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                <circle cx="12" cy="7" r="4" />
+              </svg>
+              <svg *ngIf="message.role === 'assistant'" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                fill="none" stroke="currentColor" stroke-width="1.5">
+                <!-- Simplified Robot Head for message avatar -->
+                <rect x="7" y="8" width="10" height="8" rx="2.5" ry="2.5" fill="currentColor" opacity="0.8" />
+                <!-- Robot antenna -->
+                <circle cx="12" cy="6" r="0.8" fill="currentColor" opacity="0.8" />
+                <line x1="12" y1="6.8" x2="12" y2="8" stroke="currentColor" stroke-width="1" />
+                <!-- Robot eyes -->
+                <circle cx="10" cy="11" r="1" fill="white" opacity="0.9" />
+                <circle cx="14" cy="11" r="1" fill="white" opacity="0.9" />
+                <circle cx="10" cy="11" r="0.5" fill="currentColor" />
+                <circle cx="14" cy="11" r="0.5" fill="currentColor" />
+                <!-- Robot mouth -->
+                <path d="M10.5 14 Q12 15 13.5 14" stroke="white" stroke-width="1" fill="none" opacity="0.9" />
+              </svg>
+            </div>
+            <div class="message-content">
+              <div class="message-text" [innerHTML]="formatMessageContent(message.content)"></div>
+              <div class="message-time">{{ formatTimestamp(message.timestamp) }}</div>
+            </div>
+          </div>
+
+          <!-- Loading indicator -->
+          <div *ngIf="chatLoading()" class="message assistant">
+            <div class="message-avatar">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="1.5">
+                <!-- Simplified Robot Head for loading avatar -->
+                <rect x="7" y="8" width="10" height="8" rx="2.5" ry="2.5" fill="currentColor" opacity="0.8" />
+                <!-- Robot antenna -->
+                <circle cx="12" cy="6" r="0.8" fill="currentColor" opacity="0.8" />
+                <line x1="12" y1="6.8" x2="12" y2="8" stroke="currentColor" stroke-width="1" />
+                <!-- Robot eyes -->
+                <circle cx="10" cy="11" r="1" fill="white" opacity="0.9" />
+                <circle cx="14" cy="11" r="1" fill="white" opacity="0.9" />
+                <circle cx="10" cy="11" r="0.5" fill="currentColor" />
+                <circle cx="14" cy="11" r="0.5" fill="currentColor" />
+                <!-- Robot mouth -->
+                <path d="M10.5 14 Q12 15 13.5 14" stroke="white" stroke-width="1" fill="none" opacity="0.9" />
+              </svg>
+            </div>
+            <div class="message-content">
+              <div class="typing-indicator">
+                <span></span>
+                <span></span>
+                <span></span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Input Area -->
+        <div class="input-area">
+          <div class="input-wrapper">
+            <input #chatInput [(ngModel)]="inputMessage" placeholder="Ask me anything about books..."
+              (keydown)="onKeyDown($event)" [disabled]="chatLoading()" class="chat-input" />
+            <button (click)="sendMessage()" [disabled]="!canSendMessage()" class="send-button"
+              aria-label="Send message">
+              <svg *ngIf="!chatLoading()" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2">
+                <line x1="22" y1="2" x2="11" y2="13" />
+                <polygon points="22,2 15,22 11,13 2,9" />
+              </svg>
+              <div class="spinner" *ngIf="chatLoading()"></div>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recommendations Tab -->
+      <div class="recommendations-tab" *ngIf="activeTab() === 'recommendations'">
+        <div class="recommendations-content">
+          <div class="form-group">
+            <label for="preferences">What kind of books do you enjoy?</label>
+            <textarea id="preferences" [(ngModel)]="preferences"
+              placeholder="Describe your reading preferences, favorite genres, authors you like..." rows="4"
+              maxlength="1000" class="preferences-input"></textarea>
+            <small class="char-count">{{ preferences().length }}/1000 characters</small>
+          </div>
+
+          <div class="form-group" *ngIf="categories().length > 0">
+            <label>Select categories of interest:</label>
+            <div class="category-grid">
+              <button *ngFor="let category of categories()" class="category-chip"
+                [class.selected]="selectedCategories().includes(category.id)" (click)="toggleCategory(category.id)"
+                [disabled]="recLoading()">
+                <svg *ngIf="selectedCategories().includes(category.id)" xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="20,6 9,17 4,12" />
+                </svg>
+                {{ category.name }}
+              </button>
+            </div>
+          </div>
+
+          <button class="btn-primary" (click)="getRecommendations()" [disabled]="!canGetRecommendations()">
+            <svg *ngIf="!recLoading()" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2">
+              <polygon
+                points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" />
+            </svg>
+            <div class="spinner" *ngIf="recLoading()"></div>
+            {{ recLoading() ? 'Getting Recommendations...' : 'Get Recommendations' }}
+          </button>
+
+          <div class="rec-error" *ngIf="recError()">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              stroke-width="2">
+              <circle cx="12" cy="12" r="10" />
+              <line x1="12" y1="8" x2="12" y2="12" />
+              <line x1="12" y1="16" x2="12.01" y2="16" />
+            </svg>
+            <span>{{ recError() }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

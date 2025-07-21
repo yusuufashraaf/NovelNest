@@ -39,16 +39,13 @@ export class DashboardUsers {
 
   
 
-  ToggleUserState(id:string,state:boolean) {
+  deleteUser(id:string) {
     const headers = new HttpHeaders({
       Authorization: `${this.userinfo.getToken()}`
     });
-    console.log(id,state);
-    
 
-    if(state){
-      console.log("deactivate");
-      this.http.patch<any>(`${this.rootUrl}/api/v1/users/deactivate/` + id, { headers })
+
+    this.http.delete<any>(`${this.rootUrl}/api/v1/users/` + id, { headers })
       .subscribe({
         next: (response) => {
           this.loadUsers(1);
@@ -56,18 +53,6 @@ export class DashboardUsers {
         error: (err) => {
         }
       });
-    }
-    else{
-      console.log("reactivate");
-      this.http.patch<any>(`${this.rootUrl}/api/v1/users/reactivate/` + id, { headers })
-      .subscribe({
-        next: (response) => {
-          this.loadUsers(1);
-        },
-        error: (err) => {
-        }
-      });
-    }
   }
 
   editRole(id:string) {

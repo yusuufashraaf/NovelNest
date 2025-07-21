@@ -35,12 +35,19 @@ export interface StoreInitiative {
   selector: 'app-dashboard',
   templateUrl: './dashboard.html',
   styleUrls: ['./dashboard.css'],
-  imports: [DashboardMain, DashboardProducts, DashboardUsers, DashboardCategories, DashboardOrders, DashboardSubcategories, DashboardMessages]
-})
-export class Dashboard {
-  state:number = 0;
+  imports: [
+    DashboardMain,
+    DashboardProducts,
+    DashboardUsers,
+    DashboardCategories,
+    DashboardOrders,
+    DashboardSubcategories,
+  ],
 
-  changeState(newState:number){
+export class Dashboard {
+  state: number = 0;
+
+  changeState(newState: number) {
     this.state = newState;
   }
 }
