@@ -1,11 +1,12 @@
-import { Component } from '@angular/core';
-import { DashboardMain } from '../dashboard-main/dashboard-main';
-import { DashboardProducts } from '../dashboard-products/dashboard-products';
-import { DashboardUsers } from '../dashboard-users/dashboard-users';
-import { DashboardCategories } from '../dashboard-categories/dashboard-categories';
-import { DashboardOrders } from '../dashboard-orders/dashboard-orders';
-import { DashboardSubcategories } from '../dashboard-subcategories/dashboard-subcategories';
-import { DashboardBrands } from '../dashboard-brands/dashboard-brands';
+import { Component } from "@angular/core";
+import { DashboardMain } from "../dashboard-main/dashboard-main";
+import { DashboardProducts } from "../dashboard-products/dashboard-products";
+import { DashboardUsers } from "../dashboard-users/dashboard-users";
+import { DashboardCategories } from "../dashboard-categories/dashboard-categories";
+import { DashboardOrders } from "../dashboard-orders/dashboard-orders";
+import { DashboardSubcategories } from "../dashboard-subcategories/dashboard-subcategories";
+import { DashboardBrands } from "../dashboard-brands/dashboard-brands";
+import { DashboardMessages } from "../dashboard-messages/dashboard-messages";
 
 export interface StoreMetric {
   title: string;
@@ -42,7 +43,7 @@ export interface StoreInitiative {
     DashboardOrders,
     DashboardSubcategories,
   ],
-})
+
 export class Dashboard {
   state: number = 0;
 

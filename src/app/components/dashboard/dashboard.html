@@ -30,6 +30,11 @@
         <i class="bi bi-people me-2"></i>Users
       </button>
     </li>
+    <li class="nav-item">
+      <button (click)="changeState(7)" class="nav-link" [class.active]="state === 7">
+        <i class="bi bi-chat-left-dots me-2"></i>Messages
+      </button>
+    </li>
   </ul>
 
   <div class="tab-content p-4">
@@ -50,6 +55,9 @@
     }
     @if(state == 6){
       <app-dashboard-users></app-dashboard-users>
+    }
+    @if(state == 7){
+      <app-dashboard-messages></app-dashboard-messages>
     }
   </div>
 </div>

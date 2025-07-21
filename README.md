@@ -1,114 +1,174 @@
-# NovelNest(Under Development)
+# NovelNest: An Advanced Online Bookstore Application
 
-## server Github https://github.com/yusuufashraaf/NovelList-backend/tree/main
-NovelNest is a web application built using Angular. It was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.0.0.
+## 🌟 Overview
 
-## Features
+**NovelNest** is a full-stack online bookstore built with Angular 20, offering a responsive experience across all devices. It integrates robust admin controls, secure authentication, and real-time updates, providing a powerful platform for managing and exploring books online.
 
-- **Development Server**: Easily start a local development server for testing and debugging.
-- **Code Scaffolding**: Generate components, directives, pipes, and more using Angular CLI schematics.
-- **Build Optimization**: Create production-ready builds optimized for performance and speed.
-- **Unit Testing**: Execute unit tests using the [Karma](https://karma-runner.github.io) test runner.
-- **End-to-End Testing**: Run e2e tests with your preferred testing framework.
+## 🚀 Core Features
 
-## Development Server
+| Module             | Description                                                                                                        |
+|--------------------|--------------------------------------------------------------------------------------------------------------------|
+| 👤 **User Portal**       | Secure registration (OTP, Google, GitHub), profile management, reviews, wishlists, and order tracking.      |
+| 📚 **Books**             | Extensive catalog browsing, advanced filters, and smart sorting capabilities.                             |
+| 🛒 **Shopping Cart**     | Cart management and a seamless checkout flow with confirmation messages.                                  |
+| 🔐 **Security**          | JWT authentication, route guards, OTP, and XSS prevention for secure user sessions and data integrity.    |
+| 📊 **Admin Dashboard**   | Real-time analytics, inventory, order, and user management powered by Socket.IO.                          |
 
-To start a local development server, run:
+## 🧱 Technology Stack
+
+| Category                   | Technology                     |
+|----------------------------|---------------------------------|
+| Frontend Development       | Angular 20, Bootstrap 5.3       |
+| Programming Language       | TypeScript 5.4                  |
+| UI Icons                   | Font Awesome                    |
+| Real-time Communication    | Socket.IO (Client-side)         |
+| Reactive Programming       | RxJS                            |
+
+### 🧰 Key Libraries
+
+| Library            | Purpose                                                                 |
+|--------------------|-------------------------------------------------------------------------|
+| NGX Toastr         | Toast notifications                                                     |
+| NGX Infinite Scroll| Infinite scrolling                                                       |
+| SweetAlert2        | Beautiful and responsive modals/alerts                                  |
+| Angular Forms      | Reactive form handling and validation                                   |
+
+## 📁 Project Structure (Simplified)
+
+```bash
+src/
+├── app/
+│   ├── components/
+│   │   ├── home/, browse-books/, cart/, wishlist/, book-details/
+│   │   ├── user-profile/
+│   │   │   ├── orders-history/, purchased-books/, reviews/, personal-info/
+│   │   ├── dashboard/
+│   │   │   ├── users/, products/, orders/, brands/, categories/, analytics/
+│   │   ├── auth/
+│   │   ├── static/
+│   ├── services/
+│   ├── directives/, guards/, interceptors/, interfaces/, models/
+│   ├── shared/components/
+├── assets/Logo/
+└── environments/
+```
+
+## 🛠️ Setup & Installation
+
+### System Requirements
+
+| Tool        | Version |
+|-------------|---------|
+| Node.js     | 18+     |
+| Angular CLI | Latest  |
+
+### Installation Steps
+
+```bash
+git clone https://github.com/yusuufashraaf/NovelNest.git
+cd NovelNest
+npm install
+```
+
+### Environment Configuration
+
+Update `src/environments/environment.ts`:
+
+```ts
+export const environment = {
+  production: false,
+  apiBase: 'http://localhost:5000/api',
+  apiBaseUrl: 'http://localhost:5000/api/v1',
+};
+```
+
+### Run Locally
 
 ```bash
 ng serve
 ```
+Access via: [http://localhost:4200](http://localhost:4200)
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+## 🔐 Security Features
 
-## Code Scaffolding
+| Feature                 | Description                                                                 |
+|-------------------------|-----------------------------------------------------------------------------|
+| JWT Authentication      | Secure user session with token validation                                  |
+| OTP Verification        | Email OTP for critical actions                                              |
+| Route Guards            | Role-based and authentication-based access control                         |
+| Input Sanitization      | Prevents XSS attacks                                                        |
+| Secure Socket.IO        | Token-validated real-time updates                                           |
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+## 📊 Admin Dashboard Capabilities
+
+| Feature           | Description                                                                 |
+|-------------------|-----------------------------------------------------------------------------|
+| Analytics         | KPIs on revenue, orders, book/user performance                              |
+| Charts            | Bar/pie charts for visual insights                                           |
+| Real-time Orders  | Live order updates with Socket.IO                                            |
+| User Management   | Admin moderation and review management                                       |
+| Inventory Control | Full control over book catalog, stock, and pricing                           |
+
+## 🛠️ Developer Commands
+
+| Command                          | Description                          |
+|----------------------------------|--------------------------------------|
+| `ng serve`                       | Start local dev server               |
+| `ng build --configuration prod`  | Build for production                 |
+| `ng test`                        | Run tests                            |
+| `ng lint`                        | Run code linter                      |
+
+## 🌍 Deployment
+
+### Production Environment
+
+Update `environment.prod.ts`:
+
+```ts
+export const environment = {
+  production: true,
+  apiBase: 'https://your-api.com/api',
+  apiBaseUrl: 'https://your-api.com/api/v1',
+};
+```
+
+### Build
 
 ```bash
-ng generate component component-name
+ng build --configuration production
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+## 🤝 Contributing
 
-```bash
-ng generate --help
-```
+| Step                    | Example Command                           |
+|-------------------------|-------------------------------------------|
+| Create Feature Branch   | `git checkout -b feature/your-feature`    |
+| Commit Changes          | `git commit -m "feat: add new feature"`  |
+| Push to GitHub          | `git push origin feature/your-feature`    |
+| Open Pull Request       | On GitHub                                 |
 
-## Building
+### Best Practices
 
-To build the project, run:
+- Follow Angular Style Guide
+- Add unit/integration tests
+- Use conventional commit messages
 
-```bash
-ng build
-```
+## 🗺️ Roadmap
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+| Feature                      | Status       | Description                                                                 |
+|------------------------------|--------------|-----------------------------------------------------------------------------|
+| Mobile PWA Support           | Planned      | Offline capabilities, mobile-first UX                                      |
+| Multi-language Support       | Planned      | i18n support for global audiences                                           |
+| Dockerized Deployment        | Under Review | Containerized setup for scalable deployment                                |
 
-## Running Unit Tests
+## 📩 Support & Contact
 
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+| Method         | Link                                                                 |
+|----------------|----------------------------------------------------------------------|
+| Email          | [yusuufashraaf@gmail.com](mailto:yusuufashraaf@gmail.com)            |
+| GitHub Issues  | [GitHub Issues](https://github.com/your-username/NovelNest/issues)   |
 
-```bash
-ng test
-```
+## 📄 License
 
-## Running End-to-End Tests
+Licensed under the **MIT License**. Free to use, modify, and distribute under the license terms.
 
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Folder Structure
-
-The project folder is organized as follows:
-
-```
-.editorconfig
-.gitignore
-angular.json
-eslint.config.js
-package.json
-README.md
-tsconfig.app.json
-tsconfig.json
-tsconfig.spec.json
-.vscode/
-    extensions.json
-    launch.json
-    tasks.json
-public/
-    favicon.ico
-src/
-    environment.prod.ts
-    environment.ts
-    index.html
-    main.ts
-    polyfills.server.ts
-    polyfills.ts
-    server.ts
-    stopword.d.ts
-    styles.css
-    app/
-        app.config.ts
-        app.css
-        app.html
-        app.routes.server.ts
-        app.routes.ts
-        app.spec.ts
-        app.ts
-        components/
-        directives/
-        Guards/
-        ...
-    assets/
-        ...
-```
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.

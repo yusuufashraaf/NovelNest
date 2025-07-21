@@ -1,5 +1,5 @@
 import { NewReview } from './../../interfaces/new-review';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Products } from '../models/product.model';
 import { ReviewService } from '../../services/review-service';
 import { Review, ReviewResponse } from '../../interfaces/review';
@@ -11,7 +11,7 @@ import { Product } from '../../interfaces/product';
 import { UserInfo } from '../../services/user-info';
 import { AddToCart } from "../add-to-cart/add-to-cart";
 import { AddToWishlist } from "../add-to-wishlist/add-to-wishlist";
-
+import { io, Socket } from 'socket.io-client';
 
 @Component({
   selector: 'app-book-details',
@@ -20,7 +20,9 @@ import { AddToWishlist } from "../add-to-wishlist/add-to-wishlist";
   standalone: true,
   styleUrls: ['./book-details.css']
 })
-export class BookDetails implements OnInit {
+export class BookDetails implements OnInit, OnDestroy {
+
+  private socket: Socket | undefined;
 
   reviews: Review[] = [];
   noOfReviews:number=0;
@@ -76,7 +78,13 @@ export class BookDetails implements OnInit {
       this.fetchBookReviews(id);
       this.fetchBookData(this.bookId);
       this.fetchIsreviewedandIsBought(this.bookId);
-
+       this.socket = io('https://b18a0ddd-9c40-496c-bd4d-f4b2c80b4fe5-00-14akmsgx4v42l.spock.replit.dev/');
+    // Listen for book quantity updates
+       this.socket.on('bookQuantityUpdated', (data: { bookId: string, quantity: number }) => {
+      if (data.bookId === this.bookId) {
+        this.book.quantity = data.quantity;
+      }
+    });
     }
     const userStr = localStorage.getItem('user');
     const userId = this.userInfo.getUserId() || (userStr ? JSON.parse(userStr)._id : null);
@@ -85,6 +93,11 @@ export class BookDetails implements OnInit {
     this.userId =this.newReview.userId ;
 
 
+  }
+  ngOnDestroy(): void {
+    if (this.socket) {
+      this.socket.disconnect();
+    }
   }
   fetchBookData(productId:String) {
     this.productserv.getProduct(productId).subscribe({
@@ -115,7 +128,6 @@ export class BookDetails implements OnInit {
       next:(res)=>{
           this.isCurrentUserBoughtThisBook=res.isBought;
           this.isCurrentUserReviewedBeforeThisBook =res.isReviewed;
-
       },error(err){
       }
 
