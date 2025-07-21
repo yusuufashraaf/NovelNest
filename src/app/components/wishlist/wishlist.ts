@@ -28,7 +28,7 @@ export class Wishlist implements OnInit {
         this.loadWishlist();
       },
       error: () => {
-        console.log('failed to delete');
+        // Removed: console.log('failed to delete');
       },
     });
   }

@@ -78,7 +78,7 @@ export class BookDetails implements OnInit, OnDestroy {
       this.fetchBookReviews(id);
       this.fetchBookData(this.bookId);
       this.fetchIsreviewedandIsBought(this.bookId);
-       this.socket = io('https://b18a0ddd-9c40-496c-bd4d-f4b2c80b4fe5-00-14akmsgx4v42l.spock.replit.dev/');
+       this.socket = io('https://1d8f222f-e6cd-4b30-8295-eee3fc85c4bc-00-x25a0w5n7axr.janeway.replit.dev/');
     // Listen for book quantity updates
        this.socket.on('bookQuantityUpdated', (data: { bookId: string, quantity: number }) => {
       if (data.bookId === this.bookId) {

@@ -83,6 +83,7 @@ export class DashboardMain implements OnInit, AfterViewInit, OnDestroy {
       next: (res: any) => {
         this.allOrders = res.data;
         this.calculateReveniew();
+        this.LoadstoreMetrics();
       }
     })
 
