@@ -1,8 +1,9 @@
+// src/app/components/ai-chat/ai-chat.ts
 import {
   Component,
-  inject,
   signal,
   computed,
+  inject,
   OnInit,
   OnDestroy,
   ViewChild,
@@ -11,108 +12,91 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import {
-  AiService,
-  ChatMessage,
-  BookRecommendation,
-} from '../../services/ai.service';
+import { AiService, ChatMessage } from '../../services/ai.service';
 import { Subscription } from 'rxjs';
-import { SafePipe } from '../../pipes/safe.pipe-pipe';
 
 @Component({
   selector: 'app-ai-chat',
   standalone: true,
-  imports: [CommonModule, FormsModule, SafePipe],
+  imports: [CommonModule, FormsModule],
   templateUrl: './ai-chat.html',
   styleUrls: ['./ai-chat.css'],
 })
 export class AiChatComponent implements OnInit, OnDestroy, AfterViewChecked {
-  @ViewChild('messagesContainer') private messagesContainer!: ElementRef;
-  @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
-
   private aiService = inject(AiService);
   private subscriptions = new Subscription();
 
-  // UI State
-  isOpen = signal(false);
-  isLoading = signal(false);
-  activeTab = signal<'chat' | 'recommendations' | 'pdf'>('chat');
-  error = signal<string | null>(null);
+  @ViewChild('chatInput') chatInputRef!: ElementRef<HTMLInputElement>;
+  @ViewChild('messagesContainer')
+  messagesContainer!: ElementRef<HTMLDivElement>;
 
-  // Chat State
+  isOpen = signal(false);
+  activeTab = signal<'chat' | 'recommendations'>('chat');
+
+  // Per-action loading and error
+  chatLoading = signal(false);
+  chatError = signal<string | null>(null);
+  recLoading = signal(false);
+  recError = signal<string | null>(null);
+
+  // Chat state
   messages = signal<ChatMessage[]>([]);
   inputMessage = signal('');
+  pendingMessageId = signal<string | null>(null);
 
-  // Recommendation Form State
+  // Recommendations state
   preferences = signal('');
-  selectedGenres = signal<string[]>([]);
-  previousBooksInput = signal('');
-  recommendations = signal<BookRecommendation[]>([]);
+  selectedCategories = signal<string[]>([]);
+  categories = signal<any[]>([]);
 
-  // PDF Upload State
-  selectedFile = signal<File | null>(null);
-  pdfSummary = signal<any>(null);
-  uploadProgress = signal(0);
+  // Auto-scroll flag
+  private shouldScrollToBottom = false;
 
-  // Available genres
-  genres = [
-    'Fiction',
-    'Non-Fiction',
-    'Mystery',
-    'Romance',
-    'Sci-Fi',
-    'Fantasy',
-    'Thriller',
-    'Biography',
-    'Self-Help',
-    'History',
-    'Horror',
-    'Poetry',
-    'Drama',
-    'Adventure',
-    'Children',
-    'Young Adult',
-    'Graphic Novel',
-    'Cookbook',
-    'Travel',
-    'Art',
-  ];
+  // Computed properties
+  canSendMessage = computed(
+    () =>
+      !this.chatLoading() &&
+      this.inputMessage().trim().length > 0 &&
+      !this.pendingMessageId()
+  );
+
+  canGetRecommendations = computed(
+    () =>
+      !this.recLoading() &&
+      this.preferences().trim().length > 0 &&
+      this.selectedCategories().length > 0
+  );
 
   // Quick action suggestions
   quickActions = [
-    "What's trending in fiction?",
-    'Recommend a mystery novel',
-    'Best books for beginners',
-    'Classic literature suggestions',
-    'Latest bestsellers',
+    'Recommend me a thriller novel',
+    'What are the best fantasy books of 2024?',
+    'I want to read something like Harry Potter',
+    'Suggest books for beginners in philosophy',
+    'What are some must-read classics?',
   ];
 
-  // Computed properties
-  isAuthenticated = computed(() => this.aiService.isAuthenticated());
-  previousBooks = computed(() =>
-    this.previousBooksInput()
-      .split(',')
-      .map((b) => b.trim())
-      .filter((b) => b)
-  );
-  canSendMessage = computed(
-    () => !this.isLoading() && this.inputMessage().trim().length > 0
-  );
-
   ngOnInit() {
-    // Subscribe to messages
     this.subscriptions.add(
       this.aiService.messages$.subscribe((messages) => {
         this.messages.set(messages);
+        this.shouldScrollToBottom = true;
       })
     );
 
-    // Add welcome message if no messages
-    if (this.messages().length === 0) {
-      this.addSystemMessage(
-        "👋 Welcome to NovelNest AI Assistant! I'm here to help you discover your next great read. " +
-          'Ask me about book recommendations, genres, authors, or upload a PDF for a summary!'
-      );
+    this.subscriptions.add(
+      this.aiService.categories$.subscribe((categories) => {
+        this.categories.set(categories);
+      })
+    );
+
+    this.loadQuickActions();
+  }
+
+  ngAfterViewChecked() {
+    if (this.shouldScrollToBottom && this.messagesContainer) {
+      this.scrollToBottom();
+      this.shouldScrollToBottom = false;
     }
   }
 
@@ -120,243 +104,275 @@ export class AiChatComponent implements OnInit, OnDestroy, AfterViewChecked {
     this.subscriptions.unsubscribe();
   }
 
-  ngAfterViewChecked() {
-    this.scrollToBottom();
+  private scrollToBottom(): void {
+    try {
+      this.messagesContainer.nativeElement.scrollTop =
+        this.messagesContainer.nativeElement.scrollHeight;
+    } catch (err) {
+      console.error('Could not scroll to bottom:', err);
+    }
   }
 
   toggleChat() {
     this.isOpen.update((v) => !v);
-    if (this.isOpen()) {
-      // Focus input when opening
-      setTimeout(() => {
-        const input = document.querySelector(
-          '.chat-input input'
-        ) as HTMLInputElement;
-        input?.focus();
-      }, 100);
+    if (this.isOpen() && this.activeTab() === 'chat') {
+      setTimeout(() => this.focusInput(), 100);
+    }
+  }
+
+  switchTab(tab: 'chat' | 'recommendations') {
+    if (this.chatLoading() || this.recLoading()) return;
+    this.activeTab.set(tab);
+    this.clearErrors();
+    setTimeout(() => this.focusInput(), 100);
+  }
+
+  private focusInput() {
+    if (this.activeTab() === 'chat' && this.chatInputRef) {
+      this.chatInputRef.nativeElement.focus();
     }
   }
 
   async sendMessage(message?: string) {
     const messageToSend = message || this.inputMessage();
-    if (!messageToSend.trim()) return;
+    if (!messageToSend.trim() || this.chatLoading()) return;
 
     this.inputMessage.set('');
-    this.error.set(null);
-    this.isLoading.set(true);
+    this.chatError.set(null);
+    this.chatLoading.set(true);
 
     try {
-      // Use public chat if not authenticated
-      const chatMethod = this.isAuthenticated()
-        ? this.aiService.chatWithAI(messageToSend)
-        : this.aiService.publicChat(messageToSend);
-
-      await chatMethod.toPromise();
+      await this.aiService.chatWithAI(messageToSend).toPromise();
     } catch (error: any) {
-      console.error('Chat error:', error);
-      this.error.set(
+      this.chatError.set(
         error.error?.message || 'Failed to send message. Please try again.'
       );
-      this.addSystemMessage(
-        '❌ ' +
-          (error.error?.message || 'Failed to send message. Please try again.')
-      );
     } finally {
-      this.isLoading.set(false);
+      this.chatLoading.set(false);
+      this.pendingMessageId.set(null);
+      setTimeout(() => this.focusInput(), 100);
     }
   }
 
   async getRecommendations() {
-    if (!this.preferences() || this.selectedGenres().length === 0) {
-      this.error.set(
-        'Please fill in your preferences and select at least one genre'
-      );
-      return;
-    }
-
-    if (!this.isAuthenticated()) {
-      this.addSystemMessage(
-        '🔒 Please sign in to get personalized book recommendations!'
-      );
-      return;
-    }
-
-    this.isLoading.set(true);
-    this.error.set(null);
+    if (!this.canGetRecommendations()) return;
+    this.recError.set(null);
+    this.recLoading.set(true);
+    this.activeTab.set('chat');
 
     try {
-      const response = await this.aiService
-        .getRecommendations(
-          this.preferences(),
-          this.selectedGenres(),
-          this.previousBooks()
-        )
+      await this.aiService
+        .getRecommendations(this.preferences(), this.selectedCategories())
         .toPromise();
-
-      if (response?.success && response.recommendations) {
-        this.recommendations.set(response.recommendations);
-
-        // Format and add to chat
-        const formattedMessage = this.aiService.formatRecommendationsAsMessage(
-          response.recommendations
-        );
-        this.addSystemMessage(formattedMessage);
-
-        // Switch to chat tab to show results
-        this.activeTab.set('chat');
-
-        // Clear form
-        this.preferences.set('');
-        this.selectedGenres.set([]);
-        this.previousBooksInput.set('');
-      }
+      this.resetRecommendationForm();
     } catch (error: any) {
-      console.error('Recommendation error:', error);
-      this.error.set(
+      this.recError.set(
         error.error?.message ||
           'Failed to get recommendations. Please try again.'
       );
     } finally {
-      this.isLoading.set(false);
+      this.recLoading.set(false);
     }
   }
 
-  onFileSelected(event: any) {
-    const file = event.target.files[0];
-    if (file) {
-      if (file.type === 'application/pdf') {
-        if (file.size > 10 * 1024 * 1024) {
-          this.error.set('File size must be less than 10MB');
-          this.selectedFile.set(null);
-        } else {
-          this.selectedFile.set(file);
-          this.error.set(null);
-        }
-      } else {
-        this.error.set('Please select a valid PDF file');
-        this.selectedFile.set(null);
-      }
-    }
-  }
-
-  async uploadAndSummarize() {
-    const file = this.selectedFile();
-    if (!file) return;
-
-    if (!this.isAuthenticated()) {
-      this.addSystemMessage(
-        '🔒 Please sign in to use the PDF summary feature!'
-      );
-      return;
-    }
-
-    this.isLoading.set(true);
-    this.error.set(null);
-    this.uploadProgress.set(0);
-
-    try {
-      // Simulate upload progress
-      const progressInterval = setInterval(() => {
-        this.uploadProgress.update((p) => Math.min(p + 10, 90));
-      }, 200);
-
-      const response = await this.aiService.summarizePDF(file).toPromise();
-
-      clearInterval(progressInterval);
-      this.uploadProgress.set(100);
-
-      if (response?.success) {
-        this.pdfSummary.set(response);
-
-        // Format summary for chat
-        let summaryMessage = `📄 **PDF Summary**\n\n`;
-        summaryMessage += `**Title:** ${response.info.title}\n`;
-        summaryMessage += `**Author:** ${response.info.author}\n`;
-        summaryMessage += `**Pages:** ${response.pageCount}\n\n`;
-        summaryMessage += `**Summary:**\n${response.summary}`;
-
-        this.addSystemMessage(summaryMessage);
-
-        // Switch to chat tab
-        this.activeTab.set('chat');
-
-        // Reset upload state
-        this.selectedFile.set(null);
-        this.uploadProgress.set(0);
-        if (this.fileInput) {
-          this.fileInput.nativeElement.value = '';
-        }
-      }
-    } catch (error: any) {
-      console.error('PDF summary error:', error);
-      this.error.set(
-        error.error?.message || 'Failed to summarize PDF. Please try again.'
-      );
-    } finally {
-      this.isLoading.set(false);
-      this.uploadProgress.set(0);
-    }
-  }
-
-  toggleGenre(genre: string) {
-    this.selectedGenres.update((genres) => {
-      const index = genres.indexOf(genre);
+  toggleCategory(categoryId: string) {
+    this.selectedCategories.update((categories) => {
+      const index = categories.indexOf(categoryId);
       if (index > -1) {
-        return genres.filter((g) => g !== genre);
+        return categories.filter((c) => c !== categoryId);
       }
-      return [...genres, genre];
+      return [...categories, categoryId];
     });
   }
 
-  clearChat() {
-    if (confirm('Are you sure you want to clear the chat history?')) {
-      this.aiService.clearConversation().subscribe({
-        next: () => {
-          this.messages.set([]);
-          this.addSystemMessage(
-            '👋 Chat cleared! How can I help you discover your next great read?'
-          );
-        },
-        error: (error) => {
-          console.error('Failed to clear chat:', error);
-        },
-      });
-    }
+  selectQuickAction(action: string) {
+    this.activeTab.set('chat');
+    this.sendMessage(action);
   }
 
-  sendQuickAction(action: string) {
-    this.inputMessage.set(action);
-    this.sendMessage();
+  private resetRecommendationForm() {
+    this.preferences.set('');
+    this.selectedCategories.set([]);
   }
 
-  private addSystemMessage(content: string) {
-    const message: ChatMessage = {
-      role: 'assistant',
-      content,
-      timestamp: new Date(),
-    };
-    this.messages.update((msgs) => [...msgs, message]);
+  clearErrors() {
+    this.chatError.set(null);
+    this.recError.set(null);
   }
 
-  private scrollToBottom(): void {
-    try {
-      if (this.messagesContainer) {
-        this.messagesContainer.nativeElement.scrollTop =
-          this.messagesContainer.nativeElement.scrollHeight;
-      }
-    } catch (err) {}
+  async clearChat() {
+    if (!confirm('Are you sure you want to clear the chat history?')) return;
+    await this.aiService.clearConversation().toPromise();
+    this.inputMessage.set('');
+    setTimeout(() => this.focusInput(), 100);
   }
 
   formatTimestamp(date: Date): string {
     const now = new Date();
-    const messageDate = new Date(date);
-    const diffMs = now.getTime() - messageDate.getTime();
-    const diffMins = Math.floor(diffMs / 60000);
+    const diff = now.getTime() - new Date(date).getTime();
+    const minutes = Math.floor(diff / 60000);
+    const hours = Math.floor(diff / 3600000);
+    const days = Math.floor(diff / 86400000);
 
-    if (diffMins < 1) return 'Just now';
-    if (diffMins < 60) return `${diffMins}m ago`;
-    if (diffMins < 1440) return `${Math.floor(diffMins / 60)}h ago`;
+    if (minutes < 1) return 'Just now';
+    if (minutes < 60) return `${minutes}m ago`;
+    if (hours < 24) return `${hours}h ago`;
+    if (days === 1) return 'Yesterday';
+    if (days < 7) return `${days}d ago`;
 
-    return messageDate.toLocaleDateString();
+    return new Date(date).toLocaleDateString();
+  }
+
+  onKeyDown(event: KeyboardEvent) {
+    if (event.key === 'Enter' && !event.shiftKey) {
+      event.preventDefault();
+      this.sendMessage();
+    }
+  }
+
+  formatMessageContent(content: string): string {
+    if (!content) return '';
+
+    // Check if content is already formatted (contains HTML tags)
+    if (content.includes('<span class=') || content.includes('<div class=')) {
+      return content;
+    }
+
+    let formatted = content;
+
+    // Clean up basic formatting first
+    formatted = formatted
+      .replace(/\n{3,}/g, '\n\n') // Limit consecutive line breaks
+      .replace(/^\s+|\s+$/g, '') // Trim whitespace
+      .replace(/[ \t]+/g, ' '); // Normalize spaces
+
+    // Convert basic markdown to HTML first
+    formatted = this.convertBasicMarkdown(formatted);
+
+    // Apply contextual styling
+    formatted = this.applyContextualStyling(formatted);
+
+    // Final paragraph wrapping
+    formatted = this.wrapInParagraphs(formatted);
+
+    return formatted;
+  }
+
+  private convertBasicMarkdown(text: string): string {
+    let processed = text;
+
+    // Convert headers (do this first)
+    processed = processed.replace(/^### (.*$)/gm, '<h3 class="msg-h3">$1</h3>');
+    processed = processed.replace(/^## (.*$)/gm, '<h2 class="msg-h2">$1</h2>');
+    processed = processed.replace(/^# (.*$)/gm, '<h1 class="msg-h1">$1</h1>');
+
+    // Convert bold text
+    processed = processed.replace(
+      /\*\*([^*]+?)\*\*/g,
+      '<strong class="msg-bold">$1</strong>'
+    );
+
+    // Convert italic text (avoid conflicts)
+    processed = processed.replace(
+      /(?<!\*)(\*)(?!\s)([^*\n]+?)(?<!\s)\*/g,
+      '<em class="msg-italic">$2</em>'
+    );
+
+    // Convert inline code
+    processed = processed.replace(
+      /`([^`]+)`/g,
+      '<code class="msg-code">$1</code>'
+    );
+
+    // Convert numbered lists
+    processed = processed.replace(
+      /^(\d+)\.\s+(.+$)/gm,
+      '<div class="msg-list-item"><span class="msg-number">$1.</span> $2</div>'
+    );
+
+    // Convert bullet lists
+    processed = processed.replace(
+      /^[-•*]\s+(.+$)/gm,
+      '<div class="msg-bullet-item"><span class="msg-bullet">•</span> $1</div>'
+    );
+
+    // Convert horizontal rules
+    processed = processed.replace(/^---+$/gm, '<hr class="msg-divider">');
+
+    return processed;
+  }
+
+  private applyContextualStyling(text: string): string {
+    let processed = text;
+
+    // Only apply styling to text that's not already in HTML tags
+    const stylePattern = (pattern: RegExp, className: string) => {
+      return processed.replace(pattern, (match, ...groups) => {
+        // Don't style if already inside HTML tags
+        const beforeMatch = processed.substring(0, processed.indexOf(match));
+        const openTags = (beforeMatch.match(/</g) || []).length;
+        const closeTags = (beforeMatch.match(/>/g) || []).length;
+
+        if (openTags > closeTags) {
+          return match; // Inside a tag, don't modify
+        }
+
+        const capturedText = groups[0] || match;
+        return `<span class="${className}">${capturedText}</span>`;
+      });
+    };
+
+    // Technology and platform names
+    processed = stylePattern(
+      /\b(JavaScript|TypeScript|Python|Java|C\+\+|C#|Ruby|PHP|React|Angular|Vue|GitHub|LeetCode|HackerRank|Coursera|Udemy)\b/gi,
+      'platform-name'
+    );
+
+    // Key programming terms
+    processed = stylePattern(
+      /\b(programming|coding|development|practice|projects?|experience|skills?)\b/gi,
+      'key-term'
+    );
+
+    // Greeting phrases (only at the start of sentences)
+    processed = stylePattern(
+      /^(That's\s+(?:fantastic|great|amazing)!?)/gm,
+      'greeting-text'
+    );
+
+    processed = stylePattern(/(Learning.*?is.*?rewarding)/gi, 'greeting-text');
+
+    // Emphasis words
+    processed = stylePattern(
+      /\b(hands-on|crucial|important|essential|key)\b/gi,
+      'emphasis-text'
+    );
+
+    return processed;
+  }
+
+  private wrapInParagraphs(content: string): string {
+    // Handle line breaks and paragraph wrapping
+    let processed = content.replace(/\n\n+/g, '</p><p class="msg-paragraph">');
+    processed = processed.replace(/\n/g, '<br>');
+
+    // Wrap in paragraph if it doesn't start with a block element
+    if (!processed.match(/^<(h[1-6]|div|p|hr)/)) {
+      processed = '<p class="msg-paragraph">' + processed + '</p>';
+    } else if (processed.includes('</p><p class="msg-paragraph">')) {
+      processed = '<p class="msg-paragraph">' + processed + '</p>';
+    }
+
+    return processed;
+  }
+
+  private loadQuickActions() {
+    this.quickActions = [
+      'Recommend me a thriller novel',
+      'What are the best fantasy books of 2024?',
+      'I want to read something like Harry Potter',
+      'Suggest books for beginners in philosophy',
+      'What are some must-read classics?',
+    ];
   }
 }
