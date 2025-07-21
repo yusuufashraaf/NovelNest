@@ -42,7 +42,9 @@ export interface StoreInitiative {
     DashboardCategories,
     DashboardOrders,
     DashboardSubcategories,
-  ],
+    DashboardMessages
+],
+})
 
 export class Dashboard {
   state: number = 0;
