@@ -3,7 +3,6 @@ import { ServerRoute, RenderMode } from '@angular/ssr';
 export const serverRoutes: ServerRoute[] = [
   // ✅ Static routes to prerender
   { path: '', renderMode: RenderMode.Prerender },
-  { path: 'home', renderMode: RenderMode.Prerender },
   { path: 'Browse', renderMode: RenderMode.Prerender },
   { path: 'about-us', renderMode: RenderMode.Prerender },
   { path: 'thank-you', renderMode: RenderMode.Prerender },

@@ -23,7 +23,7 @@
                                 @for (order of allOrders; track order._id) {
                                 <tr>
                                     <td>{{ order.orderNumber }}</td>
-                                    <td>{{ order.user }}</td>
+                                    <td>{{ order.userId + " s " }}</td>
                                     <td>
                                         @for (b of order.books; track b.book) {
                                         <span class="badge bg-primary">
@@ -42,7 +42,7 @@
                                     <td class="payment-{{order.paymentMethod.toLowerCase()}}">
                                         {{ order.paymentMethod }}
                                     </td>
-                                    <td>{{ order.createdAt }}</td>
+                                    <td>{{ order.createdAt | date:'dd/MM/yyyy'}}</td>
                                 </tr>
                                 }
                             </tbody>

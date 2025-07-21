@@ -1,5 +1,4 @@
 import { Routes } from '@angular/router';
-import { Home } from './components/home/home';
 import { BrowseBooks } from './components/browse-books/browse-books';
 import { Cart } from './components/cart/cart';
 import { ContactUs } from './components/contact-us/contact-us';
@@ -54,7 +53,6 @@ export const routes: Routes = [
     component: MainLayout,
     canActivateChild: [AllowedPagesGuard],
     children: [
-      { path: 'home', component: Home },
       { path: 'Browse', component: BrowseBooks },
       { path: 'Browse/:id', component: BookDetails , data: { renderMode: 'server' }},
       { path: 'Cart', component: Cart },

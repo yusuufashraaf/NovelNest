@@ -92,7 +92,7 @@ export class Register implements OnInit {
       .post(`${this.rootUrl}/api/v1/auth/google`, { token: credential })
       .subscribe((res: any) => {
         localStorage.setItem('token', res.token);
-        this.router.navigate(['/home']);
+        this.router.navigate(['/Browse']);
       });
   }
 
@@ -110,7 +110,7 @@ export class Register implements OnInit {
         localStorage.setItem('token', token);
       }
 
-      this.router.navigate(['/home']);
+      this.router.navigate(['/Browse']);
     });
   }
 }

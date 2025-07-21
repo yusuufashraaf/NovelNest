@@ -1,0 +1,171 @@
+/* Orders Container */
+.orders-container {
+  background-color: #fff9f2;
+  border-radius: 15px;
+  padding: 30px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+  border: 1px solid #f0e6d9;
+  font-family: 'Crimson Text', serif;
+  color: #5c3a21;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+/* Headings */
+.orders-container h5 {
+  font-family: 'Playfair Display', serif;
+  color: #5c3a21;
+  font-weight: 600;
+}
+
+/* Card */
+.orders-container .card {
+  background-color: #fffcf8;
+  border: 1px solid #d4b999;
+  border-radius: 12px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.03);
+}
+
+.orders-container .card-header {
+  background-color: #f8f1e7;
+  border-bottom: 1px solid #f0e6d9;
+  color: #5c3a21;
+  font-weight: 600;
+  border-radius: 12px 12px 0 0 !important;
+}
+
+.orders-container .card-footer {
+  background-color: #f8f1e7;
+  border-top: 1px solid #f0e6d9;
+  color: #5c3a21;
+}
+
+/* Table */
+.orders-container .table {
+  color: #5c3a21;
+  border-color: #f0e6d9;
+}
+
+.orders-container .table th {
+  border-bottom: 2px solid #d4b999;
+  background-color: #f8f1e7;
+  font-weight: 600;
+}
+
+.orders-container .table td {
+  border-bottom: 1px solid #f0e6d9;
+  vertical-align: middle;
+}
+
+.orders-container .table-hover tbody tr:hover {
+  background-color: rgba(240, 230, 217, 0.5);
+}
+
+.orders-container .table-striped tbody tr:nth-of-type(odd) {
+  background-color: rgba(240, 230, 217, 0.3);
+}
+
+/* Badges */
+.orders-container .badge {
+  font-weight: 500;
+  padding: 5px 10px;
+  border-radius: 6px;
+  margin-right: 5px;
+  margin-bottom: 5px;
+  display: inline-block;
+}
+
+.orders-container .badge.bg-primary {
+  background-color: #8c6e5d !important;
+}
+
+/* Status Indicators - Customize based on your status values */
+.orders-container .status-pending {
+  color: #e0a800;
+  font-weight: 600;
+}
+
+.orders-container .status-completed {
+  color: #2d6b3d;
+  font-weight: 600;
+}
+
+.orders-container .status-cancelled {
+  color: #8c4a3e;
+  font-weight: 600;
+}
+
+/* Payment Method Indicators */
+.orders-container .payment-cash {
+  color: #5c3a21;
+  font-weight: 600;
+}
+
+.orders-container .payment-card {
+  color: #3a5c66;
+  font-weight: 600;
+}
+
+/* Text */
+.orders-container .text-muted {
+  color: #b8a99a !important;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .orders-container {
+    padding: 20px;
+  }
+  
+  .table-responsive {
+    border: none;
+  }
+  
+  /* Stack table cells on mobile */
+  .orders-container table {
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+  }
+  
+  .orders-container table thead {
+    display: none;
+  }
+  
+  .orders-container table tr {
+    display: block;
+    margin-bottom: 15px;
+    border-bottom: 2px solid #d4b999;
+  }
+  
+  .orders-container table td {
+    display: block;
+    text-align: right;
+    padding-left: 50%;
+    position: relative;
+    border-bottom: 1px solid #f0e6d9;
+  }
+  
+  .orders-container table td::before {
+    content: attr(data-label);
+    position: absolute;
+    left: 15px;
+    width: 45%;
+    padding-right: 10px;
+    font-weight: 600;
+    text-align: left;
+    color: #5c3a21;
+  }
+  
+  /* Adjust badge display on mobile */
+  .orders-container .badge {
+    display: inline-block;
+    margin-bottom: 5px;
+  }
+}
+
+@media (max-width: 576px) {
+  .orders-container {
+    padding: 15px;
+  }
+}
