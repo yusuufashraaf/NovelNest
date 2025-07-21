@@ -2,7 +2,7 @@ import { SocketService } from './../../services/socket-service';
 import { PaymentService } from './../../services/payment-service';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { Component,  OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { environment } from '../../../environment';
 
@@ -16,12 +16,12 @@ import { environment } from '../../../environment';
   selector: 'app-payment-success',
   imports: [CommonModule],
   templateUrl: './payment-success.html',
-  styleUrl: './payment-success.css'
+  styleUrl: './payment-success.css',
 })
 export class PaymentSuccess implements OnInit {
-      private rootUrl = `${environment.apiUrl}`;
+  private rootUrl = `${environment.apiUrl}`;
 
- isLoading = true;
+  isLoading = true;
   paymentStatus: 'success' | 'error' | 'invalid' = 'invalid';
   successMessage = '';
   errorMessage = '';
@@ -37,13 +37,12 @@ export class PaymentSuccess implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private http: HttpClient,
-    private paymentServ:PaymentService,
-    private socketServ:SocketService
+    private paymentServ: PaymentService,
+    private socketServ: SocketService
   ) {}
 
   ngOnInit() {
     this.processPaymentConfirmation();
-
   }
 
   ngOnDestroy() {
@@ -54,8 +53,7 @@ export class PaymentSuccess implements OnInit {
   }
 
   private processPaymentConfirmation() {
-
-    const {tokenId,payerId} = this.paymentServ.getTokenPayerIdPaypal();
+    const { tokenId, payerId } = this.paymentServ.getTokenPayerIdPaypal();
 
     if (!tokenId || !payerId) {
       this.paymentStatus = 'invalid';
@@ -63,60 +61,68 @@ export class PaymentSuccess implements OnInit {
       return;
     }
 
-
     this.confirmPayment(tokenId, payerId);
   }
 
   private confirmPayment(tokenId: string, payerId: string) {
-    this.http.get<PaymentConfirmationResponse>(
-      `${this.rootUrl}/buy/confirm?token=${tokenId}&PayerID=${payerId}`
-    ).subscribe({
-      next: (response) => {
-        this.isLoading = false;
-        console.log("heeeeeeeeeeeeeeeeeey",response);
+    this.http
+      .get<PaymentConfirmationResponse>(
+        `${this.rootUrl}/buy/confirm?token=${tokenId}&PayerID=${payerId}`
+      )
+      .subscribe({
+        next: (response) => {
+          this.isLoading = false;
 
-        if (response.success  && response.data) {
-          this.paymentStatus = 'success';
-          this.successMessage = response.message || 'Your payment has been processed successfully!';
-          this.orderDetails = {
-            orderId: response.data.orderId,
-            transactionId: response.data.captureId,
-            status: response.data.status
-          };
+          if (response.success && response.data) {
+            this.paymentStatus = 'success';
+            this.successMessage =
+              response.message ||
+              'Your payment has been processed successfully!';
+            this.orderDetails = {
+              orderId: response.data.orderId,
+              transactionId: response.data.captureId,
+              status: response.data.status,
+            };
 
-          const token = localStorage.getItem('token')!;
-          const nameOfCustomer = JSON.parse(localStorage.getItem('user')!).name;
-          this.socketServ.connectToServer(token,{
+            const token = localStorage.getItem('token')!;
+            const nameOfCustomer = JSON.parse(
+              localStorage.getItem('user')!
+            ).name;
+            this.socketServ.connectToServer(token, {
+              orderId: this.orderDetails.orderId,
+              customerName: nameOfCustomer,
+            });
 
-              orderId:this.orderDetails.orderId,
-              customerName:nameOfCustomer
-
-          });
-
-          this.startCountdown();
-        } else {
+            this.startCountdown();
+          } else {
+            this.paymentStatus = 'error';
+            this.errorMessage =
+              response.message ||
+              'Payment confirmation failed. Please try again.';
+          }
+        },
+        error: (error) => {
+          this.isLoading = false;
           this.paymentStatus = 'error';
-          this.errorMessage = response.message || 'Payment confirmation failed. Please try again.';
-        }
-      },
-      error: (error) => {
-        this.isLoading = false;
-        this.paymentStatus = 'error';
 
-        // Handle different error scenarios
-        if (error.status === 0) {
-          this.errorMessage = 'Unable to connect to payment service. Please check your connection.';
-        } else if (error.status === 404) {
-          this.errorMessage = 'Payment confirmation service not found.';
-        } else if (error.status === 500) {
-          this.errorMessage = 'Server error occurred during payment confirmation.';
-        } else {
-          this.errorMessage = error.error?.message || 'An unexpected error occurred during payment confirmation.';
-        }
+          // Handle different error scenarios
+          if (error.status === 0) {
+            this.errorMessage =
+              'Unable to connect to payment service. Please check your connection.';
+          } else if (error.status === 404) {
+            this.errorMessage = 'Payment confirmation service not found.';
+          } else if (error.status === 500) {
+            this.errorMessage =
+              'Server error occurred during payment confirmation.';
+          } else {
+            this.errorMessage =
+              error.error?.message ||
+              'An unexpected error occurred during payment confirmation.';
+          }
 
-        console.error('Payment confirmation error:', error);
-      }
-    });
+          console.error('Payment confirmation error:', error);
+        },
+      });
   }
 
   private startCountdown() {

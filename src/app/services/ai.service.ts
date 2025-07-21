@@ -80,16 +80,6 @@ export class AiService {
     this.loadMessagesFromStorage();
     this.initializeWelcomeMessage();
     this.loadCategories();
-
-    // Development info
-    console.log(`🤖 NovelNest AI Service initialized`);
-    console.log(`📍 Backend URL: ${this.backendUrl}`);
-    console.log(`🔧 Mock mode: ${this.useMockMode ? 'enabled' : 'disabled'}`);
-    if (this.useMockMode) {
-      console.log(`💡 To use live backend: aiService.enableMockMode(false)`);
-    } else {
-      console.log(`💡 To use mock mode: aiService.enableMockMode(true)`);
-    }
   }
 
   private generateSessionId(): string {
@@ -1254,7 +1244,6 @@ What would you like to explore today? Feel free to ask about any book-related to
   // 🔧 Development helpers
   public enableMockMode(enabled: boolean = true): void {
     this.useMockMode = enabled;
-    console.log(`Mock mode ${enabled ? 'enabled' : 'disabled'}`);
   }
 
   public isMockModeEnabled(): boolean {
