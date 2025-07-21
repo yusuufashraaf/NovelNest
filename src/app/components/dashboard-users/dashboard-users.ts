@@ -17,11 +17,11 @@ import { environment } from '../../../environment';
 @Component({
   selector: 'app-dashboard-users',
   templateUrl: './dashboard-users.html',
-  styleUrl: './dashboard-users.css'
+  styleUrl: './dashboard-users.css',
 })
 export class DashboardUsers {
-      private rootUrl = `${environment.apiUrl}`;
-  
+  private rootUrl = `${environment.apiUrl}`;
+
   UsersData: User[] = [];
 
   constructor(
@@ -33,43 +33,37 @@ export class DashboardUsers {
     this.loadUsers(1);
   }
 
-  
-
-  deleteUser(id:string) {
+  deleteUser(id: string) {
     const headers = new HttpHeaders({
-      Authorization: `${this.userinfo.getToken()}`
+      Authorization: `${this.userinfo.getToken()}`,
     });
 
-
-    this.http.delete<any>(`${this.rootUrl}/api/v1/users/` + id, { headers })
+    this.http
+      .delete<any>(`${this.rootUrl}/api/v1/users/` + id, { headers })
       .subscribe({
         next: (response) => {
           this.loadUsers(1);
         },
-        error: (err) => {
-        }
+        error: (err) => {},
       });
   }
 
-  editRole(id:string) {
+  editRole(id: string) {
     const headers = new HttpHeaders({
-      Authorization: `${this.userinfo.getToken()}`
+      Authorization: `${this.userinfo.getToken()}`,
     });
 
-    this.http.post<any>(`${this.rootUrl}/api/v1/users/changerole/` + id, { headers })
+    this.http
+      .post<any>(`${this.rootUrl}/api/v1/users/changerole/` + id, { headers })
       .subscribe({
         next: (response) => {
           this.loadUsers(1);
         },
-        error: (err) => {
-        }
+        error: (err) => {},
       });
   }
-
-
 
   isLoading = true;
-
 
   loadUsers(page: number) {
     this.isLoading = true;
@@ -82,12 +76,10 @@ export class DashboardUsers {
     this.usersService.getAllUsers().subscribe({
       next: (users) => {
         this.UsersData = users;
-        //console.log(this.UsersData);
-
       },
       error: (err) => {
         // Show error to user
-      }
+      },
     });
   }
 }

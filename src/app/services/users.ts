@@ -20,35 +20,32 @@ interface ApiResponse {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class Users {
-    private rootUrl = `${environment.apiUrl}`;
-  
+  private rootUrl = `${environment.apiUrl}`;
+
   private readonly baseUrl = `${this.rootUrl}/api/v1/users`;
 
- constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {}
 
   getAllUsers(): Observable<User[]> {
-    
     return this.http.get<User[] | { data: User[] }>(this.baseUrl).pipe(
-      tap(response => {
-        //console.log('📡 Raw users API response:', response);
-      }),
-      map(response => {
+      tap((response) => {}),
+      map((response) => {
         // If response is already an array of users
         if (Array.isArray(response)) {
           return response;
         }
-        
+
         // If response is wrapped in data property
         if (response && 'data' in response && Array.isArray(response.data)) {
           return response.data;
         }
-        
+
         return [];
       }),
-      catchError(error => {
+      catchError((error) => {
         return of([]);
       })
     );
